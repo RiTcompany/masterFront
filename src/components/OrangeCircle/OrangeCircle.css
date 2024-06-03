@@ -1,0 +1,21 @@
+/* styles.css */
+.round-image {
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
+    /*background-position: center;*/
+    border: 6px solid #F38826;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /*margin-right: 20px;*/
+    align-self: center;
+    aspect-ratio: 1;
+    /*object-fit: cover;*/
+}
+
+.image-text {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 17px;
+}
