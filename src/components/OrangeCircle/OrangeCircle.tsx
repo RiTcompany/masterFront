@@ -3,14 +3,14 @@ import './OrangeCircle.css'
 
 interface OrangeCircleProps {
     image: string;
-    name?: string
+    title?: string
 }
 
-export function OrangeCircle({image, name}: OrangeCircleProps): React.JSX.Element {
+export function OrangeCircle({image, title}: OrangeCircleProps): React.JSX.Element {
     return (
         <>
-            <img className="round-image" src={image} alt={name} />
-            <p className="image-text">{name}</p>
+            <img className="round-image" src={image} alt={title} />
+            <p className="image-text">{title}</p>
         </>
     )
 }

@@ -1,16 +1,10 @@
-/* styles.css */
 .round-image {
-    /*background-repeat: no-repeat;*/
-    /*background-size: cover;*/
-    /*background-position: center;*/
     border: 6px solid #F38826;
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    /*margin-right: 20px;*/
     align-self: center;
     aspect-ratio: 1;
-    /*object-fit: cover;*/
 }
 
 .image-text {
@@ -19,3 +13,15 @@
     font-weight: 400;
     font-size: 17px;
 }
+
+@media (max-width: 768px) {
+    .round-image {
+        border-width: 2px;
+        width: 55px;
+        height: 55px;
+    }
+    .image-text {
+        font-size: 10px;
+    }
+}
+
