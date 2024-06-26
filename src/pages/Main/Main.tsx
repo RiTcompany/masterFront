@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import "./Main.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {OrangeCircle} from "../../components/OrangeCircle/OrangeCircle.tsx";
 import {ServiceCard} from "../../components/ServiceCard/ServiceCard.tsx";
 
@@ -229,7 +229,7 @@ function CreatedCard({image, title, description, master, city, age, rating}: Ser
                         <p>{age} лет <span>{city}</span></p>
                         <p className="rating">Оценки
                             <span className="stars">
-                                {stars.map((star, index) => (
+                                {stars.map((_, index) => (
                                     <img key={index} src={"./star.png"} className="star-icon" alt="Star"/>
                                 ))}
                             </span>
@@ -267,7 +267,14 @@ function FoundCard({title, customer, description, date, price}: TaskType): React
 }
 
 export function Main(): React.JSX.Element {
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+
+    const [activeTab, setActiveTab] = useState<string>('create');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const scrollContainer = scrollRef.current;
@@ -284,8 +291,7 @@ export function Main(): React.JSX.Element {
         };
     }, []);
 
-    const [isChecked, setIsChecked] = useState<boolean>(false);
-    const [activeTab, setActiveTab] = useState<string>('create');
+    // const [isChecked, setIsChecked] = useState<boolean>(false);
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -293,6 +299,52 @@ export function Main(): React.JSX.Element {
 
     const handleToggleChange = () => {
         setIsChecked(!isChecked);
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (!email || !password) {
+            setError("EmptyFieldError");
+            return
+        }
+        setError("")
+        try {
+            const response = await fetch('http://195.133.197.53:8081/auth/sign-in', {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, password }),
+                credentials: "include",
+            })
+
+            console.log(response)
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Sign-in successful:', responseData);
+
+                localStorage.setItem('authToken', responseData.token);
+
+                // const decodedToken = parseJwt(responseData.token);
+                // console.log(decodedToken)
+
+                navigate('/profile')
+            } else {
+                console.error('Sign-in failed:', response.statusText);
+            }
+        } catch(error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError(String(error));
+            }
+        }
     };
 
     return (
@@ -419,7 +471,7 @@ export function Main(): React.JSX.Element {
                 ))}
             </div>
 
-            <div className="login-container common">
+            <div className="login-container common" id="login">
                 <div className="left"></div>
                 <div className="right">
                     <img alt="logo" src='/black-logo.png'/>
@@ -427,12 +479,25 @@ export function Main(): React.JSX.Element {
                         <h3>Войти</h3>
                         <div className="login-field">
                             <label htmlFor="email">Логин</label>
-                            <input type="email" placeholder="Почта или номер телефона"/>
+                            <input type="email"
+                                   placeholder="Почта или номер телефона"
+                                   value={email}
+                                   onChange={handleEmailChange}
+                                   required
+                            />
                         </div>
                         <div className="login-field">
                             <label htmlFor="password">Пароль</label>
-                            <input type="password" placeholder="Пароль"/>
+                            <input type="password"
+                                   placeholder="Пароль"
+                                   value={password}
+                                   onChange={handlePasswordChange}
+                                   required
+                            />
                         </div>
+                        {
+                            error && <p>Заполните, пожалуйста, все поля</p>
+                        }
                         <div className="under-form-buttons">
                             <div className="switch-toggle-container">
                                 <div className={`switch-toggle ${isChecked ? 'checked' : ''}`}
@@ -444,10 +509,10 @@ export function Main(): React.JSX.Element {
                             <Link to={"/"}>Забыли пароль?</Link>
                         </div>
                         <div className={"login-button"}>
-                            <OrangeButton text={"Войти"} onClick={search}/>
+                            <OrangeButton text={"Войти"} onClick={handleSubmit}/>
                         </div>
                         <hr/>
-                        <p className="register-link">Не зарегистрированы? <Link to={"/"}>Пройти регистрацию</Link></p>
+                        <p className="register-link">Не зарегистрированы? <Link to={"/registration"}>Пройти регистрацию</Link></p>
                     </form>
                     {/*<div className="register-bottom">*/}
                     {/*    <p>@</p>*/}

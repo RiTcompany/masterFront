@@ -9,7 +9,7 @@ header {
 
 .navbar-content {
     width: 100%;
-    max-width: 1024px;
+    max-width: 980px;
     padding: 0 12vw;
     display: flex;
     justify-content: space-between;

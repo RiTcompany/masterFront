@@ -1,0 +1,232 @@
+.registration-form {
+    width: 100vw;
+    margin: 0 auto;
+    max-width: 840px;
+    box-sizing: border-box;
+    padding: 3vw;
+}
+
+.steps {
+    display: flex;
+    flex-direction: column;
+}
+
+.steps h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.steps label, .final-step p {
+    margin: 30px 0 10px;
+    font-size: 13px;
+    color: rgba(158, 158, 158, 1);
+}
+
+.steps input, .steps select, .steps textarea {
+    height: 45px;
+    /*width: 68vw;*/
+    font-size: 13px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 10px 0 #d5d5d5;
+}
+
+.steps textarea {
+    height: 90px;
+}
+
+.steps select {
+    margin: 30px 0;
+}
+
+.error-container {
+    height: 22px;
+}
+
+.error-message {
+    font-weight: 300;
+    font-size: 13px;
+    color: red;
+
+}
+
+.agreement {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 50px 0 20px;
+}
+
+.agreement div {
+    display: flex;
+}
+
+.agreement p {
+    font-size: 13px;
+    color: rgba(158, 158, 158, 1);
+}
+
+.agreement .agree-checkbox {
+    height: 20px;
+    width: 20px;
+    margin: 0 10px 0 0;
+    box-shadow: none;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    min-height: 40px;
+}
+
+.selected-service {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #e0e0e0;
+}
+
+.photo-instruction {
+    display: flex;
+    gap: 20px;
+    height: 230px;
+    margin: 10px 0 20px;
+}
+
+.photo-instruction img {
+    /*width: 20vw;*/
+    /*min-width: 230px;*/
+    width: 230px;
+    border: 0.5px solid rgba(224, 224, 224, 1);
+}
+
+.photo-instruction .instruction {
+    box-sizing: border-box;
+    /*padding: 10px 0;*/
+    font-weight: 400;
+    font-size: 13px;
+    color: rgba(158, 158, 158, 1);
+}
+
+.photo-instruction .instruction ul {
+    padding-left: 15px;
+}
+
+
+.photo-instruction .instruction p {
+    margin-top: 10px;
+}
+
+.add-photo-button {
+    width: 230px;
+    height: 41px;
+    border: 0.5px solid rgba(102, 102, 102, 1);
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 300;
+    background: linear-gradient(164.42deg, #FCFAFA 9.69%, #EDEAEA 41.2%);
+    color: rgba(102, 102, 102, 1);
+}
+
+.add-photo-button img {
+    width: 15px;
+    height: 12px;
+    margin-right: 10px;
+}
+
+.add-document {
+    display: flex;
+    margin: 10px 0 30px 0;
+    gap: 10px;
+}
+
+.add-document img {
+    height: 35px;
+    width: 35px;
+}
+
+.add-document-button {
+    width: 150px;
+    height: 28px;
+}
+
+.done-step {
+    align-items: center;
+}
+
+.done-step p {
+    width: 90vw;
+    max-width: 310px;
+    margin-bottom: 30px;
+}
+
+/*.confirm-step h1, .password-step h1 {*/
+/*    align-self: center;*/
+/*}*/
+
+.confirm-step input {
+    margin-bottom: 30px;
+}
+
+.register-done-image {
+    width: 165px;
+    height: 165px;
+    margin: 20px 0;
+    align-self: center;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    /*width: 100vw;*/
+}
+
+.next-button, .back-button {
+    height: 40px;
+}
+
+.next-button {
+    width: 70vw;
+}
+
+.back-button {
+    width: 30vw;
+    margin-right: 20px;
+}
+
+.back-button .orange-button {
+    background-color: white;
+    color: rgba(158, 158, 158, 1);
+    border: 1px solid rgba(158, 158, 158, 1);
+    font-weight: 300;
+}
+
+.option {
+    width: 50px;
+}
+
+
+@media (max-width: 600px) {
+    .photo-instruction {
+        flex-direction: column;
+        height: auto;
+    }
+    .photo-instruction img {
+        align-self: center;
+    }
+
+    .add-photo-button {
+        align-self: center;
+        width: 95vw;
+    }
+}
