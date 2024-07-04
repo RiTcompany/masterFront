@@ -508,8 +508,8 @@ export function Main(): React.JSX.Element {
                             </div>
                             <Link to={"/"}>Забыли пароль?</Link>
                         </div>
-                        <div className={"login-button"}>
-                            <OrangeButton text={"Войти"} onClick={handleSubmit}/>
+                        <div className="login-button">
+                            <OrangeButton text="Войти" onClick={handleSubmit}/>
                         </div>
                         <hr/>
                         <p className="register-link">Не зарегистрированы? <Link to={"/registration"}>Пройти регистрацию</Link></p>

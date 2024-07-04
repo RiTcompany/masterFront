@@ -3,7 +3,7 @@ import {Route, Routes} from "react-router-dom";
 import {Navbar} from "./components/Navbar/Navbar.tsx";
 import {Main} from "./pages/Main/Main.tsx";
 import {Registration} from "./pages/Registration/Registration.tsx";
-import {MasterProfile} from "./pages/MasterProfile/MasterProfile.tsx";
+import {Profile} from "./pages/Profile/Profile.tsx";
 import {useEffect, useState} from "react";
 
 function parseJwt(token: string) {
@@ -34,7 +34,7 @@ function App() {
             const data = parseJwt(token)
             console.log(data)
 
-            const fetchData = async (url) => {
+            const fetchData = async (url: string) => {
                 try {
                     const response = await fetch(url, { method: 'GET', credentials: 'include' });
                     if (!response.ok) {
@@ -71,7 +71,7 @@ function App() {
       <Routes>
         <Route path={'/'} element={<Main/>}/>
         <Route path={'/registration'} element={<Registration/>}/>
-          <Route path="/profile/:id" element={<MasterProfile user = {user}/>} />
+        <Route path="/profile/:id" element={<Profile user={user}/>} />
       </Routes>
     </>
   )

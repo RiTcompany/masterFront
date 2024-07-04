@@ -1,0 +1,170 @@
+.profile-container {
+
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 7% 50px;
+}
+
+.profile-left {
+    width: 70%;
+    max-width: 700px;
+    box-sizing: border-box;
+    padding-right: 40px;
+    /*display: flex;*/
+}
+
+.base-info {
+    display: flex;
+    margin: 50px 0;
+    gap: 20px;
+}
+
+.profile-left img {
+    width: 230px;
+    border: 0.5px solid rgba(224, 224, 224, 1);
+}
+
+.profile-photo {
+    display: flex;
+    flex-direction: column;
+    gap: 15px
+}
+
+.profile-select {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile-select button {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.profile-select .active {
+    font-weight: 700;
+}
+
+.profile-left hr {
+    margin: 10px 0 30px;
+}
+
+.profile-left .profile-about h3 {
+    margin: 20px 0;
+}
+
+.profile-left .profile-portfolio {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: none;
+    position: relative;
+    height: 250px;
+    margin-top: 30px;
+}
+
+.profile-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin-top: 70px;
+    padding-left: 7%;
+    border-left: 0.5px solid grey;
+}
+
+.profile-right h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.profile-right h2 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.profile-right strong {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.profile-right p {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.profile-right .contacts {
+    display: flex;
+    gap: 40px;
+    height: 50px;
+}
+
+.contacts .contact-text {
+    align-self: center;
+}
+
+.profile-right img {
+    width: 40px;
+    height: 40px;
+    align-self: center;
+}
+
+.profile-bottom {
+    padding: 0 50px;
+    margin-bottom: 30px;
+}
+
+.profile-bottom h2 {
+    margin-bottom: 20px;
+}
+
+.profile-review-card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 15px;
+    width: 196.34px;
+    height: 224.75px;
+    border-radius: 12.92px;
+    border: none;
+    box-shadow: 0 5.17px 15.5px 0 #5F58693D;
+}
+
+.profile-review-card .title, .profile-review-card .text {
+    font-size: 9px;
+    margin-bottom: 15px;
+}
+
+.profile-review-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.profile-review-card .price {
+    font-size: 10.5px;
+    margin-bottom: 15px;
+}
+
+.profile-review-card .master {
+    display: flex;
+    margin-top: 30px;
+    font-size: 7.75px;
+    color: #666666;
+    position: relative;
+    bottom: -10px;
+}
+
+.profile-review-card .master-info {
+    margin-left: 10px;
+}
+
+.profile-review-card .name {
+    margin-bottom: 15px;
+}

@@ -44,7 +44,7 @@ export function Registration(): React.JSX.Element {
     const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
     const [repeatPassword, setRepeatPassword] = useState<string>("")
-    const [metro, setMetro] = useState([])
+    const [metro, setMetro] = useState<string[]>([])
 
     const photoInputRef = useRef<HTMLInputElement>(null);
     const documentInputRef = useRef<HTMLInputElement>(null);
