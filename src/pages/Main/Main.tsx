@@ -1,9 +1,18 @@
 import React, {useEffect, useRef, useState} from "react";
 import "./Main.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {OrangeCircle} from "../../components/OrangeCircle/OrangeCircle.tsx";
 import {ServiceCard} from "../../components/ServiceCard/ServiceCard.tsx";
+import {Review} from "./Review.tsx";
+// import {SearchField} from "./SearchField.tsx";
+import {CreatedCard} from "./CreatedCard.tsx";
+import {parseJwt} from "../../App.tsx";
+import {TaskCard} from "./TaskCard.tsx";
+
+// interface MainProps {
+//     authUserId: number
+// }
 
 export interface ReviewType {
     id: number,
@@ -14,9 +23,6 @@ export interface ReviewType {
     tasksCompleted: number,
 }
 
-interface ReviewProps {
-    review: ReviewType;
-}
 
 interface ServiceType {
     id: number,
@@ -29,6 +35,11 @@ interface ServiceType {
     description: string;
 }
 
+interface CategoryType {
+    id: number,
+    name: string,
+}
+
 interface TaskType {
     id: number,
     title: string,
@@ -36,6 +47,17 @@ interface TaskType {
     description: string;
     date: Date;
     price: number
+}
+
+interface TasksType {
+    id: number,
+    userId: number,
+    categoryId: number,
+    categoryName: string,
+    // customer: string,
+    description: string;
+    startDate: string;
+    endDate: string
 }
 
 const reviews: ReviewType[] = [
@@ -179,76 +201,10 @@ const tasks: TaskType[] = [
     },
 ]
 
-function search(e: { preventDefault: () => void; }) {
-    e.preventDefault()
-}
 
-function SearchField(): React.JSX.Element {
-    return (
-        <form className={"search-container"}>
-            <input type="text" className="search-input" placeholder="Услуга или специалист"/>
-            <div className={"search-button"}>
-                <OrangeButton text={"Найти"} onClick={search}/>
-            </div>
-        </form>
-    )
-}
 
-function Review({review}: ReviewProps): React.JSX.Element {
-    return (
-        <div className="review">
-            <div className="review-image">
-                <OrangeCircle image={review.image}/>
-            </div>
-            <div className="review-content">
-                <p className="review-text">{review.text}</p>
-                <div className="review-footer">
-                    <div className="review-header">
-                        <span className="review-name">{review.name}</span>
-                        <span className="review-rating">Рейтинг исполнителя: <span
-                            className="review-star">⭐</span> {review.rating}</span>
-                    </div>
-                    <span className="review-tasks">Выполнил {review.tasksCompleted} заданий</span>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function CreatedCard({image, title, description, master, city, age, rating}: ServiceType): React.JSX.Element {
-
-    const stars = Array(rating).fill("/star-icon.png");
-
-    return (
-        <div className="created-card">
-            <img className="image" src={image}/>
-            <div className="content">
-                <h1>{master}</h1>
-                <div className="info">
-                    <div className="text-block">
-                        <p>{age} лет <span>{city}</span></p>
-                        <p className="rating">Оценки
-                            <span className="stars">
-                                {stars.map((_, index) => (
-                                    <img key={index} src={"./star.png"} className="star-icon" alt="Star"/>
-                                ))}
-                            </span>
-                            {rating}</p>
-                    </div>
-                    <div className="card-icons">
-                        <img src="/top10.png" className="icon-10"/>
-                        <img src="/card-icon.png" className="icon"/>
-                    </div>
-                </div>
-                <h2>{title}</h2>
-                <h5>{description}</h5>
-            </div>
-        </div>
-    )
-}
 
 function FoundCard({title, customer, description, date, price}: TaskType): React.JSX.Element {
-
     const formattedDate = date.toLocaleDateString();
 
     return (
@@ -268,13 +224,66 @@ function FoundCard({title, customer, description, date, price}: TaskType): React
 
 export function Main(): React.JSX.Element {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+
 
     const [activeTab, setActiveTab] = useState<string>('create');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isChecked, setIsChecked] = useState(false);
     const [error, setError] = useState('');
+    // const [authUserId, setAuthUserId] = useState()
+    const [searchResults, setSearchResults] = useState<TasksType[]>();
+    const [showSearchResults, setShowSearchResults] = useState(false);
+    const [categories, setCategories] = useState<CategoryType[]>([])
+    const [selectedCategory, setSelectedCategory] = useState<CategoryType>()
+
+
+
+    const search = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(
+                `http://195.133.197.53:8081/tasks/category/${selectedCategory?.id}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result)
+                setSearchResults(result);
+                setShowSearchResults(true);
+            } else {
+                console.error("Ошибка при загрузке заданий:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+        }
+    };
+
+    useEffect(() => {
+        (async function () {
+            try {
+                const response = await fetch("http://195.133.197.53:8081/categories", {
+                    method: "GET",
+                    credentials: "include"
+                })
+                let result = await response.json()
+                setCategories(result)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, []);
+
+    const handleChange = (e: any) => {
+        const categoryId = parseInt(e.target.value);
+        console.log(categories)
+        const category = categories.find(cat => cat.id === categoryId);
+        setSelectedCategory(category);
+    }
 
     useEffect(() => {
         const scrollContainer = scrollRef.current;
@@ -313,32 +322,33 @@ export function Main(): React.JSX.Element {
         e.preventDefault();
         if (!email || !password) {
             setError("EmptyFieldError");
-            return
+            return;
         }
-        setError("")
+        setError("");
         try {
             const response = await fetch('http://195.133.197.53:8081/auth/sign-in', {
                 method: "POST",
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
                 credentials: "include",
-            })
+            });
 
-            console.log(response)
             if (response.ok) {
                 const responseData = await response.json();
-                console.log('Sign-in successful:', responseData);
-
                 localStorage.setItem('authToken', responseData.token);
 
-                // const decodedToken = parseJwt(responseData.token);
-                // console.log(decodedToken)
-
-                navigate('/profile')
+                const token = responseData.token;
+                const data = parseJwt(token);
+                if (data && data.entity_id) {
+                    // setAuthUserId(data.entity_id);
+                    window.location.replace(`/profile/${data.entity_id}`)
+                } else {
+                    console.error('Invalid token data:', data);
+                }
             } else {
                 console.error('Sign-in failed:', response.statusText);
             }
-        } catch(error) {
+        } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
             } else {
@@ -354,7 +364,22 @@ export function Main(): React.JSX.Element {
                 <h1 className="big-title">Мастер на час</h1>
                 <h3 className="small-title">мастер на час</h3>
                 <div className="intro-search">
-                    <SearchField/>
+                    <form className={"search-container"}>
+                        <select
+                            name="metroStation"
+                            className="search-input"
+                            value={selectedCategory ? selectedCategory.id : ''}
+                            onChange={handleChange}
+                        >
+                            <option value="" disabled hidden>Поиск заданий по категориям</option>
+                            {categories && categories.map((category) => (
+                                <option key={category.id} value={category.id}>{category.name}</option>
+                            ))}
+                        </select>
+                        <div className={"search-button"}>
+                            <OrangeButton text={"Найти"} onClick={search}/>
+                        </div>
+                    </form>
                 </div>
                 <div className='selection'>
                     <div className="switcher">
@@ -373,6 +398,16 @@ export function Main(): React.JSX.Element {
                     </div>
                 </div>
             </div>
+
+            {showSearchResults &&
+                <div className="search-result-container common">
+                    {searchResults && searchResults.map((res) =>
+                        <div>
+                            <TaskCard data={res}/>
+                        </div>
+                    )}
+                </div>
+            }
 
             <div className="mini-service-container common">
                 <div className="service-circles service-scroll">
@@ -411,7 +446,7 @@ export function Main(): React.JSX.Element {
                     <div className="subscribe-card">
                         <p>Подпишитесь на уведомления о новых заказах</p>
                         <div className="subscribe-button">
-                            <OrangeButton text={"Подписаться"} onClick={search}/>
+                            <OrangeButton text={"Подписаться"} onClick={(e) => e.preventDefault()}/>
                         </div>
                     </div>
                     {tasks && tasks.map((task) =>
@@ -427,8 +462,6 @@ export function Main(): React.JSX.Element {
                     {services.map(service => (
                         <div className="service-item" key={service.id}>
                             <OrangeCircle image={service.image} title={service.title}/>
-                            {/*<img className="review-image" src={service.image} alt={service.name} />*/}
-                            {/*<p>{service.name}</p>*/}
                         </div>
                     ))}
                 </div>
@@ -459,9 +492,9 @@ export function Main(): React.JSX.Element {
                         <h5>подходящего исполнителя и обсудите сроки выполнения</h5>
                     </div>
                 </div>
-                <div className="search">
-                    <SearchField/>
-                </div>
+                {/*<div className="search">*/}
+                {/*    <SearchField/>*/}
+                {/*</div>*/}
 
             </div>
 

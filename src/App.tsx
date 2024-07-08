@@ -5,8 +5,10 @@ import {Main} from "./pages/Main/Main.tsx";
 import {Registration} from "./pages/Registration/Registration.tsx";
 import {Profile} from "./pages/Profile/Profile.tsx";
 import {useEffect, useState} from "react";
+import {NewOrder} from "./pages/NewOrder/NewOrder.tsx";
+import {TaskPage} from "./pages/TaskPage/TaskPage.tsx";
 
-function parseJwt(token: string) {
+export function parseJwt(token: string) {
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -22,46 +24,16 @@ function parseJwt(token: string) {
 }
 
 function App() {
-    const [user, setUser] = useState(null);
-
-    // useEffect(() => {
-    //     console.log(user)
-    // }, []);
+    const [authUserId, setAuthUserId] = useState<number>(-1)
+    // const [authUserRole, setAuthUserRole] = useState<string>()
 
     useEffect(() => {
         const token = localStorage.getItem("authToken");
         if (token) {
             const data = parseJwt(token)
             console.log(data)
-
-            const fetchData = async (url: string) => {
-                try {
-                    const response = await fetch(url, { method: 'GET', credentials: 'include' });
-                    if (!response.ok) {
-                        console.log(response.statusText);
-                        return null;
-                    }
-                    return await response.json();
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                    return null;
-                }
-            };
-
-            const getUserData = async () => {
-                let userData = null;
-                if (data.role === "ROLE_MASTER") {
-                    userData = await fetchData(`http://195.133.197.53:8081/masters/info/${data.entity_id}`);
-                } else if (data.role === "ROLE_CLIENT") {
-                    userData = await fetchData(`http://195.133.197.53:8081/clients/6`);
-                }
-                if (userData) {
-                    console.log(userData)
-                    setUser(userData);
-                }
-            };
-
-            getUserData();
+            setAuthUserId(data.entity_id)
+            // setAuthUserRole(data.role)
         }
     }, []);
 
@@ -69,9 +41,11 @@ function App() {
     <>
       <Navbar/>
       <Routes>
-        <Route path={'/'} element={<Main/>}/>
+        <Route path={'/'} element={<Main />}/>
         <Route path={'/registration'} element={<Registration/>}/>
-        <Route path="/profile/:id" element={<Profile user={user}/>} />
+        <Route path="/profile/:id" element={<Profile authUserId={authUserId}/>} />
+        <Route path="/create-order" element={<NewOrder />} />
+        <Route path="/task/:id" element={<TaskPage />} />
       </Routes>
     </>
   )

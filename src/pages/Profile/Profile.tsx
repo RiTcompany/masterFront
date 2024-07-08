@@ -1,164 +1,241 @@
-import React, {useEffect, useState} from "react";
-// import {useParams} from "react-router-dom";
-import {ServiceCard} from "../../components/ServiceCard/ServiceCard.tsx";
-import("./Profile.css")
+import React, {useEffect, useRef, useState} from "react";
+import { useParams } from "react-router-dom";
+import "./Profile.css";
 
-export function Profile({user} : any): React.JSX.Element {
-    // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+interface UserType {
+    email: string,
+    id: number,
+    isAccepted: boolean,
+    lastName?: string,
+    middleName?: string,
+    phoneNumber: string,
+    photoLink?: string,
+    role: string
+    telegramTag?: string,
+    userId: number,
+    firstName: string,
+    age?: number,
+    metroStation?: string,
+    rate?: number,
+    description?: string,
+    documents?: boolean,
+}
 
-    // const params = useParams();
-    // const userId = params.id
-    // console.log(user)
+interface ProfileProps {
+    authUserId: number
+}
 
-    const [loadingProfile, setLoadingProfile] = useState(true);
-    const [activeTab, setActiveTab] = useState<string>("about")
+export function Profile({authUserId} : ProfileProps): React.JSX.Element {
+    const params = useParams();
+    const userId = params.id;
+
+    const isMounted = useRef(true);
+
+    const [isMyProfile, setIsMyProfile] = useState<boolean>(false)
+    const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
+    const [activeTab, setActiveTab] = useState<string>("tab1");
+    const [user, setUser] = useState<UserType | null>(null);
 
     useEffect(() => {
-        if (user) {
-            setLoadingProfile(false);
+        if (!isMounted.current) {
+            return;
         }
-    }, [user]);
+
+        const fetchProfile = async () => {
+            try {
+                const authToken = localStorage.getItem("authToken");
+                if (!authToken) {
+                    throw new Error("Auth token not found in localStorage");
+                }
+
+                console.log(`Fetching profile for userId: ${userId} with authUserId: ${authUserId}`);
+
+                const response = await fetch(`http://195.133.197.53:8081/profiles/${userId}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+                    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+                }
+
+                const userData = await response.json();
+                console.log('Fetched user:', userData);
+
+                if (!userData.userId) {
+                    console.error('Fetched user does not have a userId:', userData);
+                    throw new Error('Fetched user does not have a userId');
+                }
+
+                setUser(userData);
+                setIsMyProfile(+userData.userId === +authUserId);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoadingProfile(false);
+            }
+        };
+
+        fetchProfile();
+    }, [userId, authUserId]);
+
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
     };
 
-    // const getUserData = async () => {
-
-        // let userData = null;
-        // if (data.role === "ROLE_MASTER") {
-        //     userData = await fetchData(`http://195.133.197.53:8081/masters/info/${data.entity_id}`);
-        // } else if (data.role === "ROLE_CLIENT") {
-        //     userData = await fetchData(`http://195.133.197.53:8081/clients/6`);
-        // }
-        // if (userData) {
-        //     console.log(userData)
-        //     setUser(userData);
-        // }
-    // };
-
     if (loadingProfile) {
         return <div>Загрузка...</div>;
     }
 
-    if (!user || !user.firstName) {
+    if (!user || !user.role) {
+        console.log('User state:', user);
         return <p>Вы не авторизованы</p>;
     }
 
+    console.log('authUserId:', authUserId);
+    console.log('userId:', user.userId);
+    console.log('isMyProfile:', isMyProfile);
 
-    // const token = localStorage.getItem('authToken');
     return (
         <div className="common">
-            {user ? (
-                <div>
-                <div className="info-container">
-                    <div className="profile-left">
-                        <h1>Здравствуйте, {user.firstName}!</h1>
-                        <div className="base-info">
-                            <div className="profile-photo">
-                                <img alt="avatar" src="/default-avatar.jpg"/>
-                                <button className="add-photo-button">добавить фото</button>
+            {/*{user.role === "ROLE_MASTER" && (*/}
+                <>
+                    <div className="info-container">
+                        <div className="profile-left">
+                            {isMyProfile ? (
+                                <h1>Здравствуйте, {user.firstName}!</h1>
+                            ) : (
+                                <h1>{user.firstName} {user.middleName} {user.lastName}</h1>
+                            )}
+                            {user.role === "ROLE_MASTER" &&
+                            <div className="base-info">
+                                <div className="profile-photo">
+                                    <img alt="avatar" src="/default-avatar.jpg"/>
+                                    <button className="add-photo-button">добавить фото</button>
+                                </div>
+                                <div>
+                                    {user.age !== undefined && user.age > 0 && <p>Возраст: {user.age}</p>}
+                                    <p>Метро: {user.metroStation}</p>
+                                    <p>Рейтинг: {user.rate}</p>
+                                </div>
                             </div>
-                            <div>
-                                { user.age > 0 && <p>Возраст: {user.age}</p> }
-                                <p>Метро: {user.metroStation}</p>
-                                <p>Рейтинг: {user.rate}</p>
+                            }
+                            <div className="profile-select">
+                                {user.role === "ROLE_MASTER" && (
+                                    <>
+                                        <button className={activeTab === "tab1" ? "active" : ""}
+                                                onClick={() => handleTabClick("tab1")}>Обо мне</button>
+                                        <button className={activeTab === "tab2" ? "active" : ""}
+                                                onClick={() => handleTabClick("tab2")}>Заказы</button>
+                                    </>
+                                )}
                             </div>
-                        </div>
-                        <div className="profile-select">
-                            <button className={activeTab === "about" ? "active" : ""}
-                                onClick={() => handleTabClick("about")}>Обо мне</button>
-                            <button className={activeTab === "orders" ? "active" : ""}
-                                onClick={() => handleTabClick("orders")}>Заказы</button>
-                            <button className={activeTab === "portfolio" ? "active" : ""}
-                                onClick={() => handleTabClick("portfolio")}>Портфолио</button>
-                        </div>
-                        <hr/>
 
-                        {
-                            activeTab === "about" &&
-                            <div className="profile-about">
-                                <h3>Немного о себе</h3>
-                                <p>{user.description}</p>
-                                <h3>Виды выполняемых работ</h3>
-                                <h4>Демонтажные работы</h4>
-                                <h4>Демонтажные работы</h4>
-                                <h4>Демонтажные работы</h4>
-                            </div>
-                        }
-                        {
-                            activeTab === "orders" &&
-                            <div>
-                                <h2>Выполненные</h2>
-                                <h2>В процессе</h2>
-                            </div>
-                        }
-                        {
-                            activeTab === "portfolio" &&
-                            <div className={"profile-portfolio"}>
-                                <ServiceCard image={"/intro-background.png"} description={"kerklkelk"}/>
-                                <ServiceCard image={"/intro-background.png"} description={"kerklkelk"}/>
-                                <ServiceCard image={"/intro-background.png"} description={"kerklkelk"}/>
-                                <ServiceCard image={"/intro-background.png"} description={"kerklkelk"}/>
-                            </div>
-                        }
-                    </div>
-                    <div className="profile-right">
-                        <h2>Исполнитель</h2>
-                        <p>Чтобы повысить уровень лояльности, подтвердите ваши  данные:  паспорт, контактный телефон,
-                            и электронную почту</p>
-                        <div className="contacts">
-                            <img src="/confirm-documents-icon.png" alt="documents-icon"/>
-                            <div>
-                                <strong>Документы</strong>
-                                {
-                                    user.documents[0] ? <p style={{"color": "green"}}>Подтверждены</p> : <p style={{"color": "red"}}>Не подтверждены</p>
-                                }
-                            </div>
+                            {user.role === "ROLE_CLIENT" &&
+                                <div>
+                                    <h2 className="orders-title">Заказы</h2>
+                                    <div className="profile-select">
+                                        <button className={activeTab === "tab1" ? "active" : ""}
+                                                onClick={() => handleTabClick("tab1")}>Активные</button>
+                                        <button className={activeTab === "tab2" ? "active" : ""}
+                                                onClick={() => handleTabClick("tab2")}>Выполненные</button>
+                                    </div>
+                                </div>
+                            }
+                            <hr/>
+
+                            {user.role === "ROLE_MASTER" && activeTab === "tab1" && (
+                                <div className="profile-about">
+                                    <h3>Немного о себе</h3>
+                                    <p>{user.description}</p>
+                                    <h3>Виды выполняемых работ</h3>
+                                    <h4>Демонтажные работы</h4>
+                                    <h4>Демонтажные работы</h4>
+                                    <h4>Демонтажные работы</h4>
+                                </div>
+                            )}
+                            {user.role === "ROLE_MASTER" && activeTab === "tab2" && (
+                                <div>
+                                    <h2>Выполненные</h2>
+                                    <h2>В процессе</h2>
+                                </div>
+                            )}
                         </div>
-                        <div className="contacts">
-                            <img src="/phone-icon.png" alt="phone-icon"/>
-                            <div className="contact-text">
-                                <strong>Телефон</strong>
-                                <p>Скрыт</p>
+                        <div className="profile-right">
+                            {user.role === "ROLE_MASTER" && <h2>Исполнитель</h2>}
+                            {user.role === "ROLE_CLIENT" && <h2>Заказчик</h2>}
+                            {user.role === "ROLE_MASTER" && <p>Чтобы повысить уровень лояльности, подтвердите ваши
+                                данные: паспорт, контактный телефон, и электронную почту</p>}
+                            {user.role === "ROLE_MASTER" &&
+                                <div className="contacts">
+                                    <img src="/confirm-documents-icon.png" alt="documents-icon"/>
+                                    <div>
+                                        <strong>Документы</strong>
+                                        {user.documents ? (
+                                            <p style={{color: "green"}}>Подтверждены</p>
+                                        ) : (
+                                            <p style={{color: "red"}}>Не подтверждены</p>
+                                        )}
+                                    </div>
+                                </div>
+                            }
+                            <div className="contacts">
+                                <img src="/phone-icon.png" alt="phone-icon"/>
+                                <div className="contact-text">
+                                    <strong>Телефон</strong>
+                                    <p>Скрыт</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="contacts">
-                            <img src="/email-icon.png" alt="email-icon"/>
-                            <div className="contact-text">
-                                <strong>Email</strong>
-                                <p>Скрыт</p>
+                            <div className="contacts">
+                                <img src="/email-icon.png" alt="email-icon"/>
+                                <div className="contact-text">
+                                    <strong>Email</strong>
+                                    <p>Скрыт</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="contacts">
-                            <img src="/tg-icon.png" alt="tg-icon"/>
-                            <div className="contact-text">
-                                <strong>Телеграм</strong>
-                                <p>Скрыт</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className={"profile-bottom"}>
-                    <h2>Ваши отзывы</h2>
-                    <div className="profile-review-card">
-                        <p className="title">Перевезти вещи на новую квартиру</p>
-                        <p className="price">Стоимость работ: 2000₽</p>
-                        <p className="text">Супер, рекомендую! Очень быстро и комфортно переехали.</p>
-                        <div className="master">
-                            <img src={"/about-background.jpg"} alt="master-photo"/>
-                            <div className="master-info">
-                                <p className="name">Сергей</p>
-                                <p className="rating">Рейтинг исполнителя: 5</p>
-                                <p className="tasks">Выполнил 306 заданий</p>
+                            <div className="contacts">
+                                <img src="/tg-icon.png" alt="tg-icon"/>
+                                <div className="contact-text">
+                                    <strong>Телеграм</strong>
+                                    <p>Скрыт</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                </div>
-            ) : (
-                <p>вы не авторизованы!</p>
-            )}
+                    {user.role === "ROLE_MASTER" &&
+                    <div className="profile-bottom">
+                        <h2>Ваши отзывы</h2>
+                        <div className="profile-review-card">
+                            <p className="title">Перевезти вещи на новую квартиру</p>
+                            <p className="price">Стоимость работ: 2000₽</p>
+                            <p className="text">Супер, рекомендую! Очень быстро и комфортно переехали.</p>
+                            <div className="master">
+                                <img src="/about-background.jpg" alt="master-photo"/>
+                                <div className="master-info">
+                                    <p className="name">Сергей</p>
+                                    <p className="rating">Рейтинг исполнителя: 5</p>
+                                    <p className="tasks">Выполнил 306 заданий</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </>
+            {/*)}*/}
+            {/*{user.role === "ROLE_CLIENT" && (*/}
+            {/*    <>*/}
+            {/*        <div className="info-container">*/}
+            {/*            <div className="profile-left">*/}
+            {/*                <h1>Здравствуйте, {user.firstName}!</h1>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </>*/}
+            {/*)}*/}
         </div>
-    )
+    );
 }

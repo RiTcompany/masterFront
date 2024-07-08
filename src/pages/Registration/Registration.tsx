@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 import "./Registration.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 
@@ -18,11 +18,17 @@ interface DataType {
     documents?: DocumentType[],
     description: string,
     metroStation: string,
-    password: string
+    password: string,
+    categories?: string[]
+}
+
+interface CategoryType {
+    id: number,
+    name: string
 }
 
 export function Registration(): React.JSX.Element {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [step, setStep] = useState<number>(1);
     const [error, setError] = useState<string>("")
@@ -38,23 +44,20 @@ export function Registration(): React.JSX.Element {
         metroStation: '',
         documents: [],
         description: '',
+        categories: []
     });
     const [agreement, setAgreement] = useState<boolean>(false)
 
-    const [selectedServices, setSelectedServices] = useState<string[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const [repeatPassword, setRepeatPassword] = useState<string>("")
     const [metro, setMetro] = useState<string[]>([])
+    const [categories, setCategories] = useState<CategoryType[]>([])
 
     const photoInputRef = useRef<HTMLInputElement>(null);
     const documentInputRef = useRef<HTMLInputElement>(null);
 
     const buttonStyle = (step === 1 || step > 5) ? {width: "100vw"} : {};
-
-    const services: string[] = [
-        'Ремонтные работы', 'Штукатурные работы', 'Малярные работы', 'Плотник', 'Плиточник',
-        'Электрик', 'Сантехник', 'Разнорабочий'
-    ];
 
     useEffect(() => {
         (async function () {
@@ -72,8 +75,25 @@ export function Registration(): React.JSX.Element {
     }, []);
 
     useEffect(() => {
-        console.log(data)
-    }, [data])
+        (async function () {
+            try {
+                const response = await fetch("http://195.133.197.53:8081/categories", {
+                    method: "GET",
+                    credentials: "include"
+                })
+                let result = await response.json()
+                // console.log(response)
+                setCategories(result)
+                console.log(categories)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, []);
+
+    // useEffect(() => {
+    //     console.log(data)
+    // }, [data])
 
     const isPasswordValid = (password: string): boolean => {
         const hasUpperCase = /[A-Z]/.test(password);
@@ -127,7 +147,7 @@ export function Registration(): React.JSX.Element {
                 const decodedToken = parseJwt(responseData.token);
                 console.log(decodedToken)
 
-                navigate(`/profile/${decodedToken.id}`)
+                window.location.replace(`/profile/${decodedToken.id}`)
             } else {
                 console.error('Sign-up failed:', response.statusText);
             }
@@ -163,6 +183,13 @@ export function Registration(): React.JSX.Element {
                     setStep(prevState => prevState + 5)
                 }
             }
+        } else if (step === 4) {
+            if (!selectedCategories[0]) {
+                setError("EmptyCategories")
+            } else {
+                setError("");
+                setStep(prevState => prevState + 1)
+            }
         } else if (step === 5) {
             if (!data.metroStation) {
                 setError("EmptyMetroError")
@@ -193,14 +220,14 @@ export function Registration(): React.JSX.Element {
         }
     }
 
-    const handleServiceClick = (service: string) => {
-        if (!selectedServices.includes(service)) {
-            setSelectedServices([...selectedServices, service]);
+    const handleServiceClick = (categoryName: string) => {
+        if (!selectedCategories.includes(categoryName)) {
+            setSelectedCategories([...selectedCategories, categoryName]);
         }
     };
 
-    const handleServiceRemove = (service: string) => {
-        setSelectedServices(selectedServices.filter(s => s !== service));
+    const handleServiceRemove = (categoryName: string) => {
+        setSelectedCategories(selectedCategories.filter(s => s !== categoryName));
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -359,30 +386,35 @@ export function Registration(): React.JSX.Element {
                     <h1>Чем вы занимаетесь?</h1>
                     <label>Укажите какого вида услуги вы оказываете</label>
                     <div className="input-container">
-                        {selectedServices.map(service => (
-                            <span key={service} className="selected-service">
-                                {service}
-                                <button type="button" onClick={() => handleServiceRemove(service)}>x</button>
+                        {selectedCategories.map(category => (
+                            <span key={category} className="selected-service">
+                                {category}
+                                <button type="button" onClick={() => handleServiceRemove(category)}>x</button>
                             </span>
                         ))}
                     </div>
                     <div style={{margin: '10px 0'}}>
-                        {services.map(service => (
+                        {categories && categories.map(category => (
                             <button
                                 type="button"
-                                key={service}
-                                onClick={() => handleServiceClick(service)}
+                                key={category.name}
+                                onClick={() => handleServiceClick(category.name)}
                                 style={{
                                     margin: '5px',
                                     padding: '10px',
                                     border: '1px solid #ccc',
                                     borderRadius: '5px',
-                                    background: selectedServices.includes(service) ? '#ddd' : '#fff'
+                                    background: selectedCategories.includes(category.name) ? '#ddd' : '#fff'
                                 }}
                             >
-                                {service}
+                                {category.name}
                             </button>
                         ))}
+                    </div>
+                    <div className="error-container">
+                        {error === "EmptyCategories" &&
+                            <p className="error-message">Выберите, пожалуйста, хотя бы одну категорию услуг</p>
+                        }
                     </div>
                 </div>
             }

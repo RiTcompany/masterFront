@@ -36,7 +36,7 @@
 
 .profile-select {
     display: flex;
-    justify-content: space-between;
+    gap: 30px;
 }
 
 .profile-select button {
@@ -52,6 +52,10 @@
 
 .profile-left hr {
     margin: 10px 0 30px;
+}
+
+.orders-title {
+    margin: 30px 0;
 }
 
 .profile-left .profile-about h3 {
@@ -167,4 +171,41 @@
 
 .profile-review-card .name {
     margin-bottom: 15px;
+}
+
+@media (max-width: 656px) {
+    .info-container {
+        flex-direction: column;
+        padding: 3% 20px;
+    }
+
+    .profile-left {
+        padding: 0;
+    }
+
+    .profile-right {
+        border: none;
+        gap: 30px;
+        margin-top: 30px;
+        padding-left: 0;
+    }
+
+    .add-photo-button {
+        width: 170px;
+    }
+
+    .profile-left {
+        width: 90vw;
+    }
+
+    .profile-left img {
+        width: 170px;
+    }
+
+    .profile-bottom {
+        padding: 0 20px;
+        /*margin-bottom: 30px;*/
+    }
+
+
 }
