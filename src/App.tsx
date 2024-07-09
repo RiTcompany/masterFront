@@ -43,7 +43,7 @@ function App() {
       <Routes>
         <Route path={'/'} element={<Main />}/>
         <Route path={'/registration'} element={<Registration/>}/>
-        <Route path="/profile/:id" element={<Profile authUserId={authUserId}/>} />
+        <Route path="/profiles/:id" element={<Profile authUserId={authUserId}/>} />
         <Route path="/create-order" element={<NewOrder />} />
         <Route path="/task/:id" element={<TaskPage />} />
       </Routes>

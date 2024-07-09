@@ -338,7 +338,7 @@ export function Main(): React.JSX.Element {
                 const data = parseJwt(token);
                 if (data && data.id) {
                     // setAuthUserId(data.entity_id);
-                    window.location.replace(`/profile/${data.id}`)
+                    window.location.replace(`/profiles/${data.id}`)
                 } else {
                     console.error('Invalid token data:', data);
                 }

@@ -50,7 +50,7 @@ export function Navbar(): React.JSX.Element {
                         <Link to={"/create-order"}><p>Создать заказ</p></Link>}
                     {user && user.role === "ROLE_MASTER" && <Link to={"/"}>Найти задание</Link>}
                     {user &&
-                        <Link to={`/profile/${user.id}`}><p>Мой профиль</p></Link>
+                        <Link to={`/profiles/${user.id}`}><p>Мой профиль</p></Link>
                     }
                 </div>
                 <div className={"login-button"}>
