@@ -338,7 +338,7 @@ export function Main(): React.JSX.Element {
                 const token = responseData.token;
                 const data = parseJwt(token);
                 if (data && data.id && localStorage.getItem('authToken')) {
-                    window.location.replace(`/profiles/${data.id}`)
+                    window.location.replace(`/profile/${data.id}`)
                 } else {
                     console.error('Invalid token data:', data);
                 }

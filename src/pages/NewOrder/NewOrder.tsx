@@ -101,7 +101,7 @@ export function NewOrder() {
         if (step === 4) {
             (async () => {
                 await fetchTask();
-                window.location.replace(`/profiles/${data.userId}`);
+                window.location.replace(`/profile/${data.userId}`);
             })();
         }
         // setStep(prevState => prevState + 1)
