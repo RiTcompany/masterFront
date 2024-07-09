@@ -11,7 +11,7 @@ interface TaskType {
     userId: number,
     categoryId: number,
     categoryName: string,
-    // customer: string,
+    userName: string,
     description: string;
     startDate: string;
     endDate: string
@@ -38,6 +38,7 @@ export function TaskPage(): React.JSX.Element {
     const [task, setTask] = useState<TaskType | null>(null);
     const [user, setUser] = useState<UserType | null>(null);
     const [response, setResponse] = useState<ResponseType>({userId: -1, taskId: -1, price: 0, dateStart: null, dateEnd: null})
+    const [masters, setMasters] = useState<ResponseType[]>([])
 
     const minDate = new Date();
 
@@ -67,7 +68,6 @@ export function TaskPage(): React.JSX.Element {
                     }
                 })
                 let result = await res.json()
-                console.log(result)
                 setTask(result)
             } catch (error) {
                 console.log(error)
@@ -78,15 +78,14 @@ export function TaskPage(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const res = await fetch(`http://localhost:8081/clients/bids/task/${params.id}`, {
+                const res = await fetch(`http://195.133.197.53:8081/clients/bids/task/${params.id}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
                         Authorization: `Bearer ${authToken}`,
                     }
                 })
-                let result = await res.json()
-                console.log(result)
+                setMasters(await res.json())
             } catch (error) {
                 console.log(error)
             }
@@ -109,14 +108,14 @@ export function TaskPage(): React.JSX.Element {
         console.log(response)
     });
 
-    const handlePrice = (e: any) => {
-        setResponse({...response, [e.target.name]: e.target.value})
+    const handlePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setResponse({...response, [e.target.name]: parseInt(e.target.value, 10)});
     }
 
     const handleResponse = async (e: any) => {
         e.preventDefault()
         try {
-            await fetch("http://195.133.197.53:8081/masters/bid", {
+            const res = await fetch("http://195.133.197.53:8081/masters/bid", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -125,24 +124,36 @@ export function TaskPage(): React.JSX.Element {
                 },
                 body: JSON.stringify(response),
             })
+
+            console.log(await res.json())
         } catch (error) {
             console.log(error)
         }
     }
 
+    // const handleHire = async (id) => {
+    //     const res = fetch(`http://localhost:8081/clients/bid/${id}`, {
+    //         method: "DELETE",
+    //         credentials: "include",
+    //         headers: {
+    //             Authorization: `Bearer ${authToken}`,
+    //         },
+    //     })
+    // }
+
     return (
         <div className="task-container common">
-            {<button onClick={() => navigate(-1)}>bach</button>}
-            {task &&
-                <div>
+            {<button onClick={() => navigate(-1)} className={"back-button"}>Назад</button>}
+            {task && (
+                <div className="task-details">
                     <h1>{task.categoryName}</h1>
                     <h3>{task.description}</h3>
+                    <h3>{task.userName}</h3>
                     <p>Начать {formatDate(task.startDate)}</p>
                     <p>Закончить {formatDate(task.endDate)}</p>
                 </div>
-            }
-            {
-                user && user.role === "ROLE_MASTER" &&
+            )}
+            {user && user.role === "ROLE_MASTER" && (
                     <form className="response-form">
                         <label>Введите примерную стоимость ваших работ в рублях</label>
                         <input className="input-container" placeholder="Сумма" type="number" onChange={handlePrice} value={response.price} name="price"/>
@@ -176,15 +187,19 @@ export function TaskPage(): React.JSX.Element {
                             <OrangeButton text={"Откликнуться"} onClick={handleResponse}/>
                         </div>
                     </form>
-            }
-            {
-                user && user.role === "ROLE_CLIENT" && user.id === task?.userId &&
-                <div>
+            )}
+            {user && user.role === "ROLE_CLIENT" && user.id === task?.userId && (
+                <div className="responses">
                     <h1>Отклики</h1>
-                    <p>Пока что отклиов нет</p>
-                </div>
 
-            }
+                    {!masters && <p>Пока что откликов нет</p>}
+                    {masters && masters.map((master) => (
+                        <div key={master.userId}>
+
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }

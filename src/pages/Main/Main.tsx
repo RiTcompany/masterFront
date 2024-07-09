@@ -8,7 +8,7 @@ import {Review} from "./Review.tsx";
 // import {SearchField} from "./SearchField.tsx";
 import {CreatedCard} from "./CreatedCard.tsx";
 import {parseJwt} from "../../App.tsx";
-import {TaskCard} from "./TaskCard.tsx";
+import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 
 // interface MainProps {
 //     authUserId: number
@@ -54,7 +54,7 @@ interface TasksType {
     userId: number,
     categoryId: number,
     categoryName: string,
-    // customer: string,
+    userName: string,
     description: string;
     startDate: string;
     endDate: string
@@ -399,10 +399,15 @@ export function Main(): React.JSX.Element {
             {showSearchResults &&
                 <div className="search-result-container common">
                     {searchResults && searchResults.map((res) =>
-                        <div>
-                            <TaskCard data={res}/>
+                        <div key={res.id}>
+                            {/*<Link to={`/task/${res.id}`}>*/}
+                                <TaskCard data={res}/>
+                            {/*</Link>*/}
                         </div>
                     )}
+                    {searchResults && searchResults[0] === undefined &&
+                        <div>В этой категории пока что заказов нет.</div>
+                    }
                 </div>
             }
 

@@ -1,10 +1,12 @@
 import {useNavigate} from "react-router-dom";
+import ("./TaskCard.css")
 
 interface TaskType {
     id: number,
     userId: number,
     categoryId: number,
     categoryName: string,
+    userName: string,
     // customer: string,
     description: string;
     startDate: string;
@@ -24,12 +26,13 @@ export function TaskCard({data}: TaskCardProps): React.JSX.Element {
     };
 
     const handleClick = () => {
-        navigate("/task/" + data.categoryId);
+        navigate("/task/" + data.id);
     }
 
     return (
         <div className="task-card" onClick={handleClick}>
             <h3>{data.categoryName}</h3>
+            <h3>{data.userName}</h3>
             <div className="text">
                 <p>{data.description}</p>
                 <span>Начать {formatDate(data.startDate)}</span>

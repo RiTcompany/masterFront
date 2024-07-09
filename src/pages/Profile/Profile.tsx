@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import "./Profile.css";
+import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 
 interface UserType {
     email: string,
@@ -21,6 +22,17 @@ interface UserType {
     documents?: boolean,
 }
 
+interface TaskType {
+    id: number,
+    userId: number,
+    categoryId: number,
+    categoryName: string,
+    userName: string,
+    description: string;
+    startDate: string;
+    endDate: string
+}
+
 interface ProfileProps {
     authUserId: number
 }
@@ -28,6 +40,7 @@ interface ProfileProps {
 export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const params = useParams();
     const userId = params.id;
+    const authToken = localStorage.getItem("authToken");
 
     const isMounted = useRef(true);
 
@@ -35,6 +48,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
     const [activeTab, setActiveTab] = useState<string>("tab1");
     const [user, setUser] = useState<UserType | null>(null);
+    const [tasks, setTasks] = useState<TaskType[]>([]);
 
     useEffect(() => {
         if (!isMounted.current) {
@@ -43,7 +57,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
 
         const fetchProfile = async () => {
             try {
-                const authToken = localStorage.getItem("authToken");
                 if (!authToken) {
                     throw new Error("Auth token not found in localStorage");
                 }
@@ -81,6 +94,25 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
 
         fetchProfile();
     }, [userId, authUserId]);
+
+    useEffect(() => {
+        (
+           async function ()  {
+               try {
+                   const response = await fetch(`http://195.133.197.53:8081/tasks/user/${userId}`, {
+                       credentials:"include",
+                       method: "GET",
+                       headers: {
+                           Authorization: `Bearer ${authToken}`,
+                       }}
+                   )
+                   setTasks(await response.json())
+               } catch (error) {
+                   console.log(error)
+               }
+           }
+        )()
+    }, [userId]);
 
 
     const handleTabClick = (tab: string) => {
@@ -147,6 +179,15 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                 </div>
                             }
                             <hr/>
+                            {user.role === "ROLE_CLIENT" && activeTab === "tab1" &&
+                                <div>
+                                    {tasks && tasks.map((task) =>
+                                        <div key={task.id}>
+                                            <TaskCard data={task}/>
+                                        </div>
+                                    )}
+                                </div>
+                            }
 
                             {user.role === "ROLE_MASTER" && activeTab === "tab1" && (
                                 <div className="profile-about">

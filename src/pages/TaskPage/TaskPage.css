@@ -8,6 +8,13 @@
     gap: 30px
 }
 
+@media (max-width: 767px) {
+    .response-form div {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 .response-form input {
     width: 200px;
 }
@@ -16,3 +23,67 @@
     width: 200px;
     height: 40px
 }
+
+.task-container {
+    background-color: #FCF6F0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-container .back-button {
+    color: gray;
+    width: 200px;
+    border: 0.5px solid gray;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.task-container .back-button:hover {
+    background-color: rgba(95, 96, 108, 0.24);
+}
+
+.task-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.task-details h1 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.task-details h3 {
+    margin: 0 0 8px;
+    color: #666;
+}
+
+.task-details p {
+    margin: 0 0 8px;
+    color: #333;
+}
+
+.responses {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.responses h1 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.responses p {
+    margin: 0;
+    color: #666;
+}
+

@@ -89,16 +89,6 @@ body > .common {
     align-items: center;
 }
 
-.task-card {
-    background-color: white;
-    width: 300px;
-    padding: 20px 90px 20px 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
 .service-container {
     height: 536px;
     background: linear-gradient(#EEE2D5, #F7AD6A);
