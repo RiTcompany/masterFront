@@ -61,7 +61,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     throw new Error("Auth token not found in localStorage");
                 }
 
-
                 const response = await fetch(`http://195.133.197.53:8081/profiles/${userId}`, {
                     method: "GET",
                     headers: {
@@ -93,7 +92,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         };
 
         fetchProfile();
-    }, [userId, authUserId]);
+    }, [userId, authUserId, authToken]);
 
     useEffect(() => {
         (

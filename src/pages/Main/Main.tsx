@@ -221,6 +221,7 @@ function FoundCard({title, customer, description, date, price}: TaskType): React
 
 export function Main(): React.JSX.Element {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const token = localStorage.getItem("authToken");
     // const navigate = useNavigate();
 
 
@@ -336,8 +337,7 @@ export function Main(): React.JSX.Element {
 
                 const token = responseData.token;
                 const data = parseJwt(token);
-                if (data && data.id) {
-                    // setAuthUserId(data.entity_id);
+                if (data && data.id && localStorage.getItem('authToken')) {
                     window.location.replace(`/profiles/${data.id}`)
                 } else {
                     console.error('Invalid token data:', data);
@@ -506,7 +506,7 @@ export function Main(): React.JSX.Element {
                 ))}
             </div>
 
-            <div className="login-container common" id="login">
+            {!token && <div className="login-container common" id="login">
                 <div className="left"></div>
                 <div className="right">
                     <img alt="logo" src='/black-logo.png'/>
@@ -554,7 +554,7 @@ export function Main(): React.JSX.Element {
                     {/*    <p>© Perfect Login 2021</p>*/}
                     {/*</div>*/}
                 </div>
-            </div>
+            </div>}
         </>
     )
 }
