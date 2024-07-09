@@ -55,7 +55,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             return;
         }
 
-        const fetchProfile = async () => {
+        (async function() {
             try {
                 if (!authToken) {
                     throw new Error("Auth token not found in localStorage");
@@ -89,9 +89,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             } finally {
                 setLoadingProfile(false);
             }
-        };
-
-        fetchProfile();
+        })()
     }, [userId, authUserId, authToken]);
 
     useEffect(() => {
