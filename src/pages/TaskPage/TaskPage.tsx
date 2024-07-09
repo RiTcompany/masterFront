@@ -195,7 +195,7 @@ export function TaskPage(): React.JSX.Element {
                     {!masters && <p>Пока что откликов нет</p>}
                     {masters && masters.map((master) => (
                         <div key={master.userId}>
-
+                            {/*<master.*/}
                         </div>
                     ))}
                 </div>
