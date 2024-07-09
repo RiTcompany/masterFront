@@ -17,6 +17,13 @@ interface TaskType {
     endDate: string
 }
 
+interface MasterType {
+    userId: number,
+    userName: string,
+    startDate: string;
+    endDate: string
+}
+
 interface UserType {
     id: number,
     role: string
@@ -38,7 +45,7 @@ export function TaskPage(): React.JSX.Element {
     const [task, setTask] = useState<TaskType | null>(null);
     const [user, setUser] = useState<UserType | null>(null);
     const [response, setResponse] = useState<ResponseType>({userId: -1, taskId: -1, price: 0, dateStart: null, dateEnd: null})
-    const [masters, setMasters] = useState<ResponseType[]>([])
+    const [masters, setMasters] = useState<MasterType[]>([])
 
     const minDate = new Date();
 
@@ -85,6 +92,7 @@ export function TaskPage(): React.JSX.Element {
                         Authorization: `Bearer ${authToken}`,
                     }
                 })
+                // console.log(await res.json())
                 setMasters(await res.json())
             } catch (error) {
                 console.log(error)
@@ -193,11 +201,11 @@ export function TaskPage(): React.JSX.Element {
                     <h1>Отклики</h1>
 
                     {!masters && <p>Пока что откликов нет</p>}
-                    {masters && masters.map((master) => (
-                        <div key={master.userId}>
-                            {/*<master.*/}
-                        </div>
-                    ))}
+                    {/*{masters && masters.map((master) => (*/}
+                    {/*    <div key={master.id}>*/}
+                    {/*        {master.master.firstName}*/}
+                    {/*    </div>*/}
+                    {/*))}*/}
                 </div>
             )}
         </div>
