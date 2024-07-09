@@ -63,9 +63,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
 
                 const response = await fetch(`http://195.133.197.53:8081/profile/${userId}`, {
                     method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${authToken}`,
-                    }
                 });
 
                 if (!response.ok) {
