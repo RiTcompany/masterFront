@@ -1,5 +1,5 @@
 import './App.css'
-import {HashRouter, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import {Navbar} from "./components/Navbar/Navbar.tsx";
 import {Main} from "./pages/Main/Main.tsx";
 import {Registration} from "./pages/Registration/Registration.tsx";
@@ -40,7 +40,7 @@ function App() {
   return (
     <>
       <Navbar/>
-        <HashRouter basename="/">
+
             <Routes>
                 <Route path={'/'} element={<Main />}/>
                 <Route path={'/registration'} element={<Registration/>}/>
@@ -48,7 +48,6 @@ function App() {
                 <Route path="/create-order" element={<NewOrder />} />
                 <Route path="/task/:id" element={<TaskPage />} />
             </Routes>
-        </HashRouter>
     </>
   )
 }
