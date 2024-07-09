@@ -47,6 +47,7 @@ export function Registration(): React.JSX.Element {
         categories: []
     });
     const [agreement, setAgreement] = useState<boolean>(false)
+    const [pin, setPin] = useState<string>('');
 
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
@@ -119,6 +120,29 @@ export function Registration(): React.JSX.Element {
         }
     }
 
+    const handleEmail = async () => {
+        console.log(data.email)
+        try {
+            await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}`, {
+                credentials: "include",
+                method: "POST",
+        });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleConfirm = async () => {
+        try {
+            await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
+                credentials: "include",
+                method: "DELETE",
+            });
+        } catch (error) {
+            console.error('Ошибка при проверке PIN кода:', error);
+        }
+    };
+
     const handleSubmit = async () => {
         setError("");
         if (data.password !== repeatPassword) {
@@ -156,7 +180,7 @@ export function Registration(): React.JSX.Element {
         }
     }
 
-    const next = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const next = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (step === 1) {
             if (!data.role) {
@@ -170,9 +194,13 @@ export function Registration(): React.JSX.Element {
                 setError("EmptyNameError")
             } else {
                 setError("")
+                await handleEmail()
                 setStep(prevState => prevState + 1)
             }
         } else if (step === 3) {
+            await handleConfirm()
+            setStep(prevState => prevState + 1)
+        } else if (step === 4) {
             if (!data.phoneNumber) {
                 setError("EmptyPhoneError");
             } else {
@@ -183,13 +211,6 @@ export function Registration(): React.JSX.Element {
                     setStep(prevState => prevState + 5)
                 }
             }
-        } else if (step === 4) {
-            if (!selectedCategories[0]) {
-                setError("EmptyCategories")
-            } else {
-                setError("");
-                setStep(prevState => prevState + 1)
-            }
         } else if (step === 5) {
             if (!data.metroStation) {
                 setError("EmptyMetroError")
@@ -198,23 +219,34 @@ export function Registration(): React.JSX.Element {
                 setStep(prevState => prevState + 1)
             }
         } else if (step === 6) {
+            if (!selectedCategories[0]) {
+                setError("EmptyCategories")
+            } else {
+                setError("");
+                setStep(prevState => prevState + 1)
+            }
+        } else if (step === 7) {
             if (!data.description) {
                 setError("EmptyDescriptionError")
             } else {
                 setError("");
                 setStep(prevState => prevState + 1)
             }
-        } else if (step === 10) {
-            handleSubmit()
+        } else if (step === 9) {
+            await handleSubmit()
         } else {
             setStep(prevState => prevState + 1)
         }
     }
 
+    useEffect(() => {
+        console.log(step)
+    });
+
     const back = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (data.role === "ROLE_CLIENT" && step === 6) {
-            setStep(prevState => prevState - 4)
+        if (data.role === "ROLE_CLIENT" && step === 9) {
+            setStep(prevState => prevState - 5)
         } else {
             setStep(prevState => prevState - 1)
         }
@@ -352,10 +384,6 @@ export function Registration(): React.JSX.Element {
                     <label htmlFor="email">Укажите вашу электронную почту</label>
                     <input name="email" value={data.email} placeholder="Ivanov@mail.ru" onChange={handleChange}/>
                     <div className="agreement">
-                        {/*<div>*/}
-                        {/*    <input className="agree-checkbox" type="checkbox"/>*/}
-                        {/*    <p>Пожалуйста укажите ваше Ф.И.О. Как в паспорте, для прохождения проверки</p>*/}
-                        {/*</div>*/}
                         <div>
                             <input name="agreement" checked={agreement} className="agree-checkbox" type="checkbox"
                                    onChange={handleAgreementChange}/>
@@ -370,6 +398,13 @@ export function Registration(): React.JSX.Element {
                 </div>
             }
             {step === 3 &&
+                <div className="steps confirm-step">
+                    <h1>Подтвердите вашу почту</h1>
+                    <label>Укажите пароль, который вы получили в письме, отправленном на вашу почту</label>
+                    <input name="pin" onChange={(e) => setPin(e.target.value)} value={pin}/>
+                </div>
+            }
+            {step === 4 &&
                 <div className="steps">
                     <h1>Укажите свой номер телефона</h1>
                     <label>Веедите номер телефона в формате +7ХХХХХХХХХХ</label>
@@ -381,7 +416,24 @@ export function Registration(): React.JSX.Element {
                     </div>
                 </div>
             }
-            {step === 4 &&
+            {step === 5 &&
+                <div className="steps">
+                    <h1>Укажите район или метро</h1>
+                    <label>Укажите удобный для вас район города или метро для оказания услуг</label>
+                    <select name="metroStation" value={data.metroStation} onChange={handleChange}>
+                        <option/>
+                        {metro && metro.map((metro) => (
+                            <option key={metro}>{metro}</option>
+                        ))}
+                    </select>
+                    <div className="error-container">
+                        {error === "EmptyMetroError" &&
+                            <p className="error-message">Выберите, пожалуйста, станцию</p>
+                        }
+                    </div>
+                </div>
+            }
+            {step === 6 &&
                 <div className="steps">
                     <h1>Чем вы занимаетесь?</h1>
                     <label>Укажите какого вида услуги вы оказываете</label>
@@ -418,25 +470,7 @@ export function Registration(): React.JSX.Element {
                     </div>
                 </div>
             }
-            {step === 5 &&
-                <div className="steps">
-                    <h1>Укажите район или метро</h1>
-                    <label>Укажите удобный для вас район города или метро для оказания услуг</label>
-                    <select name="metroStation" value={data.metroStation} onChange={handleChange}>
-                        <option/>
-                        {metro && metro.map((metro) => (
-                            <option key={metro}>{metro}</option>
-                        ))}
-                    </select>
-                    <div className="error-container">
-                        {error === "EmptyMetroError" &&
-                            <p className="error-message">Выберите, пожалуйста, станцию</p>
-                        }
-                    </div>
-                </div>
-            }
-
-            {step === 6 &&
+            {step === 7 &&
                 <div className="steps">
                     <h1>Добавьте описание для своего профиля</h1>
                     <label>Напишите все, что нужно знать заказчику</label>
@@ -448,8 +482,7 @@ export function Registration(): React.JSX.Element {
                     </div>
                 </div>
             }
-
-            {step === 7 &&
+            {step === 8 &&
                 <div className="steps">
                     <h1>Загрузите ваше фото</h1>
                     <label>Профили с фото и подтвержденными данными получают больше откликов и заказов.</label>
@@ -498,25 +531,7 @@ export function Registration(): React.JSX.Element {
                     </div>
                 </div>
             }
-
-            {step === 8 &&
-                <div className="steps done-step">
-                    <h1>Ваш профиль успешно создан</h1>
-                    <img className="register-done-image" alt="register-done-image" src="./register-done.png"/>
-                    <p>Дождитесь прохождения модерации. На вашу почту, указанную при регистрации отправлено
-                        письмо для подтверждения регистрации. </p>
-                </div>
-            }
-
             {step === 9 &&
-                <div className="steps confirm-step">
-                    <h1>Подтвердите вашу почту</h1>
-                    <label>Укажите пароль, который вы получили в письме, отправленном на вашу почту</label>
-                    <input/>
-                </div>
-            }
-
-            {step === 10 &&
                 <div className="steps password-step">
                     <h1>Установите новый пароль для входа </h1>
                     <label>Придумайте пароль</label>
@@ -529,30 +544,32 @@ export function Registration(): React.JSX.Element {
                     </div>
                 </div>
             }
+            {step === 10 &&
+                <div className="steps done-step">
+                    <h1>Ваш профиль успешно создан</h1>
+                    <img className="register-done-image" alt="register-done-image" src="./register-done.png"/>
+                    <p>Дождитесь прохождения модерации. На вашу почту, указанную при регистрации отправлено
+                        письмо для подтверждения регистрации. </p>
+                </div>
+            }
 
             <div className="buttons">
                 {
-                    step > 1 && step <= 6 &&
+                    step > 1 && step <= 9 &&
                     <div className="back-button">
                         <OrangeButton text={"Назад"} onClick={back}/>
                     </div>
                 }
 
-                {step <= 6 &&
+                {step <= 9 &&
                     <div className="next-button" style={buttonStyle}>
                         <OrangeButton text={"Далее"} onClick={next}/>
                     </div>
                 }
 
-                {step === 7 &&
+                {step === 10 &&
                     <div className="next-button" style={buttonStyle}>
                         <OrangeButton text={"Завершить регистрацию"} onClick={next}/>
-                    </div>
-                }
-
-                {step > 7 &&
-                    <div className="next-button" style={buttonStyle}>
-                        <OrangeButton text={"Готово"} onClick={next}/>
                     </div>
                 }
             </div>

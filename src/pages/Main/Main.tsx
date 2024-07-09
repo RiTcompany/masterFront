@@ -201,9 +201,6 @@ const tasks: TaskType[] = [
     },
 ]
 
-
-
-
 function FoundCard({title, customer, description, date, price}: TaskType): React.JSX.Element {
     const formattedDate = date.toLocaleDateString();
 
@@ -339,9 +336,9 @@ export function Main(): React.JSX.Element {
 
                 const token = responseData.token;
                 const data = parseJwt(token);
-                if (data && data.entity_id) {
+                if (data && data.id) {
                     // setAuthUserId(data.entity_id);
-                    window.location.replace(`/profile/${data.entity_id}`)
+                    window.location.replace(`/profile/${data.id}`)
                 } else {
                     console.error('Invalid token data:', data);
                 }

@@ -35,7 +35,7 @@ export function NewOrder() {
         if (authToken !== null) {
             setData(prevData => ({
                 ...prevData,
-                userId: parseJwt(authToken).entity_id
+                userId: parseJwt(authToken).id
             }));
         }
         (async function () {

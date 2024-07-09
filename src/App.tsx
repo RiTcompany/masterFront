@@ -32,7 +32,7 @@ function App() {
         if (token) {
             const data = parseJwt(token)
             console.log(data)
-            setAuthUserId(data.entity_id)
+            setAuthUserId(data.id)
             // setAuthUserRole(data.role)
         }
     }, []);

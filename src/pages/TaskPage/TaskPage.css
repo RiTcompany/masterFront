@@ -1,3 +1,18 @@
 .task-container {
     padding: 30px;
 }
+
+.response-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px
+}
+
+.response-form input {
+    width: 200px;
+}
+
+.response-button {
+    width: 200px;
+    height: 40px
+}

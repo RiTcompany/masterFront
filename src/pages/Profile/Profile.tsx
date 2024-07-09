@@ -48,7 +48,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     throw new Error("Auth token not found in localStorage");
                 }
 
-                console.log(`Fetching profile for userId: ${userId} with authUserId: ${authUserId}`);
 
                 const response = await fetch(`http://195.133.197.53:8081/profiles/${userId}`, {
                     method: "GET",

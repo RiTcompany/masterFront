@@ -6,7 +6,7 @@ import {parseJwt} from "../../App.tsx";
 
 interface UserType {
     role: string,
-    entity_id: number
+    id: number
 }
 
 export function Navbar(): React.JSX.Element {
@@ -37,7 +37,7 @@ export function Navbar(): React.JSX.Element {
         // return () => {
         //     window.removeEventListener("storage", handleStorageChange);
         // };
-    }, []);
+    }, [user?.role]);
 
     return (
         <header>
@@ -48,9 +48,9 @@ export function Navbar(): React.JSX.Element {
                 <div className='navigate'>
                     {user && user.role === "ROLE_CLIENT" &&
                         <Link to={"/create-order"}><p>Создать заказ</p></Link>}
-                    {user && user.role === "ROLE_MASTER" && <p>Найти задание</p>}
-                    {user && user.role === "ROLE_CLIENT" &&
-                        <Link to={`/profile/${user.entity_id}`}><p>Подобрать исполнителя</p></Link>
+                    {user && user.role === "ROLE_MASTER" && <Link to={"/"}>Найти задание</Link>}
+                    {user &&
+                        <Link to={`/profile/${user.id}`}><p>Мой профиль</p></Link>
                     }
                 </div>
                 <div className={"login-button"}>
