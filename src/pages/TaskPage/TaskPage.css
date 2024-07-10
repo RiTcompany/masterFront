@@ -87,3 +87,32 @@
     color: #666;
 }
 
+.master-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.master-card p {
+    margin: 8px 0;
+    color: #495057;
+}
+
+.master-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #343a40;
+}
+
+.master-date-start, .master-date-end {
+    font-style: italic;
+    color: #6c757d;
+}
+
+.master-price, .master-rate {
+    font-weight: bold;
+}
+

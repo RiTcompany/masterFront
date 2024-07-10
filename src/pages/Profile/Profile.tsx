@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import "./Profile.css";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 
@@ -39,6 +39,7 @@ interface ProfileProps {
 
 export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const params = useParams();
+    const navigate = useNavigate()
     const userId = params.id;
     const authToken = localStorage.getItem("authToken");
 
@@ -108,6 +109,26 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         )()
     }, [userId]);
 
+    useEffect(() => {
+        (
+            async function ()  {
+                try {
+                    const response = await fetch(`http://195.133.197.53:8081/tasks/master/${userId}`, {
+                        credentials:"include",
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${authToken}`,
+                        }}
+                    )
+                    setTasks(await response.json())
+                    console.log(tasks)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        )()
+    }, [userId]);
+
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -130,6 +151,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         <div className="common">
             {/*{user.role === "ROLE_MASTER" && (*/}
                 <>
+                    <button className={"back-button"} onClick={() => navigate(-1)} style={{marginTop: "20px", width: "80px"}}>Назад</button>
                     <div className="info-container">
                         <div className="profile-left">
                             {isMyProfile ? (
@@ -197,6 +219,13 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                 <div>
                                     <h2>Выполненные</h2>
                                     <h2>В процессе</h2>
+                                    {
+                                        tasks && tasks.map((task) =>
+                                        <Link to={`/task/${task.id}`}>
+                                            <TaskCard data={task}/>
+                                        </Link>
+                                        )
+                                    }
                                 </div>
                             )}
                         </div>
@@ -260,7 +289,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     </div>
                     }
                 </>
-            {/*)}*/}
             {/*{user.role === "ROLE_CLIENT" && (*/}
             {/*    <>*/}
             {/*        <div className="info-container">*/}

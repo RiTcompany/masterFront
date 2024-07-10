@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import "./TaskPage.css"
 import {parseJwt} from "../../App.tsx";
@@ -14,14 +14,24 @@ interface TaskType {
     userName: string,
     description: string;
     startDate: string;
-    endDate: string
+    endDate: string;
+    masterId: number | null;
+    masterEmail: string | null;
+    masterPhoneNumber: string | null;
+    masterName: string | null
 }
 
 interface MasterType {
-    userId: number,
-    userName: string,
-    startDate: string;
-    endDate: string
+    id: number,
+    dateStart: string;
+    dateEnd: string;
+    price: number;
+    master: {
+        id: number;
+        firstName: string;
+        lastName: string;
+        rate: number;
+    }
 }
 
 interface UserType {
@@ -45,6 +55,7 @@ export function TaskPage(): React.JSX.Element {
     const [task, setTask] = useState<TaskType | null>(null);
     const [user, setUser] = useState<UserType | null>(null);
     const [response, setResponse] = useState<ResponseType>({userId: -1, taskId: -1, price: 0, dateStart: null, dateEnd: null})
+    const [error, setError] = useState<string>("")
     const [masters, setMasters] = useState<MasterType[]>([])
 
     const minDate = new Date();
@@ -76,6 +87,7 @@ export function TaskPage(): React.JSX.Element {
                 })
                 let result = await res.json()
                 setTask(result)
+                console.log(result)
             } catch (error) {
                 console.log(error)
             }
@@ -114,6 +126,7 @@ export function TaskPage(): React.JSX.Element {
 
     useEffect(() => {
         console.log(response)
+        console.log(masters)
     });
 
     const handlePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,32 +135,51 @@ export function TaskPage(): React.JSX.Element {
 
     const handleResponse = async (e: any) => {
         e.preventDefault()
-        try {
-            const res = await fetch("http://195.133.197.53:8081/masters/bid", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(response),
-            })
+        if (!response.dateStart || !response.dateEnd || !response.price) {
+            setError("EmptyDate");
+        } else if (response.dateEnd < response.dateStart) {
+            setError("EndDateBeforeStartDate")
+        } else {
+            setError("")
+            try {
+                const res = await fetch("http://195.133.197.53:8081/masters/bid", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(response),
+                })
 
-            console.log(await res.json())
-        } catch (error) {
-            console.log(error)
+                await res.json()
+                navigate(-1)
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 
-    // const handleHire = async (id) => {
-    //     const res = fetch(`http://localhost:8081/clients/bid/${id}`, {
-    //         method: "DELETE",
-    //         credentials: "include",
-    //         headers: {
-    //             Authorization: `Bearer ${authToken}`,
-    //         },
-    //     })
-    // }
+    const handleHire = async (id: number) => {
+        try {
+            const res = await fetch(`http://195.133.197.53:8081/clients/bid/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
+
+            if (res.ok) {
+                console.log(`Master with ID ${id} hired successfully.`);
+                window.location.reload()
+            } else {
+                console.error(`Failed to hire master with ID ${id}`);
+            }
+        } catch (error) {
+            console.error(`Error: ${error}`);
+        }
+    }
 
     return (
         <div className="task-container common">
@@ -191,23 +223,49 @@ export function TaskPage(): React.JSX.Element {
                                 maxDate={maxDate}
                             />
                         </div>
+                        <div className="error-container">
+                            {error === "EmptyDate" && (
+                                <p className="error-message">Заполните, пожалуйста, все поля</p>
+                            )}
+                            {error === "EndDateBeforeStartDate" && (
+                                <p className="error-message">Дата окончания должна быть не раньше даты начала работ</p>
+                            )}
+                        </div>
                         <div className="response-button">
                             <OrangeButton text={"Откликнуться"} onClick={handleResponse}/>
                         </div>
                     </form>
             )}
-            {user && user.role === "ROLE_CLIENT" && user.id === task?.userId && (
+            {user && user.role === "ROLE_CLIENT" && user.id === task?.userId && !task.masterEmail &&(
                 <div className="responses">
                     <h1>Отклики</h1>
-
-                    {!masters && <p>Пока что откликов нет</p>}
-                    {/*{masters && masters.map((master) => (*/}
-                    {/*    <div key={master.id}>*/}
-                    {/*        {master.master.firstName}*/}
-                    {/*    </div>*/}
-                    {/*))}*/}
+                    {!masters[0] && <p>Пока что откликов нет</p>}
+                    {masters && masters.map((master) => (
+                        <div className="master-card" key={master.id}>
+                            <p className="master-name">{master.master.firstName} {master.master.lastName}</p>
+                            {master.dateStart && <p className="master-date-start">Готов начать: {formatDate(master.dateStart)}</p>}
+                            {master.dateStart && <p className="master-date-end">Дата окончания работ: {formatDate(master.dateEnd)}</p>}
+                            <p className="master-price">Предполагаемая цена: {master.price}</p>
+                            <p className="master-rate">Оценка мастера: {master.master.rate}</p>
+                            <OrangeButton text={"Нанять"} onClick={() => handleHire(master.id)}/>
+                        </div>
+                    ))}
                 </div>
             )}
+            {user && user.role === "ROLE_CLIENT" && user.id === task?.userId && task.masterEmail &&(
+                <div className="responses">
+                    <h1>Исполнитель выбран</h1>
+                    {task &&
+                        <div>
+                            <h3>Ваш исполнитель <Link to={`/profile/${task.masterId}`} style={{fontSize: "18px"}}>{task.masterName}</Link></h3>
+                            <span>Контакты:</span>
+                            <p>{task.masterEmail}</p>
+                            <p>{task.masterPhoneNumber}</p>
+                        </div>
+                    }
+                </div>
+            )}
+
         </div>
     )
 }
