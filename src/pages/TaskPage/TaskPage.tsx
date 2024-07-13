@@ -18,7 +18,10 @@ interface TaskType {
     masterId: number | null;
     masterEmail: string | null;
     masterPhoneNumber: string | null;
-    masterName: string | null
+    masterName: string | null;
+    clientEmail: string | null;
+    clientPhoneNumber: string | null;
+    clientName: string | null
 }
 
 interface MasterType {
@@ -181,11 +184,33 @@ export function TaskPage(): React.JSX.Element {
         }
     }
 
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`http://195.133.197.53:8081/tasks/${task?.id}`, {
+                credentials: "include",
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+            })
+            if (response.ok) {
+                navigate(`/profile/${task?.userId}`)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div className="task-container common">
-            {<button onClick={() => navigate(-1)} className={"back-button"}>Назад</button>}
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {<button onClick={() => navigate(-1)} className={"back-button"}>Назад</button>}
+                {user && user.role === "ROLE_CLIENT" && user.id === task?.userId &&(
+                    <span className="material-symbols-outlined" style={{color: "gray", fontSize: "30px"}} onClick={handleDelete}>delete</span>
+                )}
+            </div>
             {task && (
-                <div className="task-details">
+                <div className="task-details" onClick={() =>{}}>
                     <h1>{task.categoryName}</h1>
                     <h3>{task.description}</h3>
                     <h3>{task.userName}</h3>
@@ -193,7 +218,7 @@ export function TaskPage(): React.JSX.Element {
                     <p>Закончить {formatDate(task.endDate)}</p>
                 </div>
             )}
-            {user && user.role === "ROLE_MASTER" && (
+            {user && user.role === "ROLE_MASTER" && task && !task.clientEmail &&(
                     <form className="response-form">
                         <label>Введите примерную стоимость ваших работ в рублях</label>
                         <input className="input-container" placeholder="Сумма" type="number" onChange={handlePrice} value={response.price} name="price"/>
@@ -242,7 +267,7 @@ export function TaskPage(): React.JSX.Element {
                     {!masters[0] && <p>Пока что откликов нет</p>}
                     {masters && masters.map((master) => (
                         <div className="master-card" key={master.id}>
-                            <p className="master-name">{master.master.firstName} {master.master.lastName}</p>
+                            <Link to={`/profile/${master.id}`}><p className="master-name">{master.master.firstName} {master.master.lastName}</p></Link>
                             {master.dateStart && <p className="master-date-start">Готов начать: {formatDate(master.dateStart)}</p>}
                             {master.dateStart && <p className="master-date-end">Дата окончания работ: {formatDate(master.dateEnd)}</p>}
                             <p className="master-price">Предполагаемая цена: {master.price}</p>
@@ -252,6 +277,9 @@ export function TaskPage(): React.JSX.Element {
                     ))}
                 </div>
             )}
+            {
+                user && user.id !== task?.userId && task && task.masterEmail && <h1>Исполнитель выбран</h1>
+            }
             {user && user.role === "ROLE_CLIENT" && user.id === task?.userId && task.masterEmail &&(
                 <div className="responses">
                     <h1>Исполнитель выбран</h1>

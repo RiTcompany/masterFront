@@ -31,6 +31,10 @@ interface TaskType {
     description: string;
     startDate: string;
     endDate: string
+    category: {
+        name: string,
+        id: number
+    }
 }
 
 interface ProfileProps {
@@ -93,38 +97,48 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     useEffect(() => {
         (
            async function ()  {
-               try {
-                   const response = await fetch(`http://195.133.197.53:8081/tasks/user/${userId}`, {
-                       credentials:"include",
-                       method: "GET",
-                       headers: {
-                           Authorization: `Bearer ${authToken}`,
-                       }}
-                   )
-                   setTasks(await response.json())
-               } catch (error) {
-                   console.log(error)
-               }
+               // if (user?.role === "CLIENT_ROLE") {
+                   try {
+                       const response = await fetch(`http://195.133.197.53:8081/tasks/user/${userId}`, {
+                           credentials:"include",
+                           method: "GET",
+                           headers: {
+                               Authorization: `Bearer ${authToken}`,
+                           }}
+                       )
+                       setTasks(await response.json())
+                   } catch (error) {
+                       console.log(error)
+                   }
+               // }
            }
         )()
-    }, [userId]);
+    }, [user]);
 
     useEffect(() => {
         (
             async function ()  {
-                try {
-                    const response = await fetch(`http://195.133.197.53:8081/tasks/master/${userId}`, {
-                        credentials:"include",
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${authToken}`,
-                        }}
-                    )
-                    setTasks(await response.json())
-                    console.log(tasks)
-                } catch (error) {
-                    console.log(error)
-                }
+                // if (user?.role === "MASTER_ROLE") {
+                    try {
+                        const response = await fetch(`http://195.133.197.53:8081/tasks/master/${userId}`, {
+                            credentials:"include",
+                            method: "GET",
+                            headers: {
+                                Authorization: `Bearer ${authToken}`,
+                            }}
+                        )
+                        setTasks(await response.json())
+                        console.log(tasks)
+                        // setTasks(prevTasks => prevTasks.map(task => ({
+                        //     ...task,
+                        //     categoryName: task.category.name,
+                        //     userName: user ? user.firstName : task.userName // Используем task.userName, если user не определен
+                        // })));
+                        console.log(tasks)
+                    } catch (error) {
+                        console.log(error)
+                    }
+                // }
             }
         )()
     }, [userId]);

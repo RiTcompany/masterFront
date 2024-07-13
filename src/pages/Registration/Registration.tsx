@@ -171,7 +171,8 @@ export function Registration(): React.JSX.Element {
                 const decodedToken = parseJwt(responseData.token);
                 console.log(decodedToken)
 
-                window.location.replace(`/profile/${decodedToken.id}`)
+                window.location.hash=`#/profile/${decodedToken.id}`
+                window.location.reload();
             } else {
                 console.error('Sign-up failed:', response.statusText);
             }
