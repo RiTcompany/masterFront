@@ -133,8 +133,6 @@ body > .common {
     position: relative;
 }
 
-
-
 .test {
     width: 100%;
     height: 250px;
@@ -142,7 +140,8 @@ body > .common {
     z-index: 1;
 }
 
-.test::before {
+.test::before,
+.test::after {
     content: "";
     position: absolute;
     top: 0;
@@ -150,24 +149,16 @@ body > .common {
     width: 40%;
     background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75));
     z-index: 1;
-}
-
-.test::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 40%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75));
-    z-index: 1;
+    pointer-events: none;
 }
 
 .test::before {
-    left: 0;
+    left: -1px;
 }
 
 .test::after {
-    right: 0;
+    right: -1px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75)); /* Исправлено */
 }
 
 .about-container {
