@@ -136,10 +136,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         )()
     }, [user]);
 
-    useEffect(() => {
-        console.log(tasks)
-    });
-
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
