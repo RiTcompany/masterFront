@@ -218,7 +218,7 @@ export function TaskPage(): React.JSX.Element {
                     <p>Закончить {formatDate(task.endDate)}</p>
                 </div>
             )}
-            {user && user.role === "ROLE_MASTER" && task && !task.clientEmail &&(
+            {user && user.role === "ROLE_MASTER" && task && !task.masterEmail &&(
                     <form className="response-form">
                         <label>Введите примерную стоимость ваших работ в рублях</label>
                         <input className="input-container" placeholder="Сумма" type="number" onChange={handlePrice} value={response.price} name="price"/>

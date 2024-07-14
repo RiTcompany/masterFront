@@ -7,7 +7,6 @@ interface TaskType {
     categoryId: number,
     categoryName: string,
     userName: string,
-    // customer: string,
     description: string;
     startDate: string;
     endDate: string

@@ -97,7 +97,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     useEffect(() => {
         (
            async function ()  {
-               // if (user?.role === "CLIENT_ROLE") {
+               if (user?.role === "ROLE_CLIENT") {
                    try {
                        const response = await fetch(`http://195.133.197.53:8081/tasks/client/${userId}`, {
                            credentials:"include",
@@ -110,7 +110,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                    } catch (error) {
                        console.log(error)
                    }
-               // }
+               }
            }
         )()
     }, [user]);
@@ -118,7 +118,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     useEffect(() => {
         (
             async function ()  {
-                // if (user?.role === "MASTER_ROLE") {
+                if (user?.role === "ROLE_MASTER") {
                     try {
                         const response = await fetch(`http://195.133.197.53:8081/tasks/master/${userId}`, {
                             credentials:"include",
@@ -129,16 +129,10 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                         )
                         setTasks(await response.json())
                         console.log(tasks)
-                        // setTasks(prevTasks => prevTasks.map(task => ({
-                        //     ...task,
-                        //     categoryName: task.category.name,
-                        //     userName: user ? user.firstName : task.userName // Используем task.userName, если user не определен
-                        // })));
-                        console.log(tasks)
                     } catch (error) {
                         console.log(error)
                     }
-                // }
+                }
             }
         )()
     }, [userId]);
@@ -235,7 +229,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     <h2>В процессе</h2>
                                     {
                                         tasks && tasks.map((task) =>
-                                        <Link to={`/task/${task.id}`}>
+                                        <Link to={`/task/${task.id}`} key={task.id}>
                                             <TaskCard data={task}/>
                                         </Link>
                                         )
