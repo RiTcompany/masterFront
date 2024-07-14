@@ -128,14 +128,17 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             }}
                         )
                         setTasks(await response.json())
-                        console.log(tasks)
                     } catch (error) {
                         console.log(error)
                     }
                 }
             }
         )()
-    }, [userId]);
+    }, [user]);
+
+    useEffect(() => {
+        console.log(tasks)
+    });
 
 
     const handleTabClick = (tab: string) => {
