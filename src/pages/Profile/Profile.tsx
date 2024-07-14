@@ -99,7 +99,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
            async function ()  {
                // if (user?.role === "CLIENT_ROLE") {
                    try {
-                       const response = await fetch(`http://195.133.197.53:8081/tasks/user/${userId}`, {
+                       const response = await fetch(`http://195.133.197.53:8081/tasks/client/${userId}`, {
                            credentials:"include",
                            method: "GET",
                            headers: {
