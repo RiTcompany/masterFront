@@ -291,15 +291,63 @@ export function Main(): React.JSX.Element {
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
+
         const handleScroll = () => {
             if (scrollContainer.scrollLeft + scrollContainer.offsetWidth >= scrollContainer.scrollWidth) {
                 scrollContainer.scrollLeft = 0;
             }
         };
+
         scrollContainer.addEventListener('scroll', handleScroll);
 
         return () => {
             scrollContainer.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    useEffect(() => {
+        const scrollContainer = scrollRef.current;
+        if (!scrollContainer) return;
+
+        let isDown = false;
+        let startX: number;
+        let scrollLeft: number;
+
+        const handleMouseDown = (e: any) => {
+            isDown = true;
+            scrollContainer.classList.add('active');
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        };
+
+        const handleMouseLeave = () => {
+            isDown = false;
+            scrollContainer.classList.remove('active');
+        };
+
+        const handleMouseUp = () => {
+            isDown = false;
+            scrollContainer.classList.remove('active');
+        };
+
+        const handleMouseMove = (e: any) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = x - startX;
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        };
+
+        scrollContainer.addEventListener('mousedown', handleMouseDown);
+        scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+        scrollContainer.addEventListener('mouseup', handleMouseUp);
+        scrollContainer.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+            scrollContainer.removeEventListener('mousedown', handleMouseDown);
+            scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+            scrollContainer.removeEventListener('mouseup', handleMouseUp);
+            scrollContainer.removeEventListener('mousemove', handleMouseMove);
         };
     }, []);
 

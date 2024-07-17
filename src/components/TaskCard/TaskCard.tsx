@@ -17,6 +17,7 @@ interface TaskCardProps {
 }
 
 export function TaskCard({data}: TaskCardProps): React.JSX.Element {
+    const token = localStorage.getItem("authToken")
     const navigate = useNavigate();
 
     const formatDate = (dateString: string) => {
@@ -25,7 +26,11 @@ export function TaskCard({data}: TaskCardProps): React.JSX.Element {
     };
 
     const handleClick = () => {
-        navigate("/task/" + data.id);
+        if (token) {
+            navigate("/task/" + data.id);
+        } else{
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        }
     }
 
     return (
