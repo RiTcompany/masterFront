@@ -38,7 +38,10 @@ interface TaskType {
 
 interface FeedbackType {
     rate: number,
-    feedback: string
+    feedback: string,
+    price: number,
+    categoryName: string,
+    clientName: string
 }
 
 interface ProfileProps {
@@ -58,6 +61,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const [activeTab, setActiveTab] = useState<string>("tab1");
     const [user, setUser] = useState<UserType | null>(null);
     const [tasks, setTasks] = useState<TaskType[]>([]);
+    const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
+    const [uncompletedTasks, setUncompletedTasks] = useState<TaskType[]>([]);
     const [feedbacks, setFeedBacks] = useState<FeedbackType[]>([])
 
     useEffect(() => {
@@ -144,6 +149,14 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     }, [user, userId]);
 
     useEffect(() => {
+        if (tasks) {
+            setCompletedTasks(tasks.filter(task => task.isCompleted))
+            setUncompletedTasks(tasks.filter(task => !task.isCompleted))
+        }
+
+    }, [tasks]);
+
+    useEffect(() => {
         (
             async function ()  {
                 if (user?.role === "ROLE_MASTER") {
@@ -156,6 +169,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             }}
                         )
                         setFeedBacks(await response.json())
+                        console.log(feedbacks)
+                        console.log(feedbacks)
                     } catch (error) {
                         console.log(error)
                     }
@@ -182,11 +197,16 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                         const uint8Array = new Uint8Array(arrayBuffer);
                         const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
                         const base64String = btoa(binaryString);
-                        setPhotoData(`data:image/jpeg;base64,${base64String}`);
+                        if (base64String) {
+                            setPhotoData(`data:image/jpeg;base64,${base64String}`);
+                        } else {
+                            setPhotoData("/default-avatar.jpg")
+                        }
+
                         // console.log(photoData)
                     } else {
                         console.error('Failed to fetch user photo');
-                        setPhotoData("/default-avatar.jpg")
+
                     }
                 } catch (error) {
                     console.error('Error fetching user photo:', error);
@@ -196,6 +216,10 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
 
         fetchUserPhoto();
     }, [user?.photoLink, user, userId, authToken]);
+
+    useEffect(() => {
+        console.log(photoData)
+    });
 
     const photoInputRef = useRef<HTMLInputElement>(null);
 
@@ -208,7 +232,6 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
 
     const handleAddPhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (user) {
-            console.log("ok")
             const file = e.target.files?.[0];
             if (!file) {
                 console.log("No file selected");
@@ -274,7 +297,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             {user.role === "ROLE_MASTER" &&
                             <div className="base-info">
                                 <div className="profile-photo">
-                                    <img alt="avatar" src={photoData || "/default-avatar.jpg"}/>
+                                    <img alt="avatar" src={photoData}/>
                                     {isMyProfile &&
                                         <>
                                             <button className="add-photo-button" onClick={handleAddPhotoClick}>
@@ -361,22 +384,20 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             {user.role === "ROLE_MASTER" && activeTab === "tab2" && (
                                 <div>
                                     <h2>Выполненные</h2>
-                                    {tasks && tasks
-                                        .filter(task => task.isCompleted)
-                                        .map(task => (
+                                    <div style={{marginBottom: "40px"}}>
+                                        {completedTasks[0] ? completedTasks.map(task => (
                                             <Link to={`/task/${task.id}`} key={task.id}>
                                                 <TaskCard data={task} />
                                             </Link>
-                                        ))
-                                    }
+                                        )) : <h3>Задач пока нет.</h3>
+                                        }
+                                    </div>
                                     <h2>В процессе</h2>
-                                    {tasks && tasks
-                                        .filter(task => !task.isCompleted)
-                                        .map(task => (
-                                            <Link to={`/task/${task.id}`} key={task.id}>
-                                                <TaskCard data={task} />
-                                            </Link>
-                                        ))
+                                    {uncompletedTasks[0] ? uncompletedTasks.map(task => (
+                                        <Link to={`/task/${task.id}`} key={task.id}>
+                                            <TaskCard data={task} />
+                                        </Link>
+                                    )) : <h3>Задач пока нет.</h3>
                                     }
                                 </div>
                             )}
@@ -428,17 +449,12 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                         <div style={{display: "flex", gap: "20px", flexWrap: "wrap"}}>
                             {feedbacks && feedbacks.map((fb) =>
                                 <div className="profile-review-card">
-                                    <p className="title">Перевезти вещи на новую квартиру</p>
-                                    <p className="price">Стоимость работ: 2000₽</p>
+                                    <p className="title">{fb.categoryName}</p>
+                                    <p className="price">Стоимость работ: {fb.price}₽</p>
                                     <p className="text">Оценка: {fb.rate}</p>
                                     <p className="text">{fb.feedback}</p>
                                     <div className="master">
-                                        <img src="/about-background.jpg" alt="master-photo"/>
-                                        <div className="master-info">
-                                            <p className="name">Сергей</p>
-                                            <p className="rating">Рейтинг исполнителя: 5</p>
-                                            <p className="tasks">Выполнил 306 заданий</p>
-                                        </div>
+                                        Отзыв оставил(а): {fb.clientName}
                                     </div>
                                 </div>
                             )}

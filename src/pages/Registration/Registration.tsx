@@ -55,6 +55,7 @@ export function Registration(): React.JSX.Element {
 
     const photoInputRef = useRef<HTMLInputElement>(null);
     const documentInputRef = useRef<HTMLInputElement>(null);
+    const [photoData, setPhotoData] = useState("/default-avatar.jpg")
 
     const buttonStyle = (step === 1 || step > 5) ? {width: "100vw"} : {};
 
@@ -90,37 +91,35 @@ export function Registration(): React.JSX.Element {
         })()
     }, []);
 
-    // useEffect(() => {
-    //     async function fetchUserPhoto() {
-    //         if (user?.role === "ROLE_MASTER") {
-    //             try {
-    //                 const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/photo`, {
-    //                     credentials: "include",
-    //                     method: "GET",
-    //                 });
-    //                 if (response.ok) {
-    //                     const arrayBuffer = await response.arrayBuffer();
-    //                     const uint8Array = new Uint8Array(arrayBuffer);
-    //                     const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
-    //                     const base64String = btoa(binaryString);
-    //                     setPhotoData(`data:image/jpeg;base64,${base64String}`);
-    //                     // console.log(photoData)
-    //                 } else {
-    //                     console.error('Failed to fetch user photo');
-    //                     setPhotoData("/default-avatar.jpg")
-    //                 }
-    //             } catch (error) {
-    //                 console.error('Error fetching user photo:', error);
-    //             }
-    //         }
-    //     }
-    //
-    //     fetchUserPhoto();
-    // }, [data.photoLink]);
+    useEffect(() => {
+        async function fetchUserPhoto() {
+                try {
+                    const response = await fetch(`http://195.133.197.53:8081/masters/photo/key?key=${data.photoLink}`, {
+                        credentials: "include",
+                        method: "GET",
+                    });
+                    if (response.ok) {
+                        const arrayBuffer = await response.arrayBuffer();
+                        const uint8Array = new Uint8Array(arrayBuffer);
+                        const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+                        const base64String = btoa(binaryString);
+                        setPhotoData(`data:image/jpeg;base64,${base64String}`);
+                        // console.log(photoData)
+                    } else {
+                        console.error('Failed to fetch user photo');
+                        setPhotoData("/default-avatar.jpg")
+                    }
+                } catch (error) {
+                    console.error('Error fetching user photo:', error);
+                }
+        }
 
-    // useEffect(() => {
-    //     console.log(data)
-    // }, [data])
+        fetchUserPhoto();
+    }, [data.photoLink]);
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
 
     const isPasswordValid = (password: string): boolean => {
         const hasUpperCase = /[A-Z]/.test(password);
@@ -335,7 +334,7 @@ export function Registration(): React.JSX.Element {
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://195.133.197.53:8081/masters/photo", {
+            const response = await fetch("http://195.133.197.53:8081/masters/photo-reg", {
                 method: "POST",
                 credentials: "include",
                 body: formData
@@ -523,7 +522,7 @@ export function Registration(): React.JSX.Element {
                     <h1>Загрузите ваше фото</h1>
                     <label>Профили с фото и подтвержденными данными получают больше откликов и заказов.</label>
                     <div className="photo-instruction">
-                        <img alt="avatar" src="./default-avatar.jpg"/>
+                        <img alt="avatar" src={photoData || "./default-avatar.jpg"}/>
                         <div className="instruction">
                             <p>Требования к фото:</p>
                             <ul>
