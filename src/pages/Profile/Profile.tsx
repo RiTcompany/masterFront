@@ -35,6 +35,12 @@ interface TaskType {
     isCompleted: boolean
 }
 
+
+interface FeedbackType {
+    rate: number,
+    feedback: string
+}
+
 interface ProfileProps {
     authUserId: number
 }
@@ -52,6 +58,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const [activeTab, setActiveTab] = useState<string>("tab1");
     const [user, setUser] = useState<UserType | null>(null);
     const [tasks, setTasks] = useState<TaskType[]>([]);
+    const [feedbacks, setFeedBacks] = useState<FeedbackType[]>([])
 
     useEffect(() => {
         if (!isMounted.current) {
@@ -113,7 +120,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                }
            }
         )()
-    }, [user]);
+    }, [user, userId]);
 
     useEffect(() => {
         (
@@ -134,28 +141,61 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                 }
             }
         )()
-    }, [user]);
+    }, [user, userId]);
 
     useEffect(() => {
         (
             async function ()  {
                 if (user?.role === "ROLE_MASTER") {
                     try {
-                        const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/photo`, {
+                        const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/feedbacks`, {
                             credentials:"include",
                             method: "GET",
                             headers: {
                                 Authorization: `Bearer ${authToken}`,
                             }}
                         )
-                        console.log(await response.json())
+                        setFeedBacks(await response.json())
                     } catch (error) {
                         console.log(error)
                     }
                 }
             }
         )()
-    }, [user]);
+    }, [user, userId]);
+
+    const [photoData, setPhotoData] = useState("/default-avatar.jpg");
+
+    useEffect(() => {
+        async function fetchUserPhoto() {
+            if (user?.role === "ROLE_MASTER") {
+                try {
+                    const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/photo`, {
+                        credentials: "include",
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${authToken}`,
+                        }
+                    });
+                    if (response.ok) {
+                        const arrayBuffer = await response.arrayBuffer();
+                        const uint8Array = new Uint8Array(arrayBuffer);
+                        const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+                        const base64String = btoa(binaryString);
+                        setPhotoData(`data:image/jpeg;base64,${base64String}`);
+                        // console.log(photoData)
+                    } else {
+                        console.error('Failed to fetch user photo');
+                        setPhotoData("/default-avatar.jpg")
+                    }
+                } catch (error) {
+                    console.error('Error fetching user photo:', error);
+                }
+            }
+        }
+
+        fetchUserPhoto();
+    }, [user, userId, authToken]);
 
 
     const handleTabClick = (tab: string) => {
@@ -190,8 +230,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             {user.role === "ROLE_MASTER" &&
                             <div className="base-info">
                                 <div className="profile-photo">
-                                    <img alt="avatar" src="/default-avatar.jpg"/>
-                                    {userId && +userId === user.id &&
+                                    <img alt="avatar" src={photoData || "/default-avatar.jpg"}/>
+                                    {isMyProfile &&
                                         <button className="add-photo-button">добавить фото</button>
                                     }
                                 </div>
@@ -256,7 +296,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     {user.categories &&
                                         <div>
                                             {user.categories.map((cat) =>
-                                                <div>
+                                                <div key={cat}>
                                                     {cat}
                                                 </div>
                                             )}
@@ -330,20 +370,26 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     </div>
                     {user.role === "ROLE_MASTER" &&
                     <div className="profile-bottom">
-                        <h2>Ваши отзывы</h2>
-                        <div className="profile-review-card">
-                            <p className="title">Перевезти вещи на новую квартиру</p>
-                            <p className="price">Стоимость работ: 2000₽</p>
-                            <p className="text">Супер, рекомендую! Очень быстро и комфортно переехали.</p>
-                            <div className="master">
-                                <img src="/about-background.jpg" alt="master-photo"/>
-                                <div className="master-info">
-                                    <p className="name">Сергей</p>
-                                    <p className="rating">Рейтинг исполнителя: 5</p>
-                                    <p className="tasks">Выполнил 306 заданий</p>
+                        <h2>Отзывы</h2>
+                        <div style={{display: "flex", gap: "20px", flexWrap: "wrap"}}>
+                            {feedbacks && feedbacks.map((fb) =>
+                                <div className="profile-review-card">
+                                    <p className="title">Перевезти вещи на новую квартиру</p>
+                                    <p className="price">Стоимость работ: 2000₽</p>
+                                    <p className="text">Оценка: {fb.rate}</p>
+                                    <p className="text">{fb.feedback}</p>
+                                    <div className="master">
+                                        <img src="/about-background.jpg" alt="master-photo"/>
+                                        <div className="master-info">
+                                            <p className="name">Сергей</p>
+                                            <p className="rating">Рейтинг исполнителя: 5</p>
+                                            <p className="tasks">Выполнил 306 заданий</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
+
                     </div>
                     }
                 </>
