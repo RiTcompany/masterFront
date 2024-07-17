@@ -342,7 +342,7 @@ export function TaskPage(): React.JSX.Element {
             {user && user.role === "ROLE_MASTER" && task && task.masterId === user.id && !task.isCompleted &&
                 <div>
                     <h1>Вы выбраны в качестве исполнителя</h1>
-                    <h3>Заказчик <Link to={`/profile/${task.masterId}`} style={{fontSize: "18px"}}>{task.masterName}</Link></h3>
+                    <h3>Заказчик <Link to={`/profile/${task.userId}`} style={{fontSize: "18px"}}>{task.clientName}</Link></h3>
                     <span>Контакты:</span>
                     <p>{task.clientEmail}</p>
                     <p>{task.clientPhoneNumber}</p>
