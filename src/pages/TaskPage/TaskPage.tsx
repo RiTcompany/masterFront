@@ -21,7 +21,10 @@ interface TaskType {
     masterName: string | null;
     clientEmail: string | null;
     clientPhoneNumber: string | null;
-    clientName: string | null
+    clientName: string | null;
+    isCompleted: boolean;
+    feedback: string;
+    rate: number
 }
 
 interface MasterType {
@@ -60,9 +63,13 @@ export function TaskPage(): React.JSX.Element {
     const [response, setResponse] = useState<ResponseType>({userId: -1, taskId: -1, price: 0, dateStart: null, dateEnd: null})
     const [error, setError] = useState<string>("")
     const [masters, setMasters] = useState<MasterType[]>([])
+    const [feedback, setFeedback] = useState({
+        taskId: -1,
+        rate: '',
+        feedback: ''
+    });
 
     const minDate = new Date();
-
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
 
@@ -89,8 +96,8 @@ export function TaskPage(): React.JSX.Element {
                     }
                 })
                 let result = await res.json()
-                setTask(result)
                 console.log(result)
+                setTask(result)
             } catch (error) {
                 console.log(error)
             }
@@ -107,7 +114,6 @@ export function TaskPage(): React.JSX.Element {
                         Authorization: `Bearer ${authToken}`,
                     }
                 })
-                // console.log(await res.json())
                 setMasters(await res.json())
             } catch (error) {
                 console.log(error)
@@ -124,12 +130,16 @@ export function TaskPage(): React.JSX.Element {
                 taskId: task.id,
                 price: response.price,
             }));
+            setFeedback(prev => ({
+                ...prev,
+                taskId: task.id,
+            }))
         }
     }, [user, task]);
 
     useEffect(() => {
-        console.log(response)
-        console.log(masters)
+
+        console.log(task)
     });
 
     const handlePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,6 +193,57 @@ export function TaskPage(): React.JSX.Element {
             console.error(`Error: ${error}`);
         }
     }
+
+    const handleDone = async () => {
+        try {
+            const res = await fetch(`http://195.133.197.53:8081/tasks/${task?.id}/complete`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+            })
+            if (res.ok) {
+                window.location.reload()
+            } else {
+                console.error(`Failed`);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleChangeFeedback = (event: any) => {
+        const { name, value } = event.target;
+        setFeedback({
+            ...feedback,
+            [name]: value
+        });
+
+        console.log(feedback)
+    }
+
+    const handleSubmitFeedback = async () => {
+        try {
+            const res = await fetch(`http://195.133.197.53:8081/tasks/feedback`, {
+                method: "PATCH",
+                body: JSON.stringify(feedback),
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,
+                },
+            })
+            if (res.ok) {
+                window.location.reload()
+            } else {
+                console.error(`Failed`);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
 
     const handleDelete = async () => {
         try {
@@ -277,8 +338,32 @@ export function TaskPage(): React.JSX.Element {
                     ))}
                 </div>
             )}
-            {
-                user && user.id !== task?.userId && task && task.masterEmail && <h1>Исполнитель выбран</h1>
+            {user && user.id !== task?.userId && task && task.masterEmail && <h1>Исполнитель выбран</h1>}
+            {user && user.role === "ROLE_MASTER" && task && task.masterId === user.id && !task.isCompleted &&
+                <div>
+                    <h1>Вы выбраны в качестве исполнителя</h1>
+                    <h3>Заказчик <Link to={`/profile/${task.masterId}`} style={{fontSize: "18px"}}>{task.masterName}</Link></h3>
+                    <span>Контакты:</span>
+                    <p>{task.clientEmail}</p>
+                    <p>{task.clientPhoneNumber}</p>
+                </div>
+            }
+            {user && user.role === "ROLE_MASTER" && task && task.masterId === user.id && task.isCompleted &&
+                <div>
+                    <h1>Задание выполнено</h1>
+                    {task.rate &&
+                        <div>
+                            <h3>Оценка исполнителя</h3>
+                            <p>{task.rate}</p>
+                        </div>
+                    }
+                    {task.feedback &&
+                        <div>
+                            <h3>Отзыв исполнителя</h3>
+                            <p>{task.feedback}</p>
+                        </div>
+                    }
+                </div>
             }
             {user && user.role === "ROLE_CLIENT" && user.id === task?.userId && task.masterEmail &&(
                 <div className="responses">
@@ -291,9 +376,39 @@ export function TaskPage(): React.JSX.Element {
                             <p>{task.masterPhoneNumber}</p>
                         </div>
                     }
+                    {!task.isCompleted && !task.feedback &&
+                        <div>
+                            <p>Если задание выполнено, нажмите на кнопку</p>
+                            <OrangeButton text={"Задание выполнено"} onClick={handleDone}/>
+                        </div>
+                    }
+                    {task.isCompleted && !task.feedback &&
+                        <div>
+                            <label>Ваша оценка:</label>
+                            <select name="rate" value={feedback.rate} onChange={handleChangeFeedback}>
+                                <option value="">Выберите оценку</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+
+                            <label>Отзыв:</label>
+                            <input
+                                name="feedback"
+                                placeholder="Напишите, пожалуйста, пару слов об исполнителе"
+                                value={feedback.feedback}
+                                onChange={handleChangeFeedback}
+                            />
+                            <OrangeButton text={"Отправить отзыв"} onClick={handleSubmitFeedback}/>
+                        </div>
+                    }
+                    {task.feedback &&
+                        <h2>Спасибо за отзыв!</h2>
+                    }
                 </div>
             )}
-
         </div>
     )
 }

@@ -57,7 +57,8 @@ interface TasksType {
     userName: string,
     description: string;
     startDate: string;
-    endDate: string
+    endDate: string;
+    masterId: number;
 }
 
 const reviews: ReviewType[] = [
@@ -250,8 +251,11 @@ export function Main(): React.JSX.Element {
             );
             if (response.ok) {
                 const result = await response.json();
-                console.log(result)
-                setSearchResults(result);
+
+                // Фильтрация результатов по условию (например, по полю masterId)
+                const filteredResults = result.filter((res: any) => !res.masterId);
+
+                setSearchResults(filteredResults);
                 setShowSearchResults(true);
             } else {
                 console.error("Ошибка при загрузке заданий:", response.statusText);
@@ -260,6 +264,7 @@ export function Main(): React.JSX.Element {
             console.error("Ошибка при выполнении запроса:", error);
         }
     };
+
 
     useEffect(() => {
         (async function () {

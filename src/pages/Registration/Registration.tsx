@@ -19,7 +19,7 @@ interface DataType {
     description: string,
     metroStation: string,
     password: string,
-    categories?: string[]
+    categories: string[]
 }
 
 interface CategoryType {
@@ -48,8 +48,6 @@ export function Registration(): React.JSX.Element {
     });
     const [agreement, setAgreement] = useState<boolean>(false)
     const [pin, setPin] = useState<string>('');
-
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const [repeatPassword, setRepeatPassword] = useState<string>("")
     const [metro, setMetro] = useState<string[]>([])
@@ -220,7 +218,7 @@ export function Registration(): React.JSX.Element {
                 setStep(prevState => prevState + 1)
             }
         } else if (step === 6) {
-            if (!selectedCategories[0]) {
+            if (!data.categories[0]) {
                 setError("EmptyCategories")
             } else {
                 setError("");
@@ -254,13 +252,21 @@ export function Registration(): React.JSX.Element {
     }
 
     const handleServiceClick = (categoryName: string) => {
-        if (!selectedCategories.includes(categoryName)) {
-            setSelectedCategories([...selectedCategories, categoryName]);
-        }
+        setData(prevData => {
+            const newCategories = prevData.categories.includes(categoryName)
+                ? prevData.categories
+                : [...(prevData.categories), categoryName];
+
+            return { ...prevData, categories: newCategories };
+        });
     };
 
     const handleServiceRemove = (categoryName: string) => {
-        setSelectedCategories(selectedCategories.filter(s => s !== categoryName));
+        setData(prevData => {
+            const newCategories = prevData.categories.filter(cat => cat !== categoryName);
+
+            return { ...prevData, categories: newCategories };
+        });
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -297,7 +303,7 @@ export function Registration(): React.JSX.Element {
         }
 
         const formData = new FormData();
-        formData.append("email", data.email);
+        formData.append("username", data.email);
         formData.append("file", file);
 
         try {
@@ -307,11 +313,12 @@ export function Registration(): React.JSX.Element {
                 body: formData
             });
 
-            // if (!response.ok) {
-            //     console.log(await response.json());
-            //     return
-            // }
+            if (!response.ok) {
+                console.log(await response.json());
+                return
+            }
             setData({...data, photoLink: await response.text()});
+            console.log(data)
 
         } catch (error) {
             console.log(error)
@@ -439,11 +446,11 @@ export function Registration(): React.JSX.Element {
                     <h1>Чем вы занимаетесь?</h1>
                     <label>Укажите какого вида услуги вы оказываете</label>
                     <div className="input-container">
-                        {selectedCategories.map(category => (
+                        {data.categories.map(category => (
                             <span key={category} className="selected-service">
-                                {category}
+                        {category}
                                 <button type="button" onClick={() => handleServiceRemove(category)}>x</button>
-                            </span>
+                    </span>
                         ))}
                     </div>
                     <div style={{margin: '10px 0'}}>
@@ -457,7 +464,7 @@ export function Registration(): React.JSX.Element {
                                     padding: '10px',
                                     border: '1px solid #ccc',
                                     borderRadius: '5px',
-                                    background: selectedCategories.includes(category.name) ? '#ddd' : '#fff'
+                                    background: data.categories.includes(category.name) ? '#ddd' : '#fff'
                                 }}
                             >
                                 {category.name}

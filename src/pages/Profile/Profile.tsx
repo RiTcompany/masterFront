@@ -11,6 +11,7 @@ interface UserType {
     middleName?: string,
     phoneNumber: string,
     photoLink?: string,
+    categories: string[],
     role: string
     telegramTag?: string,
     userId: number,
@@ -30,11 +31,8 @@ interface TaskType {
     userName: string,
     description: string;
     startDate: string;
-    endDate: string
-    category: {
-        name: string,
-        id: number
-    }
+    endDate: string;
+    isCompleted: boolean
 }
 
 interface ProfileProps {
@@ -83,6 +81,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     console.error('Fetched user does not have a userId:', userData);
                     throw new Error('Fetched user does not have a userId');
                 }
+
+                console.log(userData)
 
                 setUser(userData);
                 setIsMyProfile(+userData.userId === +authUserId);
@@ -136,6 +136,27 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         )()
     }, [user]);
 
+    useEffect(() => {
+        (
+            async function ()  {
+                if (user?.role === "ROLE_MASTER") {
+                    try {
+                        const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/photo`, {
+                            credentials:"include",
+                            method: "GET",
+                            headers: {
+                                Authorization: `Bearer ${authToken}`,
+                            }}
+                        )
+                        console.log(await response.json())
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            }
+        )()
+    }, [user]);
+
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -170,7 +191,9 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             <div className="base-info">
                                 <div className="profile-photo">
                                     <img alt="avatar" src="/default-avatar.jpg"/>
-                                    <button className="add-photo-button">добавить фото</button>
+                                    {userId && +userId === user.id &&
+                                        <button className="add-photo-button">добавить фото</button>
+                                    }
                                 </div>
                                 <div>
                                     {user.age !== undefined && user.age > 0 && <p>Возраст: {user.age}</p>}
@@ -204,11 +227,24 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             <hr/>
                             {user.role === "ROLE_CLIENT" && activeTab === "tab1" &&
                                 <div>
-                                    {tasks && tasks.map((task) =>
-                                        <div key={task.id}>
-                                            <TaskCard data={task}/>
-                                        </div>
-                                    )}
+                                    {tasks && tasks
+                                        .filter(task => !task.isCompleted)
+                                        .map((task) => (
+                                            <div key={task.id}>
+                                                <TaskCard data={task} />
+                                            </div>
+                                        ))}
+                                </div>
+                            }
+                            {user.role === "ROLE_CLIENT" && activeTab === "tab2" &&
+                                <div>
+                                    {tasks && tasks
+                                        .filter(task => task.isCompleted)
+                                        .map((task) => (
+                                            <div key={task.id}>
+                                                <TaskCard data={task} />
+                                            </div>
+                                        ))}
                                 </div>
                             }
 
@@ -217,21 +253,36 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     <h3>Немного о себе</h3>
                                     <p>{user.description}</p>
                                     <h3>Виды выполняемых работ</h3>
-                                    <h4>Демонтажные работы</h4>
-                                    <h4>Демонтажные работы</h4>
-                                    <h4>Демонтажные работы</h4>
+                                    {user.categories &&
+                                        <div>
+                                            {user.categories.map((cat) =>
+                                                <div>
+                                                    {cat}
+                                                </div>
+                                            )}
+                                        </div>
+                                    }
                                 </div>
                             )}
                             {user.role === "ROLE_MASTER" && activeTab === "tab2" && (
                                 <div>
                                     <h2>Выполненные</h2>
+                                    {tasks && tasks
+                                        .filter(task => task.isCompleted)
+                                        .map(task => (
+                                            <Link to={`/task/${task.id}`} key={task.id}>
+                                                <TaskCard data={task} />
+                                            </Link>
+                                        ))
+                                    }
                                     <h2>В процессе</h2>
-                                    {
-                                        tasks && tasks.map((task) =>
-                                        <Link to={`/task/${task.id}`} key={task.id}>
-                                            <TaskCard data={task}/>
-                                        </Link>
-                                        )
+                                    {tasks && tasks
+                                        .filter(task => !task.isCompleted)
+                                        .map(task => (
+                                            <Link to={`/task/${task.id}`} key={task.id}>
+                                                <TaskCard data={task} />
+                                            </Link>
+                                        ))
                                     }
                                 </div>
                             )}
