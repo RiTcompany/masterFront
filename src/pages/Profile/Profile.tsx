@@ -195,7 +195,51 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         }
 
         fetchUserPhoto();
-    }, [user, userId, authToken]);
+    }, [user?.photoLink, user, userId, authToken]);
+
+    const photoInputRef = useRef<HTMLInputElement>(null);
+
+    const handleAddPhotoClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (photoInputRef.current) {
+            photoInputRef.current.click();
+        }
+    };
+
+    const handleAddPhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (user) {
+            console.log("ok")
+            const file = e.target.files?.[0];
+            if (!file) {
+                console.log("No file selected");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("username", user.email);
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("http://195.133.197.53:8081/masters/photo", {
+                    method: "POST",
+                    credentials: "include",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    console.log(await response.json());
+                    return
+                }
+
+                console.log(await response.text())
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        // console.log(data)
+    };
 
 
     const handleTabClick = (tab: string) => {
@@ -232,7 +276,17 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                 <div className="profile-photo">
                                     <img alt="avatar" src={photoData || "/default-avatar.jpg"}/>
                                     {isMyProfile &&
-                                        <button className="add-photo-button">добавить фото</button>
+                                        <>
+                                            <button className="add-photo-button" onClick={handleAddPhotoClick}>
+                                                Добавить фото
+                                            </button>
+                                            <input
+                                                type="file"
+                                                ref={photoInputRef}
+                                                style={{display: 'none'}}
+                                                onChange={handleAddPhotoChange}
+                                            />
+                                        </>
                                     }
                                 </div>
                                 <div>

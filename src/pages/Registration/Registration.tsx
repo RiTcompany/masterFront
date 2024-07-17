@@ -91,6 +91,34 @@ export function Registration(): React.JSX.Element {
     }, []);
 
     // useEffect(() => {
+    //     async function fetchUserPhoto() {
+    //         if (user?.role === "ROLE_MASTER") {
+    //             try {
+    //                 const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/photo`, {
+    //                     credentials: "include",
+    //                     method: "GET",
+    //                 });
+    //                 if (response.ok) {
+    //                     const arrayBuffer = await response.arrayBuffer();
+    //                     const uint8Array = new Uint8Array(arrayBuffer);
+    //                     const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+    //                     const base64String = btoa(binaryString);
+    //                     setPhotoData(`data:image/jpeg;base64,${base64String}`);
+    //                     // console.log(photoData)
+    //                 } else {
+    //                     console.error('Failed to fetch user photo');
+    //                     setPhotoData("/default-avatar.jpg")
+    //                 }
+    //             } catch (error) {
+    //                 console.error('Error fetching user photo:', error);
+    //             }
+    //         }
+    //     }
+    //
+    //     fetchUserPhoto();
+    // }, [data.photoLink]);
+
+    // useEffect(() => {
     //     console.log(data)
     // }, [data])
 
@@ -118,28 +146,28 @@ export function Registration(): React.JSX.Element {
         }
     }
 
-    const handleEmail = async () => {
-        console.log(data.email)
-        try {
-            await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}`, {
-                credentials: "include",
-                method: "POST",
-        });
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // const handleEmail = async () => {
+    //     console.log(data.email)
+    //     try {
+    //         await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}`, {
+    //             credentials: "include",
+    //             method: "POST",
+    //     });
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
-    const handleConfirm = async () => {
-        try {
-            await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
-                credentials: "include",
-                method: "DELETE",
-            });
-        } catch (error) {
-            console.error('Ошибка при проверке PIN кода:', error);
-        }
-    };
+    // const handleConfirm = async () => {
+    //     try {
+    //         await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
+    //             credentials: "include",
+    //             method: "DELETE",
+    //         });
+    //     } catch (error) {
+    //         console.error('Ошибка при проверке PIN кода:', error);
+    //     }
+    // };
 
     const handleSubmit = async () => {
         setError("");
@@ -193,11 +221,11 @@ export function Registration(): React.JSX.Element {
                 setError("EmptyNameError")
             } else {
                 setError("")
-                await handleEmail()
+                // await handleEmail()
                 setStep(prevState => prevState + 1)
             }
         } else if (step === 3) {
-            await handleConfirm()
+            // await handleConfirm()
             setStep(prevState => prevState + 1)
         } else if (step === 4) {
             if (!data.phoneNumber) {
