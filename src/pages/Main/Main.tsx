@@ -61,6 +61,13 @@ interface TasksType {
     masterId: number;
 }
 
+interface MasterType {
+    photoLink: string,
+    description: string,
+    userId: number,
+    photo: string
+}
+
 const reviews: ReviewType[] = [
     {
         id: 1,
@@ -236,8 +243,7 @@ export function Main(): React.JSX.Element {
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [categories, setCategories] = useState<CategoryType[]>([])
     const [selectedCategory, setSelectedCategory] = useState<CategoryType>()
-
-
+    const [topMasters, setTopMasters] = useState<MasterType[]>([])
 
     const search = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -265,6 +271,52 @@ export function Main(): React.JSX.Element {
         }
     };
 
+    useEffect(() => {
+        (async function () {
+            try {
+                const response = await fetch("http://195.133.197.53:8081/masters/top10", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                let result = await response.json();
+                console.log(result);
+                setTopMasters(result);
+                fetchAndSetPhotos(result);
+            } catch (error) {
+                console.log(error);
+            }
+        })();
+    }, []);
+
+    const fetchAndSetPhotos = async (masters: MasterType[]) => {
+        const updatedMasters = await Promise.all(masters.map(async (master) => {
+            try {
+                const response = await fetch(`http://195.133.197.53:8081/masters/${master.userId}/photo`, {
+                    credentials: "include",
+                    method: "GET",
+                });
+                if (response.ok) {
+                    const arrayBuffer = await response.arrayBuffer();
+                    const uint8Array = new Uint8Array(arrayBuffer);
+                    const binaryString = uint8Array.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+                    const base64String = btoa(binaryString);
+                    if (base64String) {
+                        master.photo = `data:image/jpeg;base64,${base64String}`;
+                    } else {
+                        master.photo = "/default-avatar.jpg";
+                    }
+                } else {
+                    console.error(`Failed to fetch photo for master with id ${master.userId}`);
+                    master.photo = "/default-avatar.jpg";
+                }
+            } catch (error) {
+                console.error(`Error fetching photo for master with id ${master.userId}:`, error);
+                master.photo = "/default-avatar.jpg";
+            }
+            return master;
+        }));
+        setTopMasters(updatedMasters);
+    };
 
     useEffect(() => {
         (async function () {
@@ -288,23 +340,28 @@ export function Main(): React.JSX.Element {
         setSelectedCategory(category);
     }
 
-    useEffect(() => {
-        const scrollContainer = scrollRef.current;
-        if (!scrollContainer) return;
+    // useEffect(() => {
+    //     const scrollContainer = scrollRef.current;
+    //     if (!scrollContainer) return;
+    //
+    //     const handleScroll = () => {
+    //         if (scrollContainer.scrollLeft + scrollContainer.offsetWidth >= scrollContainer.scrollWidth) {
+    //             scrollContainer.scrollLeft = 0;
+    //         }
+    //     };
+    //
+    //     scrollContainer.addEventListener('scroll', handleScroll);
+    //
+    //     return () => {
+    //         scrollContainer.removeEventListener('scroll', handleScroll);
+    //     };
+    // }, []);
 
-        const handleScroll = () => {
-            if (scrollContainer.scrollLeft + scrollContainer.offsetWidth >= scrollContainer.scrollWidth) {
-                scrollContainer.scrollLeft = 0;
-            }
-        };
+    const addMoreMasters = () => {
+        setTopMasters((prevMasters) => prevMasters.concat(topMasters));
+    };
 
-        scrollContainer.addEventListener('scroll', handleScroll);
-
-        return () => {
-            scrollContainer.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
+    // Function to handle mouse events
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
@@ -350,6 +407,24 @@ export function Main(): React.JSX.Element {
             scrollContainer.removeEventListener('mousemove', handleMouseMove);
         };
     }, []);
+
+    // Function to handle scroll events
+    useEffect(() => {
+        const scrollContainer = scrollRef.current;
+        if (!scrollContainer) return;
+
+        const handleScroll = () => {
+            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                addMoreMasters();
+            }
+        };
+
+        scrollContainer.addEventListener('scroll', handleScroll);
+
+        return () => {
+            scrollContainer.removeEventListener('scroll', handleScroll);
+        };
+    }, [topMasters]);
 
     // const [isChecked, setIsChecked] = useState<boolean>(false);
 
@@ -524,9 +599,11 @@ export function Main(): React.JSX.Element {
                 <h1>МАСТЕРА</h1>
                 <div className={"test"}>
                     <div className="service-scroll" ref={scrollRef}>
-                        {services.concat(services).map((service, index) => (
-                            <ServiceCard key={`${service.id}-${index}`} image={service.image}
-                                         description={service.description}/>
+                        {topMasters.concat(topMasters).map((master, index) => (
+                            <Link to={`/profile/${master.userId}`}>
+                                <ServiceCard key={`${master.userId}-${index}`} image={master.photo}
+                                             description={master.description}/>
+                            </Link>
                         ))}
                     </div>
                 </div>

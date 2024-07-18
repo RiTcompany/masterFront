@@ -45,12 +45,12 @@ export function Navbar(): React.JSX.Element {
                 <Link to={"/"}>
                     <img src={'/logo.png'} alt='logo'/>
                 </Link>
-                <div className='navigate'>
+                <div className='navigate' >
                     {user && user.role === "ROLE_CLIENT" &&
-                        <Link to={"/create-order"}><p>Создать заказ</p></Link>}
-                    {user && user.role === "ROLE_MASTER" && <Link to={"/"}>Найти задание</Link>}
+                        <Link to={"/create-order"}><p style={{color: "white"}}>Создать заказ</p></Link>}
+                    {user && user.role === "ROLE_MASTER" && <Link to={"/"}><p style={{color: "white"}}>Найти задание</p></Link>}
                     {user &&
-                        <Link to={`/profile/${user.id}`}><p>Мой профиль</p></Link>
+                        <Link to={`/profile/${user.id}`}><p style={{color: "white"}}>Мой профиль</p></Link>
                     }
                 </div>
                 <div className={"login-button"}>

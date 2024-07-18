@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import "./Profile.css";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
+import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 
 interface UserType {
     email: string,
@@ -254,6 +255,10 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     return
                 }
 
+                if (response.ok) {
+                    window.location.reload()
+                }
+
                 console.log(await response.text())
 
             } catch (error) {
@@ -286,7 +291,9 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         <div className="common">
             {/*{user.role === "ROLE_MASTER" && (*/}
                 <>
-                    <button className={"back-button"} onClick={() => navigate(-1)} style={{marginTop: "20px", width: "80px"}}>Назад</button>
+                    <div style={{ width: '150px', height: '45px', marginTop: '30px'}}>
+                        <OrangeButton onClick={() => navigate(-1)} text={"Назад"}/>
+                    </div>
                     <div className="info-container">
                         <div className="profile-left">
                             {isMyProfile ? (
