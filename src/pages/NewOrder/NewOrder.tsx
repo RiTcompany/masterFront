@@ -240,9 +240,12 @@ export function NewOrder() {
             {step === 4 &&
                 <div className="steps">
                     <h1>{data.categoryName}</h1>
-                    <p>{data.description}</p>
+                    <p style={{margin: "20px 0"}}>{data.description}</p>
                     {data.startDate &&
                         <p>Начать {formatDate(data.startDate)}</p>
+                    }
+                    {data.endDate &&
+                        <p style={{marginBottom: '20px'}}>Закончить {formatDate(data.endDate)}</p>
                     }
                 </div>
             }

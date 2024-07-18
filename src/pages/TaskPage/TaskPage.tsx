@@ -33,11 +33,13 @@ interface MasterType {
     dateEnd: string;
     price: number;
     master: {
-        id: number;
         firstName: string;
         lastName: string;
         rate: number;
-    }
+        user: {
+            id: number
+        }
+    };
 }
 
 interface UserType {
@@ -115,6 +117,7 @@ export function TaskPage(): React.JSX.Element {
                     }
                 })
                 setMasters(await res.json())
+                console.log(masters)
             } catch (error) {
                 console.log(error)
             }
@@ -327,13 +330,15 @@ export function TaskPage(): React.JSX.Element {
                     <h1>Отклики</h1>
                     {!masters[0] && <p>Пока что откликов нет</p>}
                     {masters && masters.map((master) => (
-                        <div className="master-card" key={master.id}>
-                            <Link to={`/profile/${master.id}`}><p className="master-name">{master.master.firstName} {master.master.lastName}</p></Link>
+                        <div className="master-card" key={master.master.user.id}>
+                            <Link to={`/profile/${master.master.user.id}`}><p className="master-name">{master.master.firstName} {master.master.lastName}</p></Link>
                             {master.dateStart && <p className="master-date-start">Готов начать: {formatDate(master.dateStart)}</p>}
                             {master.dateStart && <p className="master-date-end">Дата окончания работ: {formatDate(master.dateEnd)}</p>}
                             <p className="master-price">Предполагаемая цена: {master.price}</p>
                             <p className="master-rate">Оценка мастера: {master.master.rate}</p>
-                            <OrangeButton text={"Нанять"} onClick={() => handleHire(master.id)}/>
+                            <div className="response-button" style={{marginTop: '20px'}}>
+                                <OrangeButton text={"Нанять"} onClick={() => handleHire(master.id)}/>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -342,25 +347,23 @@ export function TaskPage(): React.JSX.Element {
             {user && user.role === "ROLE_MASTER" && task && task.masterId === user.id && !task.isCompleted &&
                 <div>
                     <h1>Вы выбраны в качестве исполнителя</h1>
-                    <h3>Заказчик <Link to={`/profile/${task.userId}`} style={{fontSize: "18px"}}>{task.clientName}</Link></h3>
-                    <span>Контакты:</span>
+                    <h3 style={{marginBottom: '10px'}}>Заказчик <Link to={`/profile/${task.userId}`} style={{fontSize: "18px"}}>{task.clientName}</Link></h3>
+                    <span style={{fontSize: '18px'}}>Контакты:</span>
                     <p>{task.clientEmail}</p>
                     <p>{task.clientPhoneNumber}</p>
                 </div>
             }
             {user && user.role === "ROLE_MASTER" && task && task.masterId === user.id && task.isCompleted &&
                 <div>
-                    <h1>Задание выполнено</h1>
+                    <h2 style={{margin: "15px 0"}}>Задание выполнено</h2>
                     {task.rate &&
                         <div>
-                            <h3>Оценка исполнителя</h3>
-                            <p>{task.rate}</p>
+                            <h3>Оценка исполнителя: {task.rate}</h3>
                         </div>
                     }
                     {task.feedback &&
                         <div>
-                            <h3>Отзыв исполнителя</h3>
-                            <p>{task.feedback}</p>
+                            <h3>Отзыв исполнителя: <span style={{fontWeight:"400"}}>{task.feedback}</span></h3>
                         </div>
                     }
                 </div>
@@ -370,20 +373,22 @@ export function TaskPage(): React.JSX.Element {
                     <h1>Исполнитель выбран</h1>
                     {task &&
                         <div>
-                            <h3>Ваш исполнитель <Link to={`/profile/${task.masterId}`} style={{fontSize: "18px"}}>{task.masterName}</Link></h3>
-                            <span>Контакты:</span>
+                            <h3 style={{marginBottom: '10px'}}>Ваш исполнитель <Link to={`/profile/${task.masterId}`} style={{fontSize: "18px"}}>{task.masterName}</Link></h3>
+                            <span style={{fontSize: '18px'}}>Контакты:</span>
                             <p>{task.masterEmail}</p>
                             <p>{task.masterPhoneNumber}</p>
                         </div>
                     }
                     {!task.isCompleted && !task.feedback &&
                         <div>
-                            <p>Если задание выполнено, нажмите на кнопку</p>
-                            <OrangeButton text={"Задание выполнено"} onClick={handleDone}/>
+                            <p style={{margin: '15px 0'}}>Если задание выполнено, нажмите на кнопку</p>
+                            <div className="response-button" style={{marginTop: '20px'}}>
+                                <OrangeButton text={"Задание выполнено"} onClick={handleDone}/>
+                            </div>
                         </div>
                     }
                     {task.isCompleted && !task.feedback &&
-                        <div>
+                        <div style={{display: "flex", flexDirection: "column", gap: "10px", marginTop: "15px"}}>
                             <label>Ваша оценка:</label>
                             <select name="rate" value={feedback.rate} onChange={handleChangeFeedback}>
                                 <option value="">Выберите оценку</option>
@@ -395,17 +400,20 @@ export function TaskPage(): React.JSX.Element {
                             </select>
 
                             <label>Отзыв:</label>
-                            <input
+                            <textarea
                                 name="feedback"
                                 placeholder="Напишите, пожалуйста, пару слов об исполнителе"
                                 value={feedback.feedback}
                                 onChange={handleChangeFeedback}
+                                style={{height: "100px"}}
                             />
-                            <OrangeButton text={"Отправить отзыв"} onClick={handleSubmitFeedback}/>
+                            <div className="response-button" style={{marginTop: '20px'}}>
+                                <OrangeButton text={"Отправить отзыв"} onClick={handleSubmitFeedback}/>
+                            </div>
                         </div>
                     }
                     {task.feedback &&
-                        <h2>Спасибо за отзыв!</h2>
+                        <h2 style={{marginTop: '15px'}}>Спасибо за отзыв!</h2>
                     }
                 </div>
             )}

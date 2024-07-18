@@ -116,3 +116,15 @@
     font-weight: bold;
 }
 
+select, textarea {
+    height: 45px;
+    /*width: 68vw;*/
+    font-size: 13px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 10px 0 #d5d5d5;
+}
+
