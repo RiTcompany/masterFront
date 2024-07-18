@@ -54,7 +54,14 @@ header img {
     }
 
     .navigate {
-        display: none;
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+        justify-content: space-evenly;
+    }
+
+    .navbar-content {
+        padding: 0 1vw;
     }
 
     .login-button {

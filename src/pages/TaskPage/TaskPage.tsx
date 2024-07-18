@@ -1,5 +1,5 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {forwardRef, useEffect, useState} from "react";
 import "./TaskPage.css"
 import {parseJwt} from "../../App.tsx";
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
@@ -286,7 +286,7 @@ export function TaskPage(): React.JSX.Element {
                     <form className="response-form">
                         <label>Введите примерную стоимость ваших работ в рублях</label>
                         <input className="input-container" placeholder="Сумма" type="number" onChange={handlePrice} value={response.price} name="price"/>
-                        <div style={{display: "flex", gap: "30px"}}>
+                        <div style={{display: "flex", gap: "30px", flexDirection: "column"}}>
                             <DatePicker
                                 className="input-container"
                                 selected={response.dateStart ? new Date(response.dateStart) : null}
@@ -298,6 +298,7 @@ export function TaskPage(): React.JSX.Element {
                                 placeholderText="Выберите дату начала"
                                 minDate={minDate}
                                 maxDate={maxDate}
+                                customInput={<CustomInput />}
                             />
                             <DatePicker
                                 className="input-container"
@@ -310,6 +311,7 @@ export function TaskPage(): React.JSX.Element {
                                 placeholderText="Выберите дату окончания"
                                 minDate={minDate}
                                 maxDate={maxDate}
+                                customInput={<SecCustomInput />}
                             />
                         </div>
                         <div className="error-container">
@@ -420,3 +422,28 @@ export function TaskPage(): React.JSX.Element {
         </div>
     )
 }
+
+interface CustomInputProps {
+    value?: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const CustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref) => (
+    <button
+        className="input-container"
+        style={{ backgroundColor: 'white', color: 'black', width: "200px" }}
+        onClick={(e) => { e.preventDefault(); onClick?.(e); }}
+        ref={ref as React.RefObject<HTMLButtonElement>}
+    >
+        {value || "Выберите дату начала"}
+    </button>
+));
+
+const SecCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref) => (
+    <button className="input-container"
+            style={{backgroundColor: 'white', color: 'black', width: "200px"}}
+            onClick={(e) => { e.preventDefault(); onClick?.(e); }}
+            ref={ref}>
+        {value || "Выберите дату окончания"}
+    </button>
+));

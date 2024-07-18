@@ -291,7 +291,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         <div className="common">
             {/*{user.role === "ROLE_MASTER" && (*/}
                 <>
-                    <div style={{ width: '150px', height: '45px', marginTop: '30px'}}>
+                    <div style={{ width: '150px', height: '45px', margin: '30px 0 0 20px', }}>
                         <OrangeButton onClick={() => navigate(-1)} text={"Назад"}/>
                     </div>
                     <div className="info-container">
@@ -330,9 +330,9 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                 {user.role === "ROLE_MASTER" && (
                                     <>
                                         <button className={activeTab === "tab1" ? "active" : ""}
-                                                onClick={() => handleTabClick("tab1")}>Обо мне</button>
+                                                onClick={() => handleTabClick("tab1")} style={{color: "black"}}>Обо мне</button>
                                         <button className={activeTab === "tab2" ? "active" : ""}
-                                                onClick={() => handleTabClick("tab2")}>Заказы</button>
+                                                onClick={() => handleTabClick("tab2")} style={{color: "black"}}>Заказы</button>
                                     </>
                                 )}
                             </div>
@@ -342,9 +342,9 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     <h2 className="orders-title">Заказы</h2>
                                     <div className="profile-select">
                                         <button className={activeTab === "tab1" ? "active" : ""}
-                                                onClick={() => handleTabClick("tab1")}>Активные</button>
+                                                onClick={() => handleTabClick("tab1")} style={{color: "black"}}>Активные</button>
                                         <button className={activeTab === "tab2" ? "active" : ""}
-                                                onClick={() => handleTabClick("tab2")}>Выполненные</button>
+                                                onClick={() => handleTabClick("tab2")} style={{color: "black"}}>Выполненные</button>
                                     </div>
                                 </div>
                             }
@@ -393,7 +393,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     <h2>Выполненные</h2>
                                     <div style={{marginBottom: "40px"}}>
                                         {completedTasks[0] ? completedTasks.map(task => (
-                                            <Link to={`/task/${task.id}`} key={task.id}>
+                                            <Link to={`/task/${task.id}`} key={task.id} style={{color: "black"}}>
                                                 <TaskCard data={task} />
                                             </Link>
                                         )) : <h3>Задач пока нет.</h3>
@@ -401,7 +401,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     </div>
                                     <h2>В процессе</h2>
                                     {uncompletedTasks[0] ? uncompletedTasks.map(task => (
-                                        <Link to={`/task/${task.id}`} key={task.id}>
+                                        <Link to={`/task/${task.id}`} key={task.id} style={{color: "black"}}>
                                             <TaskCard data={task} />
                                         </Link>
                                     )) : <h3>Задач пока нет.</h3>
@@ -453,8 +453,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     {user.role === "ROLE_MASTER" &&
                     <div className="profile-bottom">
                         <h2>Отзывы</h2>
-                        <div style={{display: "flex", gap: "20px", flexWrap: "wrap"}}>
-                            {feedbacks && feedbacks.map((fb) =>
+                        <div className="feedbacks">
+                            {feedbacks ? feedbacks.map((fb) =>
                                 <div className="profile-review-card">
                                     <p className="title">{fb.categoryName}</p>
                                     <p className="price">Стоимость работ: {fb.price}₽</p>
@@ -464,9 +464,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                         Отзыв оставил(а): {fb.clientName}
                                     </div>
                                 </div>
-                            )}
+                            ): <p>Отзывов нет</p>}
                         </div>
-
                     </div>
                     }
                 </>

@@ -468,8 +468,8 @@ a {
     }
 
     .intro-search {
-        width: 80%;
-        max-width: 286px;
+        width: 90%;
+        /*max-width: 286px;*/
     }
 
     .search-container {
@@ -477,21 +477,21 @@ a {
     }
 
     .search-container .orange-button {
-        font-size: 7px;
+        font-size: 10px;
     }
 
     .search-input {
-        height: 30px;
+        height: 50px;
         padding: 0 12px;
         border-radius: 4px;
-        font-size: 7px;
+        /*font-size: 7px;*/
     }
 
     .search-button {
-        height: 18px;
-        width: 41px;
-        top: 1px;
-        right: 20px;
+        height: 34px;
+        width: 70px;
+        top: 8px;
+        right: 5px;
     }
 
     .orange-button {
@@ -535,7 +535,7 @@ a {
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        height: 230px;
+        /*height: 230px;*/
         margin: 0;
         padding: 25px 0 15px;
         background-color: #f7f7f7;
@@ -763,6 +763,7 @@ a {
 
     .about-container {
         height: 280px;
+        background-color: #c2a37f;
     }
 
     .about-container .about-title {
@@ -791,6 +792,7 @@ a {
         font-size: 12px;
         font-weight: 400;
         height: 50px;
+        color: black;
     }
 
     .reviews-container,

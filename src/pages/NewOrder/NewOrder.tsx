@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {forwardRef, useEffect, useState} from "react";
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -156,7 +156,7 @@ export function NewOrder() {
                         {data.categoryName && (
                             <span className="selected-service">
                             {data.categoryName}
-                                <button type="button" onClick={handleCategoryRemove}>x</button>
+                                <button type="button" onClick={handleCategoryRemove} style={{color: "black", marginLeft: "8px", marginTop: "2px"}}>x</button>
                         </span>
                         )}
                     </div>
@@ -171,7 +171,8 @@ export function NewOrder() {
                                     padding: '10px',
                                     border: '1px solid #ccc',
                                     borderRadius: '5px',
-                                    background: data.categoryName === category.name ? '#ddd' : '#fff'
+                                    background: data.categoryName === category.name ? '#ddd' : '#fff',
+                                    color: "black"
                                 }}
                             >
                                 {category.name}
@@ -189,8 +190,9 @@ export function NewOrder() {
                 <div className="steps">
                     <h1>Когда нужно приступить к работе?</h1>
                     <label>Укажите дату начала работ и ориентировочные сроки выполнения работ.</label>
-                    <div style={{display: "flex", gap: "30px"}}>
+                    <div style={{display: "flex", gap: "30px", flexDirection: 'column'}}>
                         <DatePicker
+                            className="input-container"
                             selected={data.startDate ? new Date(data.startDate) : null}
                             onChange={date => setData(prevData => ({
                                 ...prevData,
@@ -200,8 +202,10 @@ export function NewOrder() {
                             placeholderText="Выберите дату начала"
                             minDate={minDate}
                             maxDate={maxDate}
+                            customInput={<CustomInput />}
                         />
                         <DatePicker
+                            className="input-container"
                             selected={data.endDate ? new Date(data.endDate) : null}
                             onChange={date => setData(prevData => ({
                                 ...prevData,
@@ -211,6 +215,7 @@ export function NewOrder() {
                             placeholderText="Выберите дату окончания"
                             minDate={minDate}
                             maxDate={maxDate}
+                            customInput={<SecCustomInput />}
                         />
                     </div>
 
@@ -273,3 +278,29 @@ export function NewOrder() {
         </form>
     )
 }
+
+
+interface CustomInputProps {
+    value?: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const CustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref) => (
+    <button
+        className="input-container"
+        style={{ backgroundColor: 'white', color: 'black', width: "200px" }}
+        onClick={(e) => { e.preventDefault(); onClick?.(e); }}
+        ref={ref as React.RefObject<HTMLButtonElement>}
+    >
+        {value || "Выберите дату начала"}
+    </button>
+));
+
+const SecCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref) => (
+    <button className="input-container"
+            style={{backgroundColor: 'white', color: 'black', width: "200px"}}
+            onClick={(e) => { e.preventDefault(); onClick?.(e); }}
+            ref={ref}>
+        {value || "Выберите дату окончания"}
+    </button>
+));

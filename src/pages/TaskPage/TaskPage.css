@@ -1,6 +1,6 @@
-.task-container {
-    padding: 30px;
-}
+/*.task-container {*/
+/*    padding: 30px;*/
+/*}*/
 
 .response-form {
     display: flex;
@@ -10,8 +10,28 @@
 
 @media (max-width: 767px) {
     .response-form div {
-        display: flex;
-        flex-direction: column;
+        /*display: flex;*/
+        /*flex-direction: column;*/
+    }
+
+    .task-container {
+        width: 95vw;
+    }
+}
+
+@media (max-width: 450px) {
+    .task-container h1 {
+        font-size: 22px;
+    }
+
+    .task-container h2 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .task-container h3 {
+
+        font-weight: 600;
     }
 }
 

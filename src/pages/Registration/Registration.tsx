@@ -399,7 +399,7 @@ export function Registration(): React.JSX.Element {
             {step === 1 &&
                 <div className="steps">
                     <h1>Укажите качестве кого вы хотите зарегистрироваться</h1>
-                    <select name="role" value={data.role} onChange={handleChange}>
+                    <select name="role" value={data.role} onChange={handleChange} style={{color: "black"}}>
                         <option/>
                         <option value="ROLE_MASTER">Исполнитель</option>
                         <option value="ROLE_CLIENT">Заказчик</option>
@@ -455,7 +455,7 @@ export function Registration(): React.JSX.Element {
                 <div className="steps">
                     <h1>Укажите район или метро</h1>
                     <label>Укажите удобный для вас район города или метро для оказания услуг</label>
-                    <select name="metroStation" value={data.metroStation} onChange={handleChange}>
+                    <select name="metroStation" value={data.metroStation} onChange={handleChange} style={{color: "black"}}>
                         <option/>
                         {metro && metro.map((metro) => (
                             <option key={metro}>{metro}</option>
@@ -476,7 +476,7 @@ export function Registration(): React.JSX.Element {
                         {data.categories.map(category => (
                             <span key={category} className="selected-service">
                         {category}
-                                <button type="button" onClick={() => handleServiceRemove(category)}>x</button>
+                                <button type="button" onClick={() => handleServiceRemove(category)} style={{marginLeft: "8px", color: "black"}}>x</button>
                     </span>
                         ))}
                     </div>
@@ -487,6 +487,7 @@ export function Registration(): React.JSX.Element {
                                 key={category.name}
                                 onClick={() => handleServiceClick(category.name)}
                                 style={{
+                                    color: 'black',
                                     margin: '5px',
                                     padding: '10px',
                                     border: '1px solid #ccc',
@@ -550,7 +551,7 @@ export function Registration(): React.JSX.Element {
                         onChange={handleAddPhotoChange}
                     />
                     <label>Для успешного завершения регистрации и подтверждения личности, загрузите документ
-                        подтверждяающий вашу личность.</label>
+                        подтверждающий вашу личность.</label>
                     <div className="add-document">
                         <img alt="document-icon" src="./document-icon.png"/>
                         <div className="add-document-button">

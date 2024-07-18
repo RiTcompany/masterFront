@@ -35,8 +35,8 @@ export function TaskCard({data}: TaskCardProps): React.JSX.Element {
 
     return (
         <div className="task-card" onClick={handleClick}>
-            <h3>{data.categoryName}</h3>
-            <h3>{data.userName}</h3>
+            <h3 className="category">{data.categoryName}</h3>
+            <h3 className="username">{data.userName}</h3>
             <div className="text">
                 <p>{data.description}</p>
                 <span>Начать {formatDate(data.startDate)}</span>

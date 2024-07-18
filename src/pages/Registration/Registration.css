@@ -30,7 +30,7 @@
     box-sizing: border-box;
     padding: 8px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid grey;
     box-shadow: 0 0 10px 0 #d5d5d5;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .error-container {
-    height: 22px;
+    height: 40px;
 }
 
 .error-message {

@@ -6,7 +6,6 @@ import {OrangeCircle} from "../../components/OrangeCircle/OrangeCircle.tsx";
 import {ServiceCard} from "../../components/ServiceCard/ServiceCard.tsx";
 import {Review} from "./Review.tsx";
 // import {SearchField} from "./SearchField.tsx";
-import {CreatedCard} from "./CreatedCard.tsx";
 import {parseJwt} from "../../App.tsx";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 
@@ -40,14 +39,14 @@ interface CategoryType {
     name: string,
 }
 
-interface TaskType {
-    id: number,
-    title: string,
-    customer: string,
-    description: string;
-    date: Date;
-    price: number
-}
+// interface TaskType {
+//     id: number,
+//     title: string,
+//     customer: string,
+//     description: string;
+//     date: Date;
+//     price: number
+// }
 
 interface TasksType {
     id: number,
@@ -166,66 +165,66 @@ const services: ServiceType[] = [
     }
 ];
 
-const tasks: TaskType[] = [
-    {
-        id: 1,
-        title: "Замена окон",
-        customer: "Дмитрий Ц.",
-        description: "Демонтаж окон в квартире, 4 шт.",
-        date: new Date(2024, 5, 6),
-        price: 12000
-    },
-    {
-        id: 2,
-        title: "Замена окон",
-        customer: "Дмитрий Ц.",
-        description: "Демонтаж окон в квартире, 4 шт.",
-        date: new Date(2024, 5, 6),
-        price: 12000
-    },
-    {
-        id: 3,
-        title: "Замена окон",
-        customer: "Дмитрий Ц.",
-        description: "Демонтаж окон в квартире, 4 шт.",
-        date: new Date(2024, 5, 6),
-        price: 12000
-    },
-    {
-        id: 4,
-        title: "Замена окон",
-        customer: "Дмитрий Ц.",
-        description: "Демонтаж окон в квартире, 4 шт.",
-        date: new Date(2024, 5, 6),
-        price: 12000
-    },
-    {
-        id: 5,
-        title: "Замена окон",
-        customer: "Дмитрий Ц.",
-        description: "Демонтаж окон в квартире, 4 шт.",
-        date: new Date(2024, 5, 6),
-        price: 12000
-    },
-]
+// const tasks: TaskType[] = [
+//     {
+//         id: 1,
+//         title: "Замена окон",
+//         customer: "Дмитрий Ц.",
+//         description: "Демонтаж окон в квартире, 4 шт.",
+//         date: new Date(2024, 5, 6),
+//         price: 12000
+//     },
+//     {
+//         id: 2,
+//         title: "Замена окон",
+//         customer: "Дмитрий Ц.",
+//         description: "Демонтаж окон в квартире, 4 шт.",
+//         date: new Date(2024, 5, 6),
+//         price: 12000
+//     },
+//     {
+//         id: 3,
+//         title: "Замена окон",
+//         customer: "Дмитрий Ц.",
+//         description: "Демонтаж окон в квартире, 4 шт.",
+//         date: new Date(2024, 5, 6),
+//         price: 12000
+//     },
+//     {
+//         id: 4,
+//         title: "Замена окон",
+//         customer: "Дмитрий Ц.",
+//         description: "Демонтаж окон в квартире, 4 шт.",
+//         date: new Date(2024, 5, 6),
+//         price: 12000
+//     },
+//     {
+//         id: 5,
+//         title: "Замена окон",
+//         customer: "Дмитрий Ц.",
+//         description: "Демонтаж окон в квартире, 4 шт.",
+//         date: new Date(2024, 5, 6),
+//         price: 12000
+//     },
+// ]
 
-function FoundCard({title, customer, description, date, price}: TaskType): React.JSX.Element {
-    const formattedDate = date.toLocaleDateString();
-
-    return (
-        <div className="found-card">
-            <div className="left">
-                <h1>{title}</h1>
-                <p>{description}</p>
-                <p>Начать {formattedDate}</p>
-            </div>
-            <div className="right">
-                <h1>до {price}&#8381;</h1>
-                <p>{customer}</p>
-            </div>
-        </div>
-    )
-}
+// function FoundCard({title, customer, description, date, price}: TaskType): React.JSX.Element {
+//     const formattedDate = date.toLocaleDateString();
+//
+//     return (
+//         <div className="found-card">
+//             <div className="left">
+//                 <h1>{title}</h1>
+//                 <p>{description}</p>
+//                 <p>Начать {formattedDate}</p>
+//             </div>
+//             <div className="right">
+//                 <h1>до {price}&#8381;</h1>
+//                 <p>{customer}</p>
+//             </div>
+//         </div>
+//     )
+// }
 
 export function Main(): React.JSX.Element {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -233,7 +232,7 @@ export function Main(): React.JSX.Element {
     // const navigate = useNavigate();
 
 
-    const [activeTab, setActiveTab] = useState<string>('create');
+    // const [activeTab, setActiveTab] = useState<string>('create');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isChecked, setIsChecked] = useState(false);
@@ -428,9 +427,9 @@ export function Main(): React.JSX.Element {
 
     // const [isChecked, setIsChecked] = useState<boolean>(false);
 
-    const handleTabClick = (tab: string) => {
-        setActiveTab(tab);
-    };
+    // const handleTabClick = (tab: string) => {
+    //     setActiveTab(tab);
+    // };
 
     const handleToggleChange = () => {
         setIsChecked(!isChecked);
@@ -496,10 +495,11 @@ export function Main(): React.JSX.Element {
                             className="search-input"
                             value={selectedCategory ? selectedCategory.id : ''}
                             onChange={handleChange}
+                            style={{color: "black"}}
                         >
-                            <option value="" disabled hidden>Поиск заданий по категориям</option>
+                            <option value="" disabled hidden style={{color: "black"}}>Поиск заданий по категориям</option>
                             {categories && categories.map((category) => (
-                                <option key={category.id} value={category.id}>{category.name}</option>
+                                <option key={category.id} value={category.id} style={{color: "black"}}>{category.name}</option>
                             ))}
                         </select>
                         <div className={"search-button"}>
@@ -507,22 +507,22 @@ export function Main(): React.JSX.Element {
                         </div>
                     </form>
                 </div>
-                <div className='selection'>
-                    <div className="switcher">
-                        <button
-                            className={activeTab === 'create' ? 'active' : ''}
-                            onClick={() => handleTabClick('create')}
-                        >
-                            Создать услугу
-                        </button>
-                        <button
-                            className={activeTab === 'find' ? 'active' : ''}
-                            onClick={() => handleTabClick('find')}
-                        >
-                            Найти услугу
-                        </button>
-                    </div>
-                </div>
+                {/*<div className='selection'>*/}
+                {/*    <div className="switcher">*/}
+                {/*        <button*/}
+                {/*            className={activeTab === 'create' ? 'active' : ''}*/}
+                {/*            onClick={() => handleTabClick('create')}*/}
+                {/*        >*/}
+                {/*            Создать услугу*/}
+                {/*        </button>*/}
+                {/*        <button*/}
+                {/*            className={activeTab === 'find' ? 'active' : ''}*/}
+                {/*            onClick={() => handleTabClick('find')}*/}
+                {/*        >*/}
+                {/*            Найти услугу*/}
+                {/*        </button>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
 
             {showSearchResults &&
@@ -548,45 +548,45 @@ export function Main(): React.JSX.Element {
                         </div>
                     ))}
                 </div>
-                <div className="finder-container">
-                    <form className="finder-form">
-                        <label htmlFor="service-search" className="finder-label">Поиск исполнителя</label>
-                        <div className="finder-inputs">
-                            <input type="text" id="service-search" name="search" placeholder="Услуга или специалист"
-                                   className="finder-input"/>
-                            <select id="location-select" name="location" className="finder-select">
-                                <option value="">Радиус, метро, район</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
+                {/*<div className="finder-container">*/}
+                {/*    <form className="finder-form">*/}
+                {/*        <label htmlFor="service-search" className="finder-label">Поиск исполнителя</label>*/}
+                {/*        <div className="finder-inputs">*/}
+                {/*            <input type="text" id="service-search" name="search" placeholder="Услуга или специалист"*/}
+                {/*                   className="finder-input"/>*/}
+                {/*            <select id="location-select" name="location" className="finder-select">*/}
+                {/*                <option value="">Радиус, метро, район</option>*/}
+                {/*            </select>*/}
+                {/*        </div>*/}
+                {/*    </form>*/}
+                {/*</div>*/}
             </div>
 
-            {activeTab === 'create' &&
-                <div className="create-service-container">
-                    {services && services.map((service) =>
-                        <CreatedCard image={service.image} title={service.title} master={service.master}
-                                     city={service.city} age={service.age} rating={service.rating}
-                                     description={service.description} id={service.id} key={service.id}
-                        />)}
-                </div>
-            }
+            {/*{activeTab === 'create' &&*/}
+            {/*    <div className="create-service-container">*/}
+            {/*        {services && services.map((service) =>*/}
+            {/*            <CreatedCard image={service.image} title={service.title} master={service.master}*/}
+            {/*                         city={service.city} age={service.age} rating={service.rating}*/}
+            {/*                         description={service.description} id={service.id} key={service.id}*/}
+            {/*            />)}*/}
+            {/*    </div>*/}
+            {/*}*/}
 
-            {activeTab === 'find' &&
-                <div className="find-service-container">
-                    <div className="subscribe-card">
-                        <p>Подпишитесь на уведомления о новых заказах</p>
-                        <div className="subscribe-button">
-                            <OrangeButton text={"Подписаться"} onClick={(e) => e.preventDefault()}/>
-                        </div>
-                    </div>
-                    {tasks && tasks.map((task) =>
-                        <FoundCard title={task.title} customer={task.customer} description={task.description}
-                                   date={task.date} price={task.price} id={task.id} key={task.id}
-                        />
-                    )}
-                </div>
-            }
+            {/*{activeTab === 'find' &&*/}
+            {/*    <div className="find-service-container">*/}
+            {/*        <div className="subscribe-card">*/}
+            {/*            <p>Подпишитесь на уведомления о новых заказах</p>*/}
+            {/*            <div className="subscribe-button">*/}
+            {/*                <OrangeButton text={"Подписаться"} onClick={(e) => e.preventDefault()}/>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*        {tasks && tasks.map((task) =>*/}
+            {/*            <FoundCard title={task.title} customer={task.customer} description={task.description}*/}
+            {/*                       date={task.date} price={task.price} id={task.id} key={task.id}*/}
+            {/*            />*/}
+            {/*        )}*/}
+            {/*    </div>*/}
+            {/*}*/}
 
             <div className="service-container common">
                 <div className="service-circles">
