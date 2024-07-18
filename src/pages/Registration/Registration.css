@@ -233,3 +233,31 @@
         width: 95vw;
     }
 }
+
+.password-input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.password-input {
+    width: 100%;
+    padding-right: 80px;
+    box-sizing: border-box;
+}
+
+.password-toggle-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: grey;
+    padding: 0;
+    margin: 0;
+    outline: none;
+
+}
+

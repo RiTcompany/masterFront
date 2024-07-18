@@ -21,7 +21,7 @@ interface UserType {
     metroStation?: string,
     rate?: number,
     description?: string,
-    documents?: boolean,
+    documents?: string[],
 }
 
 interface TaskType {
@@ -351,24 +351,22 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                             <hr/>
                             {user.role === "ROLE_CLIENT" && activeTab === "tab1" &&
                                 <div>
-                                    {tasks && tasks
-                                        .filter(task => !task.isCompleted)
+                                    {uncompletedTasks.length > 0 ? uncompletedTasks
                                         .map((task) => (
                                             <div key={task.id}>
                                                 <TaskCard data={task} />
                                             </div>
-                                        ))}
+                                        )) : <h4>Заказов нет</h4>}
                                 </div>
                             }
                             {user.role === "ROLE_CLIENT" && activeTab === "tab2" &&
                                 <div>
-                                    {tasks && tasks
-                                        .filter(task => task.isCompleted)
+                                    {completedTasks.length > 0 ? completedTasks
                                         .map((task) => (
                                             <div key={task.id}>
                                                 <TaskCard data={task} />
                                             </div>
-                                        ))}
+                                        )) : <h4>Заказов нет</h4>}
                                 </div>
                             }
 
@@ -419,7 +417,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     <img src="/confirm-documents-icon.png" alt="documents-icon"/>
                                     <div>
                                         <strong>Документы</strong>
-                                        {user.documents ? (
+                                        {user.documents && user.documents.length > 0 ? (
                                             <p style={{color: "green"}}>Подтверждены</p>
                                         ) : (
                                             <p style={{color: "red"}}>Не подтверждены</p>
@@ -454,7 +452,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     <div className="profile-bottom">
                         <h2>Отзывы</h2>
                         <div className="feedbacks">
-                            {feedbacks ? feedbacks.map((fb) =>
+                            {feedbacks && feedbacks.length > 0 ? feedbacks.map((fb) =>
                                 <div className="profile-review-card">
                                     <p className="title">{fb.categoryName}</p>
                                     <p className="price">Стоимость работ: {fb.price}₽</p>
@@ -464,7 +462,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                         Отзыв оставил(а): {fb.clientName}
                                     </div>
                                 </div>
-                            ): <p>Отзывов нет</p>}
+                            ): <h4>Отзывов нет</h4>}
                         </div>
                     </div>
                     }

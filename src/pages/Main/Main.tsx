@@ -243,6 +243,7 @@ export function Main(): React.JSX.Element {
     const [categories, setCategories] = useState<CategoryType[]>([])
     const [selectedCategory, setSelectedCategory] = useState<CategoryType>()
     const [topMasters, setTopMasters] = useState<MasterType[]>([])
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const search = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -458,6 +459,10 @@ export function Main(): React.JSX.Element {
                 credentials: "include",
             });
 
+            if (!response.ok) {
+                setError("WrongPassword")
+            }
+
             if (response.ok) {
                 const responseData = await response.json();
                 localStorage.setItem('authToken', responseData.token);
@@ -480,6 +485,10 @@ export function Main(): React.JSX.Element {
                 setError(String(error));
             }
         }
+    };
+
+    const toggleShowPassword = () => {
+        setShowPassword(prevShowPassword => !prevShowPassword);
     };
 
     return (
@@ -654,16 +663,27 @@ export function Main(): React.JSX.Element {
                         </div>
                         <div className="login-field">
                             <label htmlFor="password">Пароль</label>
-                            <input type="password"
-                                   placeholder="Пароль"
-                                   value={password}
-                                   onChange={handlePasswordChange}
-                                   required
-                            />
+                            {/*<input type="password"*/}
+                            {/*       placeholder="Пароль"*/}
+                            {/*       value={password}*/}
+                            {/*       onChange={handlePasswordChange}*/}
+                            {/*       required*/}
+                            {/*/>*/}
+                            <div className="password-input-container">
+                                <input
+                                    name="password"
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    placeholder="Пароль"
+                                    onChange={handlePasswordChange}
+                                    className="password-input"
+                                />
+                                <button type="button" onClick={toggleShowPassword} className="password-toggle-button" style={{top: "12px"}}>
+                                    {showPassword ? <span className="material-symbols-outlined">visibility_off</span>
+                                        : <span className="material-symbols-outlined">visibility</span>}
+                                </button>
+                            </div>
                         </div>
-                        {
-                            error && <p>Заполните, пожалуйста, все поля</p>
-                        }
                         <div className="under-form-buttons">
                             <div className="switch-toggle-container">
                                 <div className={`switch-toggle ${isChecked ? 'checked' : ''}`}
@@ -674,6 +694,12 @@ export function Main(): React.JSX.Element {
                             </div>
                             <Link to={"/"}>Забыли пароль?</Link>
                         </div>
+
+                        <div className="error-container">
+                            {error === "WrongPassword" && <p className="error-message">Неправильный логин или пароль, либо ваш аккаунт еще не подтвержен</p>}
+                            {error === "EmptyFieldError" && <p className="error-message">Заполните, пожалуйста, все поля</p>}
+                        </div>
+
                         <div className="login-button">
                             <OrangeButton text="Войти" onClick={handleSubmit}/>
                         </div>

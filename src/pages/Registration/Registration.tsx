@@ -361,7 +361,7 @@ export function Registration(): React.JSX.Element {
         }
 
         const formData = new FormData();
-        formData.append("email", data.email);
+        formData.append("username", data.email);
         const filesToUpload = Array.from(files).slice(0, 5);
         filesToUpload.forEach(file => {
             formData.append("files", file);
@@ -393,6 +393,12 @@ export function Registration(): React.JSX.Element {
             console.log(error)
         }
     }
+
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const toggleShowPassword = () => {
+        setShowPassword(prevShowPassword => !prevShowPassword);
+    };
 
     return (
         <form className="registration-form">
@@ -553,17 +559,18 @@ export function Registration(): React.JSX.Element {
                     <label>Для успешного завершения регистрации и подтверждения личности, загрузите документ
                         подтверждающий вашу личность.</label>
                     <div className="add-document">
-                        <img alt="document-icon" src="./document-icon.png"/>
-                        <div className="add-document-button">
-                            <OrangeButton text="Загрузить" onClick={handleAddDocumentsClick}/>
-                            <input
-                                type="file"
-                                ref={documentInputRef}
-                                style={{display: 'none'}}
-                                onChange={handleAddDocumentsChange}
-                                multiple
-                            />
-                        </div>
+                        {data.documents && data.documents.length > 0 ? <p>Документ загружен</p> :
+                            <div className="add-document-button">
+                                <OrangeButton text="Загрузить" onClick={handleAddDocumentsClick}/>
+                                <input
+                                    type="file"
+                                    ref={documentInputRef}
+                                    style={{display: 'none'}}
+                                    onChange={handleAddDocumentsChange}
+                                    multiple
+                                />
+                            </div>
+                        }
                     </div>
                 </div>
             }
@@ -571,7 +578,19 @@ export function Registration(): React.JSX.Element {
                 <div className="steps password-step">
                     <h1>Установите новый пароль для входа </h1>
                     <label>Придумайте пароль</label>
-                    <input name="password" type="text" value={data.password} onChange={handleChange}/>
+                    <div className="password-input-container">
+                        <input
+                            name="password"
+                            type={showPassword ? "text" : "password"}
+                            value={data.password}
+                            onChange={handleChange}
+                            className="password-input"
+                        />
+                        <button type="button" onClick={toggleShowPassword} className="password-toggle-button">
+                            {showPassword ? <span className="material-symbols-outlined">visibility_off</span>
+                                : <span className="material-symbols-outlined">visibility</span>}
+                        </button>
+                    </div>
                     <label>Повторите пароль</label>
                     <input name="repeatPassword" type="password" value={repeatPassword} onChange={handleChangeRepeatPassword}/>
                     <div className="error-container">
