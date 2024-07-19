@@ -203,10 +203,6 @@
         width: 170px;
     }
 
-    .profile-left {
-        width: 90vw;
-    }
-
     .profile-left img {
         width: 170px;
     }
@@ -219,7 +215,11 @@
 
 @media (max-width: 450px) {
     .profile-review-card {
+        width: 90vw;
         justify-self: center;
         align-self: center;
+    }
+    .profile-left {
+        width: 90vw;
     }
 }

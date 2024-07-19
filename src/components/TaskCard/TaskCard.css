@@ -33,7 +33,7 @@
     font-weight: bold;
 }
 
-@media (max-width: 787px) {
+@media (max-width: 656px) {
     .task-card {
         width: 80vw;
         min-width: 250px;
