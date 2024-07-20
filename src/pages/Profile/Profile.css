@@ -49,8 +49,19 @@
     font-size: 18px;
 }
 
+.settings {
+    color: gray;
+}
+
+.change-info {
+    width: 50vw;
+    max-width: 500px;
+    margin: 5px 0 25px;
+}
+
 .profile-select .active {
     font-weight: 700;
+    color: black;
 }
 
 .profile-left hr {
@@ -200,16 +211,21 @@
     }
 
     .add-photo-button {
-        width: 170px;
+        width: 190px;
     }
 
     .profile-left img {
-        width: 170px;
+        width: 190px;
     }
 
     .profile-bottom {
         padding: 0 20px;
         /*margin-bottom: 30px;*/
+    }
+
+    .change-info {
+        width: 90vw;
+        margin: 5px 0 25px;
     }
 }
 

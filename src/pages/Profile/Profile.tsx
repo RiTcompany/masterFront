@@ -14,7 +14,7 @@ interface UserType {
     photoLink?: string,
     categories: string[],
     role: string
-    telegramTag?: string,
+    telegramTag: string,
     userId: number,
     firstName: string,
     age?: number,
@@ -65,6 +65,11 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
     const [uncompletedTasks, setUncompletedTasks] = useState<TaskType[]>([]);
     const [feedbacks, setFeedBacks] = useState<FeedbackType[]>([])
+    const [metro, setMetro] = useState([]);
+    const [categories, setCategories] = useState<{id: number, name: string}[]>([])
+    const [changeInfoClient, setChangeInfoClient] = useState({email: "", phoneNumber: "", telegramTag: ""})
+    const [changeInfoMaster, setChangeInfoMaster] = useState({email: "", phoneNumber: "", telegramTag: "", description: "", metroStation: "", categories: [""]})
+    const [error, setError] = useState("")
 
     useEffect(() => {
         if (!isMounted.current) {
@@ -106,6 +111,16 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             }
         })()
     }, [userId, authUserId, authToken]);
+
+    useEffect(() => {
+        if (user && user.role === "ROLE_CLIENT") {
+            setChangeInfoClient({phoneNumber: user.phoneNumber, telegramTag: user.telegramTag, email: user.email})
+        } else if (user && user.role === "ROLE_MASTER") {
+            setChangeInfoMaster({phoneNumber: user.phoneNumber, telegramTag: user.telegramTag, email: user.email,
+                description: user.description || "", metroStation: user.metroStation || "", categories: user.categories || []})
+            console.log(changeInfoMaster)
+        }
+    }, [user]);
 
     useEffect(() => {
         (
@@ -150,7 +165,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     }, [user, userId]);
 
     useEffect(() => {
-        if (tasks) {
+        if (tasks && tasks.length > 0) {
             setCompletedTasks(tasks.filter(task => task.isCompleted))
             setUncompletedTasks(tasks.filter(task => !task.isCompleted))
         }
@@ -269,6 +284,127 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         // console.log(data)
     };
 
+    useEffect(() => {
+        (async function () {
+            try {
+                const response = await fetch("http://195.133.197.53:8081/masters/metro-stations", {
+                    method: "GET",
+                    credentials: "include"
+                })
+                let result = await response.json()
+                setMetro(result)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, []);
+
+    useEffect(() => {
+        (async function () {
+            try {
+                const response = await fetch("http://195.133.197.53:8081/categories", {
+                    method: "GET",
+                    credentials: "include"
+                })
+                let result = await response.json()
+                // console.log(response)
+                setCategories(result)
+                console.log(categories)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, []);
+
+    const handleServiceClick = (categoryName: string) => {
+        setChangeInfoMaster(prevData => {
+            const newCategories = prevData.categories.includes(categoryName)
+                ? prevData.categories
+                : [...(prevData.categories), categoryName];
+
+            return { ...prevData, categories: newCategories };
+        });
+    };
+
+    const handleServiceRemove = (categoryName: string) => {
+        setChangeInfoMaster(prevData => {
+            const newCategories = prevData.categories.filter(cat => cat !== categoryName);
+
+            return { ...prevData, categories: newCategories };
+        });
+    };
+
+    const handleChangeClient = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        setChangeInfoClient({...changeInfoClient, [e.target.name]: e.target.value})
+    }
+
+    const handleChangeMaster = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        setChangeInfoMaster({...changeInfoMaster, [e.target.name]: e.target.value})
+    }
+
+    const submitClientChanges = async (e: any) => {
+        e.preventDefault();
+        if (!changeInfoClient.phoneNumber) {
+            setError("EmptyPhoneError")
+        } else if (!changeInfoClient.email) {
+            setError("EmptyPhoneError")
+        } else {
+            setError("")
+        }
+        try {
+            console.log(changeInfoClient)
+            const response = await fetch(`http://195.133.197.53:8081/profiles/${user?.userId}/change`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,},
+                body: JSON.stringify(changeInfoClient)
+                })
+            if (response.ok) {
+                window.location.reload()
+            }
+            console.log(await response.json())
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const submitMasterChanges = async (e: any) => {
+        e.preventDefault();
+        if (!changeInfoMaster.phoneNumber) {
+            setError("EmptyPhoneError")
+        } else if (!changeInfoMaster.email) {
+            setError("EmptyEmailError")
+        } else if (!changeInfoMaster.metroStation) {
+            setError("EmptyMetroError")
+        } else if (changeInfoMaster.categories.length === 0) {
+            setError("EmptyCategoriesError")
+        } else if (!changeInfoMaster.description) {
+            setError("EmptyDescriptionError")
+        } else {
+            setError("")
+        }
+        try {
+            console.log(changeInfoMaster)
+            const response = await fetch(`http://195.133.197.53:8081/profiles/${user?.userId}/change`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,},
+                body: JSON.stringify(changeInfoMaster)
+            })
+            if (response.ok) {
+                console.log("ok")
+                // window.location.reload()
+            }
+            console.log(await response.json())
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -279,13 +415,8 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     }
 
     if (!user || !user.role) {
-        console.log('User state:', user);
         return <p>Вы не авторизованы</p>;
     }
-
-    console.log('authUserId:', authUserId);
-    console.log('userId:', user.userId);
-    console.log('isMyProfile:', isMyProfile);
 
     return (
         <div className="common">
@@ -333,6 +464,11 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                                 onClick={() => handleTabClick("tab1")} style={{color: "black"}}>Обо мне</button>
                                         <button className={activeTab === "tab2" ? "active" : ""}
                                                 onClick={() => handleTabClick("tab2")} style={{color: "black"}}>Заказы</button>
+                                        {isMyProfile &&
+                                            <button className={activeTab === "tab3" ? "active" : "settings"} onClick={() => handleTabClick("tab3")} >
+                                                <span className="material-symbols-outlined">settings</span>
+                                            </button>
+                                        }
                                     </>
                                 )}
                             </div>
@@ -345,6 +481,11 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                                 onClick={() => handleTabClick("tab1")} style={{color: "black"}}>Активные</button>
                                         <button className={activeTab === "tab2" ? "active" : ""}
                                                 onClick={() => handleTabClick("tab2")} style={{color: "black"}}>Выполненные</button>
+                                        {isMyProfile &&
+                                            <button className={activeTab === "tab3" ? "active" : "settings"} onClick={() => handleTabClick("tab3")} >
+                                                <span className="material-symbols-outlined">settings</span>
+                                            </button>
+                                        }
                                     </div>
                                 </div>
                             }
@@ -367,6 +508,33 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                                 <TaskCard data={task} />
                                             </div>
                                         )) : <h4>Заказов нет</h4>}
+                                </div>
+                            }
+                            {user.role === "ROLE_CLIENT" && activeTab === "tab3" &&
+                                <div>
+                                    <h3 style={{marginBottom: "30px"}}>Редактирование профиля</h3>
+
+                                    <label>Email</label>
+                                    <input name="email" className="input-container change-info" value={changeInfoClient.email}
+                                            onChange={handleChangeClient}/>
+                                    <label>Телефон</label>
+                                    <input name="phoneNumber" className="input-container change-info" value={changeInfoClient.phoneNumber}
+                                           onChange={handleChangeClient}/>
+                                    <label>Телеграм</label>
+                                    <input name="telegramTag" className="input-container change-info"
+                                           value={changeInfoClient.telegramTag ? changeInfoClient.telegramTag : ""}
+                                           onChange={handleChangeClient}/>
+                                    <div className="error-container">
+                                        {error === "EmptyEmailError" &&
+                                            <p className="error-message">Поле email не должно быть пустым</p>
+                                        }
+                                        {error === "EmptyPhoneError" &&
+                                            <p className="error-message">Поле номера телефона не должно быть пустым</p>
+                                        }
+                                    </div>
+                                    <div style={{width: "200px", height: "45px"}}>
+                                        <OrangeButton text="Сохранить" onClick={submitClientChanges}/>
+                                    </div>
                                 </div>
                             }
 
@@ -406,6 +574,82 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     }
                                 </div>
                             )}
+                            {user.role === "ROLE_MASTER" && activeTab === "tab3" &&
+                                <div>
+                                    <h3 style={{marginBottom: "30px"}}>Редактирование профиля</h3>
+
+                                    <label>Email</label>
+                                    <input name="email" className="input-container change-info" value={changeInfoMaster.email}
+                                           onChange={handleChangeMaster}/>
+                                    <label>Телефон</label>
+                                    <input name="phoneNumber" className="input-container change-info" value={changeInfoMaster.phoneNumber}
+                                           onChange={handleChangeMaster}/>
+                                    <label>Телеграм</label>
+                                    <input name="telegramTag" className="input-container change-info"
+                                           value={changeInfoMaster.telegramTag ? changeInfoMaster.telegramTag : ""}
+                                           onChange={handleChangeMaster}/>
+                                    <label>Категории</label>
+                                    <div className="input-container change-info">
+                                        {changeInfoMaster.categories.map(category => (
+                                            <span key={category} className="selected-service">
+                                                {category}
+                                                <button type="button" onClick={() => handleServiceRemove(category)} style={{marginLeft: "8px", color: "black"}}>x</button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div style={{margin: '0 0 30px'}}>
+                                        {categories && categories.map(category => (
+                                            <button
+                                                type="button"
+                                                key={category.name}
+                                                onClick={() => handleServiceClick(category.name)}
+                                                style={{
+                                                    color: 'black',
+                                                    margin: '5px',
+                                                    padding: '10px',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '5px',
+                                                    background: changeInfoMaster.categories.includes(category.name) ? '#ddd' : '#fff'
+                                                }}
+                                            >
+                                                {category.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <label>Описание</label>
+                                    <textarea name="description" className="input-container change-info" style={{height: "100px"}}
+                                           value={changeInfoMaster.description ? changeInfoMaster.description : ""}
+                                           onChange={handleChangeMaster}/>
+                                    <label>Метро</label>
+                                    <select name="metroStation" value={changeInfoMaster.metroStation} className="input-container change-info"
+                                            onChange={handleChangeMaster} style={{color: "black"}}>
+                                        <option/>
+                                        {metro && metro.map((metro) => (
+                                            <option key={metro}>{metro}</option>
+                                        ))}
+                                    </select>
+                                    <div className="error-container">
+                                        {error === "EmptyEmailError" &&
+                                            <p className="error-message">Поле email не должно быть пустым</p>
+                                        }
+                                        {error === "EmptyPhoneError" &&
+                                            <p className="error-message">Поле номера телефона не должно быть пустым</p>
+                                        }
+                                        {error === "EmptyCategoriesError" &&
+                                            <p className="error-message">Поле категорий не должно быть пустым</p>
+                                        }
+                                        {error === "EmptyMetroError" &&
+                                            <p className="error-message">Поле метро не должно быть пустым</p>
+                                        }
+                                        {error === "EmptyDescriptionError" &&
+                                            <p className="error-message">Поле описания не должно быть пустым</p>
+                                        }
+                                    </div>
+                                    <div style={{width: "200px", height: "45px"}}>
+                                        <OrangeButton text="Сохранить" onClick={submitMasterChanges}/>
+                                    </div>
+                                </div>
+                            }
                         </div>
                         <div className="profile-right">
                             {user.role === "ROLE_MASTER" && <h2>Исполнитель</h2>}
