@@ -38,6 +38,7 @@ interface TaskType {
 
 
 interface FeedbackType {
+    id: number,
     rate: number,
     feedback: string,
     price: number,
@@ -396,8 +397,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                 body: JSON.stringify(changeInfoMaster)
             })
             if (response.ok) {
-                console.log("ok")
-                // window.location.reload()
+                window.location.reload()
             }
             console.log(await response.json())
         } catch (error) {
@@ -697,7 +697,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                         <h2>Отзывы</h2>
                         <div className="feedbacks">
                             {feedbacks && feedbacks.length > 0 ? feedbacks.map((fb) =>
-                                <div className="profile-review-card">
+                                <div className="profile-review-card" key={fb.id}>
                                     <p className="title">{fb.categoryName}</p>
                                     <p className="price">Стоимость работ: {fb.price}₽</p>
                                     <p className="text">Оценка: {fb.rate}</p>
