@@ -77,7 +77,7 @@ body > .common {
 }
 
 .search-result-container {
-    max-height: 400px;
+    max-height: 800px;
     overflow-y: auto;
     border: 1px solid #ccc;
     background-color: #F9EDE282;

@@ -4,7 +4,12 @@ import "./TaskPage.css"
 import {parseJwt} from "../../App.tsx";
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import {ru} from 'date-fns/locale/ru';
 import 'react-datepicker/dist/react-datepicker.css';
+
+registerLocale('ru', ru);
+setDefaultLocale('ru');
 
 interface TaskType {
     id: number,
@@ -15,6 +20,7 @@ interface TaskType {
     description: string;
     startDate: string;
     endDate: string;
+    maxPrice: number;
     masterId: number | null;
     masterEmail: string | null;
     masterPhoneNumber: string | null;
@@ -155,6 +161,8 @@ export function TaskPage(): React.JSX.Element {
             setError("EmptyDate");
         } else if (response.dateEnd < response.dateStart) {
             setError("EndDateBeforeStartDate")
+        } else if (task?.maxPrice && response.price > task?.maxPrice) {
+            setError("TooBigPrice")
         } else {
             setError("")
             try {
@@ -280,6 +288,7 @@ export function TaskPage(): React.JSX.Element {
                     <h3>{task.userName}</h3>
                     <p>Начать {formatDate(task.startDate)}</p>
                     <p>Закончить {formatDate(task.endDate)}</p>
+                    <p>Максимальная цена: {task.maxPrice}</p>
                 </div>
             )}
             {user && user.role === "ROLE_MASTER" && task && !task.masterEmail &&(
@@ -298,6 +307,7 @@ export function TaskPage(): React.JSX.Element {
                                 placeholderText="Выберите дату начала"
                                 minDate={minDate}
                                 maxDate={maxDate}
+                                locale="ru"
                                 customInput={<CustomInput />}
                             />
                             <DatePicker
@@ -311,7 +321,9 @@ export function TaskPage(): React.JSX.Element {
                                 placeholderText="Выберите дату окончания"
                                 minDate={minDate}
                                 maxDate={maxDate}
-                                customInput={<SecCustomInput />}
+                                locale="ru"
+                                customInput={<SecCustomInput />
+                            }
                             />
                         </div>
                         <div className="error-container">
@@ -320,6 +332,9 @@ export function TaskPage(): React.JSX.Element {
                             )}
                             {error === "EndDateBeforeStartDate" && (
                                 <p className="error-message">Дата окончания должна быть не раньше даты начала работ</p>
+                            )}
+                            {error === "TooBigPrice" && (
+                                <p className="error-message">Ваша цена не может быть больше указанной в заказе</p>
                             )}
                         </div>
                         <div className="response-button">

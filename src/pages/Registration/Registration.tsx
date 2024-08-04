@@ -1,10 +1,16 @@
 import React, {useEffect, useRef, useState} from "react";
 // import {useNavigate} from "react-router-dom";
+import Select, { MultiValue } from 'react-select';
 import "./Registration.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 
 interface DocumentType {
     url: string;
+}
+
+interface OptionType {
+    value: string;
+    label: string;
 }
 
 interface DataType {
@@ -17,7 +23,7 @@ interface DataType {
     photoLink?: string,
     documents?: DocumentType[],
     description: string,
-    metroStation: string,
+    metroStation: string[],
     password: string,
     categories: string[]
 }
@@ -41,7 +47,7 @@ export function Registration(): React.JSX.Element {
         password: '',
         role: '',
         photoLink: '',
-        metroStation: '',
+        metroStation: [],
         documents: [],
         description: '',
         categories: []
@@ -73,6 +79,11 @@ export function Registration(): React.JSX.Element {
             }
         })()
     }, []);
+
+    const metroOptions: OptionType[] = metro.map(station => ({ value: station, label: station }));
+    const allOption: OptionType = { value: 'ALL', label: 'Выбрать все' };
+    const options: OptionType[] = [allOption, ...metroOptions];
+    // const selectedValues = data.metroStation.includes('*') ? [allOption, ...metroOptions] : metroOptions.filter(option => data.metroStation.includes(option.value));
 
     useEffect(() => {
         (async function () {
@@ -300,6 +311,27 @@ export function Registration(): React.JSX.Element {
         setData({...data, [e.target.name]: e.target.value})
     }
 
+    const handleMultiSelectChange = (selectedOptions: MultiValue<OptionType>) => {
+        let values: string[] = [];
+        if (selectedOptions.some(option => option.value === 'ALL')) {
+            values = metroOptions.map(option => option.value);
+        } else {
+            values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        }
+
+        const event = {
+            target: {
+                name: 'metroStation',
+                value: values
+            }
+        } as unknown as React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+
+        handleChange(event);
+    };
+
+
+    const selectedValues: OptionType[] = data.metroStation.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter(option => data.metroStation.includes(option.value));
+
     const handleChangeRepeatPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRepeatPassword(e.target.value)
     }
@@ -461,12 +493,14 @@ export function Registration(): React.JSX.Element {
                 <div className="steps">
                     <h1>Укажите район или метро</h1>
                     <label>Укажите удобный для вас район города или метро для оказания услуг</label>
-                    <select name="metroStation" value={data.metroStation} onChange={handleChange} style={{color: "black"}}>
-                        <option/>
-                        {metro && metro.map((metro) => (
-                            <option key={metro}>{metro}</option>
-                        ))}
-                    </select>
+                    <Select
+                        name="metroStation"
+                        value={selectedValues}
+                        onChange={handleMultiSelectChange}
+                        options={options}
+                        isMulti
+                        styles={{ control: (base) => ({ ...base, color: 'black' }) }}
+                    />
                     <div className="error-container">
                         {error === "EmptyMetroError" &&
                             <p className="error-message">Выберите, пожалуйста, станцию</p>

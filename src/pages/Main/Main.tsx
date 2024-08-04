@@ -8,6 +8,7 @@ import {Review} from "./Review.tsx";
 // import {SearchField} from "./SearchField.tsx";
 import {parseJwt} from "../../App.tsx";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
+import Select, {MultiValue} from 'react-select';
 
 // interface MainProps {
 //     authUserId: number
@@ -37,6 +38,11 @@ interface ServiceType {
 interface CategoryType {
     id: number,
     name: string,
+}
+
+interface OptionType {
+    value: string;
+    label: string;
 }
 
 // interface TaskType {
@@ -245,6 +251,22 @@ export function Main(): React.JSX.Element {
     const [topMasters, setTopMasters] = useState<MasterType[]>([])
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
+    const [options, setOptions] = useState<OptionType[]>([]);
+    const [selectedValues, setSelectedValues] = useState<OptionType[]>([]);
+
+    const handleMultiSelectChange = (
+        newValue: MultiValue<OptionType>,
+        // actionMeta: ActionMeta<OptionType>
+    ) => {
+        if (newValue.some(option => option.value === 'all')) {
+            // Если выбрана опция "Выбрать все", то выбираем все опции
+            setSelectedValues(options.filter(option => option.value !== 'all'));
+        } else {
+            // В остальных случаях просто обновляем выбранные значения
+            setSelectedValues(newValue as OptionType[]);
+        }
+    };
+
     const search = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -258,7 +280,6 @@ export function Main(): React.JSX.Element {
             if (response.ok) {
                 const result = await response.json();
 
-                // Фильтрация результатов по условию (например, по полю masterId)
                 const filteredResults = result.filter((res: any) => !res.masterId);
 
                 setSearchResults(filteredResults);
@@ -268,6 +289,31 @@ export function Main(): React.JSX.Element {
             }
         } catch (error) {
             console.error("Ошибка при выполнении запроса:", error);
+        }
+    };
+
+    const multiSearch = async () => {
+        try {
+            const selectedIds = selectedValues.map(option => option.value);
+            console.log(selectedIds)
+
+            const response = await fetch('http://195.133.197.53:8081/categories/list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(selectedIds),
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при загрузке данных');
+            }
+
+            const data = await response.json();
+            console.log(data)
+            setSearchResults(data);
+        } catch (error) {
+            console.error('Ошибка при поиске:', error);
         }
     };
 
@@ -327,6 +373,11 @@ export function Main(): React.JSX.Element {
                 })
                 let result = await response.json()
                 setCategories(result)
+                const formattedOptions: OptionType[] = result.map((category: { id: number; name: string }) => ({
+                    value: category.id,
+                    label: category.name,
+                }));
+                setOptions([{ value: 'all', label: 'Выбрать все' }, ...formattedOptions]);
             } catch (error) {
                 console.log(error)
             }
@@ -536,6 +587,18 @@ export function Main(): React.JSX.Element {
 
             {showSearchResults &&
                 <div className="search-result-container common">
+                    <Select
+                        name="categories"
+                        placeholder="Выбор категорий"
+                        value={selectedValues}
+                        onChange={handleMultiSelectChange}
+                        options={options}
+                        isMulti
+                        styles={{ control: (base) => ({ ...base, color: 'black', width: "330px" }) }}
+                    />
+                    <div style={{width: "50vw"}}>
+                        <OrangeButton text={"Обновить"} onClick={multiSearch}/>
+                    </div>
                     {searchResults && searchResults.map((res) =>
                         <div key={res.id}>
                             {/*<Link to={`/task/${res.id}`}>*/}
