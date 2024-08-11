@@ -297,7 +297,7 @@ export function Main(): React.JSX.Element {
             const selectedIds = selectedValues.map(option => option.value);
             console.log(selectedIds)
 
-            const response = await fetch('http://195.133.197.53:8081/categories/list', {
+            const response = await fetch('http://195.133.197.53:8081/tasks/category/list', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
