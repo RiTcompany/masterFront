@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 // import {useNavigate} from "react-router-dom";
-import Select, { MultiValue } from 'react-select';
+import Select, {CSSObjectWithLabel, MultiValue} from 'react-select';
 import "./Registration.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 
@@ -313,10 +313,10 @@ export function Registration(): React.JSX.Element {
 
     const handleMultiSelectChange = (selectedOptions: MultiValue<OptionType>) => {
         let values: string[] = [];
-        if (selectedOptions.some(option => option.value === 'ALL')) {
-            values = metroOptions.map(option => option.value);
+        if (selectedOptions.some((option: OptionType) => option.value === 'ALL')) {
+            values = metroOptions.map((option: OptionType) => option.value);
         } else {
-            values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+            values = selectedOptions ? selectedOptions.map((option: OptionType) => option.value) : [];
         }
 
         const event = {
@@ -330,7 +330,7 @@ export function Registration(): React.JSX.Element {
     };
 
 
-    const selectedValues: OptionType[] = data.metroStation.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter(option => data.metroStation.includes(option.value));
+    const selectedValues: OptionType[] = data.metroStation.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter((option: OptionType) => data.metroStation.includes(option.value));
 
     const handleChangeRepeatPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRepeatPassword(e.target.value)
@@ -499,7 +499,7 @@ export function Registration(): React.JSX.Element {
                         onChange={handleMultiSelectChange}
                         options={options}
                         isMulti
-                        styles={{ control: (base) => ({ ...base, color: 'black' }) }}
+                        styles={{ control: (base: CSSObjectWithLabel) => ({ ...base, color: 'black' }) }}
                     />
                     <div className="error-container">
                         {error === "EmptyMetroError" &&

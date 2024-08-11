@@ -8,7 +8,7 @@ import {Review} from "./Review.tsx";
 // import {SearchField} from "./SearchField.tsx";
 import {parseJwt} from "../../App.tsx";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
-import Select, {MultiValue} from 'react-select';
+import Select, {CSSObjectWithLabel, MultiValue} from 'react-select';
 
 // interface MainProps {
 //     authUserId: number
@@ -594,8 +594,8 @@ export function Main(): React.JSX.Element {
                         onChange={handleMultiSelectChange}
                         options={options}
                         isMulti
-                        styles={{ control: (base) => ({ ...base, color: 'black', width: "330px" }) }}
-                    />
+                        styles={{ control: (base: CSSObjectWithLabel) => ({ ...base, color: 'black', width: "330px" }) }}
+                    />§
                     <div style={{width: "50vw"}}>
                         <OrangeButton text={"Обновить"} onClick={multiSearch}/>
                     </div>
