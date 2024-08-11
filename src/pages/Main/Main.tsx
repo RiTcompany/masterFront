@@ -292,7 +292,8 @@ export function Main(): React.JSX.Element {
 
     const multiSearch = async () => {
         try {
-            const categoryIds = selectedValues.map(option => option.value);
+            const categoryIdsArr = selectedValues.map(option => option.value);
+            const categoryIds = categoryIdsArr.join(',')
             console.log(categoryIds)
 
             const response = await fetch('http://195.133.197.53:8081/tasks/category/list', {
