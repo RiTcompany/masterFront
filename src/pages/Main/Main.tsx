@@ -296,7 +296,7 @@ export function Main(): React.JSX.Element {
             console.log(selectedIds)
 
             const response = await fetch('http://195.133.197.53:8081/tasks/category/list', {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -594,11 +594,11 @@ export function Main(): React.JSX.Element {
                         isMulti
                         styles={{ control: (base: CSSObjectWithLabel) => ({ ...base, color: 'black', width: "330px" }) }}
                     />
-                    <div style={{width: "50vw"}}>
+                    <div style={{width: "300px", height: "50px"}}>
                         <OrangeButton text={"Обновить"} onClick={multiSearch}/>
                     </div>
                     {searchResults && searchResults.map((res) =>
-                        <div key={res.id}>
+                        <div key={res.id} >
                             {/*<Link to={`/task/${res.id}`}>*/}
                                 <TaskCard data={res}/>
                             {/*</Link>*/}
