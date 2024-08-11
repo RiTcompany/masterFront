@@ -258,11 +258,9 @@ export function Main(): React.JSX.Element {
         newValue: MultiValue<OptionType>,
         // actionMeta: ActionMeta<OptionType>
     ) => {
-        if (newValue.some(option => option.value === 'all')) {
-            // Если выбрана опция "Выбрать все", то выбираем все опции
+        if (newValue.some((option: OptionType) => option.value === 'all')) {
             setSelectedValues(options.filter(option => option.value !== 'all'));
         } else {
-            // В остальных случаях просто обновляем выбранные значения
             setSelectedValues(newValue as OptionType[]);
         }
     };
