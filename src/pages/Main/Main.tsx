@@ -295,9 +295,6 @@ export function Main(): React.JSX.Element {
             const categoryIdsArr = selectedValues.map(option => option.value);
             const categoryIds = categoryIdsArr.join(',')
             console.log(categoryIds)
-            const payload = {
-                categoryIds: categoryIdsArr
-            };
 
             const response = await fetch(`http://195.133.197.53:8081/tasks/category/list?categoryIds=${categoryIds}`, {
                 method: 'POST',
