@@ -292,15 +292,15 @@ export function Main(): React.JSX.Element {
 
     const multiSearch = async () => {
         try {
-            const selectedIds = selectedValues.map(option => option.value);
-            console.log(selectedIds)
+            const categoryIds = selectedValues.map(option => option.value);
+            console.log(categoryIds)
 
             const response = await fetch('http://195.133.197.53:8081/tasks/category/list', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(selectedIds),
+                body: JSON.stringify(categoryIds),
             });
 
             if (!response.ok) {
