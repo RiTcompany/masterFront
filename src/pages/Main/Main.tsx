@@ -269,7 +269,7 @@ export function Main(): React.JSX.Element {
         e.preventDefault();
         try {
             const response = await fetch(
-                `http://195.133.197.53:8081/tasks/category/${selectedCategory?.id}`,
+                `http://89.23.117.193:80/tasks/category/${selectedCategory?.id}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -296,7 +296,7 @@ export function Main(): React.JSX.Element {
             const categoryIds = categoryIdsArr.join(',')
             console.log(categoryIds)
 
-            const response = await fetch(`http://195.133.197.53:8081/tasks/category/list?categoryIds=${categoryIds}`, {
+            const response = await fetch(`http://89.23.117.193:80/tasks/category/list?categoryIds=${categoryIds}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -319,7 +319,7 @@ export function Main(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/masters/top10", {
+                const response = await fetch("http://89.23.117.193:80/masters/top10", {
                     method: "GET",
                     credentials: "include"
                 });
@@ -336,7 +336,7 @@ export function Main(): React.JSX.Element {
     const fetchAndSetPhotos = async (masters: MasterType[]) => {
         const updatedMasters = await Promise.all(masters.map(async (master) => {
             try {
-                const response = await fetch(`http://195.133.197.53:8081/masters/${master.userId}/photo`, {
+                const response = await fetch(`http://89.23.117.193:80/masters/${master.userId}/photo`, {
                     credentials: "include",
                     method: "GET",
                 });
@@ -366,7 +366,7 @@ export function Main(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/categories", {
+                const response = await fetch("http://89.23.117.193:80/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -502,7 +502,7 @@ export function Main(): React.JSX.Element {
         }
         setError("");
         try {
-            const response = await fetch('http://195.133.197.53:8081/auth/sign-in', {
+            const response = await fetch('http://89.23.117.193:80/auth/sign-in', {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),

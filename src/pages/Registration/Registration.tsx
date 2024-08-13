@@ -23,7 +23,7 @@ interface DataType {
     photoLink?: string,
     documents?: DocumentType[],
     description: string,
-    metroStation: string[],
+    metroStations: string[],
     password: string,
     categories: string[]
 }
@@ -47,7 +47,7 @@ export function Registration(): React.JSX.Element {
         password: '',
         role: '',
         photoLink: '',
-        metroStation: [],
+        metroStations: [],
         documents: [],
         description: '',
         categories: []
@@ -68,7 +68,7 @@ export function Registration(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/masters/metro-stations", {
+                const response = await fetch("http://89.23.117.193:80/masters/metro-stations", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -88,7 +88,7 @@ export function Registration(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/categories", {
+                const response = await fetch("http://89.23.117.193:80/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -105,7 +105,7 @@ export function Registration(): React.JSX.Element {
     useEffect(() => {
         async function fetchUserPhoto() {
                 try {
-                    const response = await fetch(`http://195.133.197.53:8081/masters/photo/key?key=${data.photoLink}`, {
+                    const response = await fetch(`http://89.23.117.193:80/masters/photo/key?key=${data.photoLink}`, {
                         credentials: "include",
                         method: "GET",
                     });
@@ -159,7 +159,7 @@ export function Registration(): React.JSX.Element {
     // const handleEmail = async () => {
     //     console.log(data.email)
     //     try {
-    //         await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}`, {
+    //         await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}`, {
     //             credentials: "include",
     //             method: "POST",
     //     });
@@ -170,7 +170,7 @@ export function Registration(): React.JSX.Element {
 
     // const handleConfirm = async () => {
     //     try {
-    //         await fetch(`http://195.133.197.53:8081/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
+    //         await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
     //             credentials: "include",
     //             method: "DELETE",
     //         });
@@ -191,7 +191,8 @@ export function Registration(): React.JSX.Element {
         }
 
         try {
-            const response = await fetch("http://195.133.197.53:8081/auth/sign-up", {
+            console.log(data)
+            const response = await fetch("http://89.23.117.193:80/auth/sign-up", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -249,7 +250,7 @@ export function Registration(): React.JSX.Element {
                 }
             }
         } else if (step === 5) {
-            if (!data.metroStation) {
+            if (!data.metroStations) {
                 setError("EmptyMetroError")
             } else {
                 setError("");
@@ -321,7 +322,7 @@ export function Registration(): React.JSX.Element {
 
         const event = {
             target: {
-                name: 'metroStation',
+                name: 'metroStations',
                 value: values
             }
         } as unknown as React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
@@ -330,7 +331,7 @@ export function Registration(): React.JSX.Element {
     };
 
 
-    const selectedValues: OptionType[] = data.metroStation.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter((option: OptionType) => data.metroStation.includes(option.value));
+    const selectedValues: OptionType[] = data.metroStations.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter((option: OptionType) => data.metroStations.includes(option.value));
 
     const handleChangeRepeatPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRepeatPassword(e.target.value)
@@ -366,7 +367,7 @@ export function Registration(): React.JSX.Element {
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://195.133.197.53:8081/masters/photo-reg", {
+            const response = await fetch("http://89.23.117.193:80/masters/photo-reg", {
                 method: "POST",
                 credentials: "include",
                 body: formData
@@ -400,7 +401,7 @@ export function Registration(): React.JSX.Element {
         });
 
         try {
-            const response = await fetch("http://195.133.197.53:8081/masters/documents", {
+            const response = await fetch("http://89.23.117.193:80/masters/documents", {
                 method: "POST",
                 credentials: "include",
                 body: formData
@@ -494,7 +495,7 @@ export function Registration(): React.JSX.Element {
                     <h1>Укажите район или метро</h1>
                     <label>Укажите удобный для вас район города или метро для оказания услуг</label>
                     <Select
-                        name="metroStation"
+                        name="metroStations"
                         value={selectedValues}
                         onChange={handleMultiSelectChange}
                         options={options}

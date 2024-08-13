@@ -83,7 +83,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                     throw new Error("Auth token not found in localStorage");
                 }
 
-                const response = await fetch(`http://195.133.197.53:8081/profiles/${userId}`, {
+                const response = await fetch(`http://89.23.117.193:80/profiles/${userId}`, {
                     method: "GET",
                 });
 
@@ -128,7 +128,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
            async function ()  {
                if (user?.role === "ROLE_CLIENT") {
                    try {
-                       const response = await fetch(`http://195.133.197.53:8081/tasks/client/${userId}`, {
+                       const response = await fetch(`http://89.23.117.193:80/tasks/client/${userId}`, {
                            credentials:"include",
                            method: "GET",
                            headers: {
@@ -149,7 +149,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             async function ()  {
                 if (user?.role === "ROLE_MASTER") {
                     try {
-                        const response = await fetch(`http://195.133.197.53:8081/tasks/master/${userId}`, {
+                        const response = await fetch(`http://89.23.117.193:80/tasks/master/${userId}`, {
                             credentials:"include",
                             method: "GET",
                             headers: {
@@ -178,7 +178,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             async function ()  {
                 if (user?.role === "ROLE_MASTER") {
                     try {
-                        const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/feedbacks`, {
+                        const response = await fetch(`http://89.23.117.193:80/masters/${userId}/feedbacks`, {
                             credentials:"include",
                             method: "GET",
                             headers: {
@@ -202,7 +202,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         async function fetchUserPhoto() {
             if (user?.role === "ROLE_MASTER") {
                 try {
-                    const response = await fetch(`http://195.133.197.53:8081/masters/${userId}/photo`, {
+                    const response = await fetch(`http://89.23.117.193:80/masters/${userId}/photo`, {
                         credentials: "include",
                         method: "GET",
                         headers: {
@@ -260,7 +260,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             formData.append("file", file);
 
             try {
-                const response = await fetch("http://195.133.197.53:8081/masters/photo", {
+                const response = await fetch("http://89.23.117.193:80/masters/photo", {
                     method: "POST",
                     credentials: "include",
                     body: formData
@@ -288,7 +288,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/masters/metro-stations", {
+                const response = await fetch("http://89.23.117.193:80/masters/metro-stations", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -303,7 +303,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/categories", {
+                const response = await fetch("http://89.23.117.193:80/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -354,7 +354,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         }
         try {
             console.log(changeInfoClient)
-            const response = await fetch(`http://195.133.197.53:8081/profiles/${user?.userId}/change`, {
+            const response = await fetch(`http://89.23.117.193:80/profiles/${user?.userId}/change`, {
                 method: "PATCH",
                 credentials: "include",
                 headers: {
@@ -388,7 +388,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         }
         try {
             console.log(changeInfoMaster)
-            const response = await fetch(`http://195.133.197.53:8081/profiles/${user?.userId}/change`, {
+            const response = await fetch(`http://89.23.117.193:80/profiles/${user?.userId}/change`, {
                 method: "PATCH",
                 credentials: "include",
                 headers: {

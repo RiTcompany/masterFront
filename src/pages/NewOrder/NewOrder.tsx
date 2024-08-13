@@ -41,7 +41,7 @@ export function NewOrder() {
         }
         (async function () {
             try {
-                const response = await fetch("http://195.133.197.53:8081/categories", {
+                const response = await fetch("http://89.23.117.193:80/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -55,7 +55,7 @@ export function NewOrder() {
 
     const fetchTask = async () => {
         try {
-            await fetch("http://195.133.197.53:8081/tasks/", {
+            await fetch("http://89.23.117.193:80/tasks/", {
                 credentials: "include",
                 method: "POST",
                 body: JSON.stringify(data),

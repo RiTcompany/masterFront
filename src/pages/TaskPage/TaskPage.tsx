@@ -96,7 +96,7 @@ export function TaskPage(): React.JSX.Element {
             }
 
             try {
-                const res = await fetch(`http://195.133.197.53:8081/tasks/${params.id}`, {
+                const res = await fetch(`http://89.23.117.193:80/tasks/${params.id}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -115,7 +115,7 @@ export function TaskPage(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const res = await fetch(`http://195.133.197.53:8081/clients/bids/task/${params.id}`, {
+                const res = await fetch(`http://89.23.117.193:80/clients/bids/task/${params.id}`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
@@ -166,7 +166,7 @@ export function TaskPage(): React.JSX.Element {
         } else {
             setError("")
             try {
-                const res = await fetch("http://195.133.197.53:8081/masters/bid", {
+                const res = await fetch("http://89.23.117.193:80/masters/bid", {
                     method: "POST",
                     credentials: "include",
                     headers: {
@@ -186,7 +186,7 @@ export function TaskPage(): React.JSX.Element {
 
     const handleHire = async (id: number) => {
         try {
-            const res = await fetch(`http://195.133.197.53:8081/clients/bid/${id}`, {
+            const res = await fetch(`http://89.23.117.193:80/clients/bid/${id}`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -207,7 +207,7 @@ export function TaskPage(): React.JSX.Element {
 
     const handleDone = async () => {
         try {
-            const res = await fetch(`http://195.133.197.53:8081/tasks/${task?.id}/complete`, {
+            const res = await fetch(`http://89.23.117.193:80/tasks/${task?.id}/complete`, {
                 method: "PATCH",
                 credentials: "include",
                 headers: {
@@ -236,7 +236,7 @@ export function TaskPage(): React.JSX.Element {
 
     const handleSubmitFeedback = async () => {
         try {
-            const res = await fetch(`http://195.133.197.53:8081/tasks/feedback`, {
+            const res = await fetch(`http://89.23.117.193:80/tasks/feedback`, {
                 method: "PATCH",
                 body: JSON.stringify(feedback),
                 credentials: "include",
@@ -258,7 +258,7 @@ export function TaskPage(): React.JSX.Element {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://195.133.197.53:8081/tasks/${task?.id}`, {
+            const response = await fetch(`http://89.23.117.193:80/tasks/${task?.id}`, {
                 credentials: "include",
                 method: "DELETE",
                 headers: {
