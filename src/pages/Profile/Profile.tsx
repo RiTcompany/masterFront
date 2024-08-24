@@ -3,6 +3,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import "./Profile.css";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
+import Select, {CSSObjectWithLabel} from "react-select";
 
 interface UserType {
     email: string,
@@ -18,7 +19,7 @@ interface UserType {
     userId: number,
     firstName: string,
     age?: number,
-    metroStation?: string,
+    metroStation?: string[],
     rate?: number,
     description?: string,
     documents?: string[],
@@ -69,8 +70,13 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
     const [metro, setMetro] = useState([]);
     const [categories, setCategories] = useState<{id: number, name: string}[]>([])
     const [changeInfoClient, setChangeInfoClient] = useState({email: "", phoneNumber: "", telegramTag: ""})
-    const [changeInfoMaster, setChangeInfoMaster] = useState({email: "", phoneNumber: "", telegramTag: "", description: "", metroStation: "", categories: [""]})
+    const [changeInfoMaster, setChangeInfoMaster] = useState({email: "", phoneNumber: "", telegramTag: "", description: "", metroStation: [""], categories: [""]})
     const [error, setError] = useState("")
+
+    const metroStationOptions = (user?.metroStation ?? []).map(station => ({
+        value: station,
+        label: station
+    }));
 
     useEffect(() => {
         if (!isMounted.current) {
@@ -104,6 +110,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                 console.log(userData)
 
                 setUser(userData);
+                console.log(user)
                 setIsMyProfile(+userData.userId === +authUserId);
             } catch (error) {
                 console.error(error);
@@ -118,7 +125,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
             setChangeInfoClient({phoneNumber: user.phoneNumber, telegramTag: user.telegramTag, email: user.email})
         } else if (user && user.role === "ROLE_MASTER") {
             setChangeInfoMaster({phoneNumber: user.phoneNumber, telegramTag: user.telegramTag, email: user.email,
-                description: user.description || "", metroStation: user.metroStation || "", categories: user.categories || []})
+                description: user.description || "", metroStation: user.metroStation || [], categories: user.categories || []})
             console.log(changeInfoMaster)
         }
     }, [user]);
@@ -452,7 +459,18 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                 </div>
                                 <div>
                                     {user.age !== undefined && user.age > 0 && <p>Возраст: {user.age}</p>}
-                                    <p>Метро: {user.metroStation}</p>
+                                    {
+                                        user.metroStation &&
+                                        <p>Метро:
+                                            <Select
+                                                name="metroStations"
+                                                value={user.metroStation && user.metroStation.length > 0 ? { value: user.metroStation[0], label: user.metroStation[0] } : null}
+                                                onChange={() => {}}
+                                                options={metroStationOptions}
+                                                styles={{ control: (base: CSSObjectWithLabel) => ({ ...base, color: 'black', cursor: 'not-allowed', }) }}
+                                            />
+                                        </p>
+                                    }
                                     <p>Рейтинг: {user.rate}</p>
                                 </div>
                             </div>
