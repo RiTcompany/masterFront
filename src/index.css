@@ -3,6 +3,11 @@
     font-family: "Open Sans", sans-serif;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 /*body {*/
 /*    width: 100vw;*/
 /*    !*max-width: 1024px;*!*/

@@ -461,7 +461,7 @@ export function Registration(): React.JSX.Element {
                         <div>
                             <input name="agreement" checked={agreement} className="agree-checkbox" type="checkbox"
                                    onChange={handleAgreementChange}/>
-                            <p>Я принимаю условия публичной оферты и условия использования</p>
+                            <p>Я принимаю <a href="/public/Spb-masters.ru_website_privacy_policy.pdf" target="_blank">Политику конфидециальности</a> и <a href="/public/Spb-masters.ru_User_agreement.pdf" target="_blank">Пользовательское соглашение</a></p>
                         </div>
                     </div>
                     <div className="error-container">

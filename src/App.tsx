@@ -1,5 +1,5 @@
 import './App.css'
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import {Navbar} from "./components/Navbar/Navbar.tsx";
 import {Main} from "./pages/Main/Main.tsx";
 import {Registration} from "./pages/Registration/Registration.tsx";
@@ -7,6 +7,7 @@ import {Profile} from "./pages/Profile/Profile.tsx";
 import {useEffect, useState} from "react";
 import {NewOrder} from "./pages/NewOrder/NewOrder.tsx";
 import {TaskPage} from "./pages/TaskPage/TaskPage.tsx";
+import {Footer} from "./components/Footer/Footer.tsx";
 
 export function parseJwt(token: string) {
     try {
@@ -25,6 +26,8 @@ export function parseJwt(token: string) {
 
 function App() {
     const [authUserId, setAuthUserId] = useState<number>(-1)
+
+    const location = useLocation()
     // const [authUserRole, setAuthUserRole] = useState<string>()
 
     useEffect(() => {
@@ -47,6 +50,9 @@ function App() {
         <Route path="/create-order" element={<NewOrder />} />
         <Route path="/task/:id" element={<TaskPage />} />
       </Routes>
+        {location.pathname === "/" &&
+            <Footer/>
+        }
     </>
   )
 }
