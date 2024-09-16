@@ -21,7 +21,7 @@
 
 .footer-links {
     color: #6c757d;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 .developers {
@@ -33,6 +33,10 @@
     .footer {
         max-width: 100%;
         height: 53px;
+    }
+
+    .footer-content {
+        padding: 0 20px
     }
 }
 

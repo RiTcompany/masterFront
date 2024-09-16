@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import {NewOrder} from "./pages/NewOrder/NewOrder.tsx";
 import {TaskPage} from "./pages/TaskPage/TaskPage.tsx";
 import {Footer} from "./components/Footer/Footer.tsx";
+import {CookieConsent} from "./components/CookieConsent/CookieConsent.tsx";
 
 export function parseJwt(token: string) {
     try {
@@ -53,6 +54,7 @@ function App() {
         {location.pathname === "/" &&
             <Footer/>
         }
+        <CookieConsent />
     </>
   )
 }
