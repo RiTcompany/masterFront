@@ -546,7 +546,7 @@ export function Main(): React.JSX.Element {
             <div className="intro-container common">
                 <img alt="logo" src={'/logo.png'}/>
                 <h1 className="big-title">Мастер на час</h1>
-                <h3 className="small-title">мастер на час</h3>
+                <h3 className="small-title">БЫСТРЫЕ РЕШЕНИЯ ДЛЯ ВАШЕГО РЕМОНТА </h3>
                 <div className="intro-search">
                     <form className={"search-container"}>
                         <select
