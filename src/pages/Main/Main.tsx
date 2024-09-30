@@ -600,7 +600,7 @@ export function Main(): React.JSX.Element {
                     </div>
                     {searchResults && searchResults.map((res) =>
                         <div key={res.id} >
-                            {/*<Link to={`/task/${res.id}`}>*/}
+                            {/*<Link to={`/client/${res.id}`}>*/}
                                 <TaskCard data={res}/>
                             {/*</Link>*/}
                         </div>
@@ -651,9 +651,9 @@ export function Main(): React.JSX.Element {
             {/*                <OrangeButton text={"Подписаться"} onClick={(e) => e.preventDefault()}/>*/}
             {/*            </div>*/}
             {/*        </div>*/}
-            {/*        {tasks && tasks.map((task) =>*/}
-            {/*            <FoundCard title={task.title} customer={task.customer} description={task.description}*/}
-            {/*                       date={task.date} price={task.price} id={task.id} key={task.id}*/}
+            {/*        {tasks && tasks.map((client) =>*/}
+            {/*            <FoundCard title={client.title} customer={client.customer} description={client.description}*/}
+            {/*                       date={client.date} price={client.price} id={client.id} key={client.id}*/}
             {/*            />*/}
             {/*        )}*/}
             {/*    </div>*/}
