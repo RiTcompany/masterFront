@@ -24,16 +24,16 @@ export interface ReviewType {
 }
 
 
-interface ServiceType {
-    id: number,
-    image: string,
-    title: string,
-    master: string,
-    city: string,
-    age: number;
-    rating: number;
-    description: string;
-}
+// interface ServiceType {
+//     id: number,
+//     image: string,
+//     title: string,
+//     master: string,
+//     city: string,
+//     age: number;
+//     rating: number;
+//     description: string;
+// }
 
 interface CategoryType {
     id: number,
@@ -108,68 +108,78 @@ const reviews: ReviewType[] = [
     },
 ];
 
-const services: ServiceType[] = [
-    {
-        id: 1,
-        image: 'intro-background.png',
-        title: "Прокладка труб",
-        description: "Описание описание описание",
-        master: "Михаил",
-        city: "Санкт-Петербург",
-        age: 25,
-        rating: 5,
-    },
-    {
-        id: 2,
-        image: 'intro-background.png',
-        title: "Прокладка труб",
-        description: "Описание описание описание",
-        master: "Михаил",
-        city: "Санкт-Петербург",
-        age: 25,
-        rating: 4,
-    },
-    {
-        id: 3,
-        image: 'intro-background.png',
-        title: "Прокладка труб",
-        description: "Описание описание описание",
-        master: "Михаил",
-        city: "Санкт-Петербург",
-        age: 25,
-        rating: 3,
-    },
-    {
-        id: 4,
-        image: 'intro-background.png',
-        title: "Прокладка труб",
-        description: "Описание описание описание Описание описание описание ",
-        master: "Михаил",
-        city: "Санкт-Петербург",
-        age: 25,
-        rating: 2,
-    },
-    {
-        id: 5,
-        image: 'intro-background.png',
-        title: "Прокладка труб",
-        description: "Описание описание описание",
-        master: "Михаил",
-        city: "Санкт-Петербург",
-        age: 25,
-        rating: 1,
-    },
-    {
-        id: 6,
-        image: 'intro-background.png',
-        title: "Прокладка труб",
-        description: "Описание описание описание",
-        master: "Михаил",
-        city: "Санкт-Петербург",
-        age: 25,
-        rating: 0,
-    }
-];
+// const services: ServiceType[] = [
+//     {
+//         id: 1,
+//         image: 'intro-background.png',
+//         title: "Прокладка труб",
+//         description: "Описание описание описание",
+//         master: "Михаил",
+//         city: "Санкт-Петербург",
+//         age: 25,
+//         rating: 5,
+//     },
+//     {
+//         id: 2,
+//         image: 'intro-background.png',
+//         title: "Прокладка труб",
+//         description: "Описание описание описание",
+//         master: "Михаил",
+//         city: "Санкт-Петербург",
+//         age: 25,
+//         rating: 4,
+//     },
+//     {
+//         id: 3,
+//         image: 'intro-background.png',
+//         title: "Прокладка труб",
+//         description: "Описание описание описание",
+//         master: "Михаил",
+//         city: "Санкт-Петербург",
+//         age: 25,
+//         rating: 3,
+//     },
+//     {
+//         id: 4,
+//         image: 'intro-background.png',
+//         title: "Прокладка труб",
+//         description: "Описание описание описание Описание описание описание ",
+//         master: "Михаил",
+//         city: "Санкт-Петербург",
+//         age: 25,
+//         rating: 2,
+//     },
+//     {
+//         id: 5,
+//         image: 'intro-background.png',
+//         title: "Прокладка труб",
+//         description: "Описание описание описание",
+//         master: "Михаил",
+//         city: "Санкт-Петербург",
+//         age: 25,
+//         rating: 1,
+//     },
+//     {
+//         id: 6,
+//         image: 'intro-background.png',
+//         title: "Прокладка труб",
+//         description: "Описание описание описание",
+//         master: "Михаил",
+//         city: "Санкт-Петербург",
+//         age: 25,
+//         rating: 0,
+//     }
+// ];
+
+const categoryImages: { [key: string]: string } = {
+    "Конструктивные работы": "const-works.png",
+    "Отделочные работы": "otd-works.png",
+    "Монтажные работы": "mon-works.png",
+    "Электромонтажные работы": "electromont-works.png",
+    "Сантехнические работы": "sant-works.png",
+    "Демонтажные работы": "demon-works.png",
+    "Дополнительные услуги": "extra-serv.png"
+}
 
 // const tasks: TaskType[] = [
 //     {
@@ -265,11 +275,14 @@ export function Main(): React.JSX.Element {
         }
     };
 
-    const search = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const search = async (e: React.FormEvent | null, cat?: number) => {
+        if (e) e.preventDefault();
+        const categ = cat ? cat : selectedCategory?.id
+        console.log(categ)
+        console.log(selectedCategory)
         try {
             const response = await fetch(
-                `http://89.23.117.193:80/tasks/category/${selectedCategory?.id}`,
+                `http://89.23.117.193:80/tasks/category/${categ}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -315,6 +328,19 @@ export function Main(): React.JSX.Element {
             console.error('Ошибка при поиске:', error);
         }
     };
+
+    const updateCategoryAndSearch = async (categoryId: number) => {
+        const category = categories.find(cat => cat.id === categoryId);
+
+        await new Promise<void>((resolve) => {
+            setSelectedCategory(category);
+            resolve();
+        });
+        console.log(selectedCategory)
+
+        await search(null, category?.id);
+    };
+
 
     useEffect(() => {
         (async function () {
@@ -389,6 +415,10 @@ export function Main(): React.JSX.Element {
         const category = categories.find(cat => cat.id === categoryId);
         setSelectedCategory(category);
     }
+
+    useEffect(() => {
+        console.log(selectedCategory)
+    }, [selectedCategory]);
 
     // useEffect(() => {
     //     const scrollContainer = scrollRef.current;
@@ -613,9 +643,9 @@ export function Main(): React.JSX.Element {
 
             <div className="mini-service-container common">
                 <div className="service-circles service-scroll">
-                    {services.map((service) => (
-                        <div className="service-item" key={service.id}>
-                            <OrangeCircle key={service.id} image={service.image} title={service.title}/>
+                    {categories.map((category) => (
+                        <div className="service-item" key={category.id}>
+                            <OrangeCircle key={category.id} image={categoryImages[category.name] || 'extra-serv.png'}  title={category.name}/>
                         </div>
                     ))}
                 </div>
@@ -661,9 +691,11 @@ export function Main(): React.JSX.Element {
 
             <div className="service-container common">
                 <div className="service-circles">
-                    {services.map(service => (
-                        <div className="service-item" key={service.id}>
-                            <OrangeCircle image={service.image} title={service.title}/>
+                    {categories.slice(0, 6).map((category) => (
+                        <div className="service-item" key={category.id}
+                             onClick={() => updateCategoryAndSearch(category.id)}
+                        >
+                            <OrangeCircle key={category.id} image={categoryImages[category.name] || 'extra-serv.png'}  title={category.name}/>
                         </div>
                     ))}
                 </div>
@@ -685,11 +717,11 @@ export function Main(): React.JSX.Element {
                 <div className="points">
                     <div>
                         <h3>Опишите</h3>
-                        <h5>свою задачу и условия. Это бесплатно и займёт 3‑4 минуты</h5>
+                        <h5>вашу задачу и условия. Это бесплатно и занимает 3‑4 минуты</h5>
                     </div>
                     <div>
                         <h3>Получите отклики</h3>
-                        <h5>с ценами от исполнителей. Обычно они приходят в течение 30 минут</h5>
+                        <h5>с ценами от исполнителей. В среднем приходят в течение 30 минут</h5>
                     </div>
                     <div>
                         <h3>Выберите</h3>
@@ -708,7 +740,9 @@ export function Main(): React.JSX.Element {
                 ))}
             </div>
 
-            {!token && <div className="login-container common" id="login">
+            <div id="login"/>
+
+            {!token && <div className="login-container common">
                 <div className="left"></div>
                 <div className="right">
                     <img alt="logo" src='/black-logo.png'/>

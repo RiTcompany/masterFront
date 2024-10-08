@@ -11,8 +11,16 @@ interface UserType {
 
 export function Navbar(): React.JSX.Element {
     const [user, setUser] = useState<UserType>();
+
+    function scrollToElementById(elementId: string) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
     function scrollToBottom() {
-        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        scrollToElementById('login');
     }
 
     function handleLogout() {

@@ -9,8 +9,12 @@ interface OrangeCircleProps {
 export function OrangeCircle({image, title}: OrangeCircleProps): React.JSX.Element {
     return (
         <>
-            <img className="round-image" src={image} alt={title} />
+            <div className={'or-circle'}>
+            <div className="round-image">
+                <img className={title ? 'category-image' : 'round-image'} src={image} alt={title} />
+            </div>
             <p className="image-text">{title}</p>
+            </div>
         </>
     )
 }
