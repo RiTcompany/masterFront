@@ -156,28 +156,28 @@ export function Registration(): React.JSX.Element {
         }
     }
 
-    // const handleEmail = async () => {
-    //     console.log(data.email)
-    //     try {
-    //         await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}`, {
-    //             credentials: "include",
-    //             method: "POST",
-    //     });
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    const handleEmail = async () => {
+        console.log(data.email)
+        try {
+            await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}`, {
+                credentials: "include",
+                method: "POST",
+        });
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-    // const handleConfirm = async () => {
-    //     try {
-    //         await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
-    //             credentials: "include",
-    //             method: "DELETE",
-    //         });
-    //     } catch (error) {
-    //         console.error('Ошибка при проверке PIN кода:', error);
-    //     }
-    // };
+    const handleConfirm = async () => {
+        try {
+            await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
+                credentials: "include",
+                method: "DELETE",
+            });
+        } catch (error) {
+            console.error('Ошибка при проверке PIN кода:', error);
+        }
+    };
 
     const handleSubmit = async () => {
         setError("");
@@ -232,11 +232,11 @@ export function Registration(): React.JSX.Element {
                 setError("EmptyNameError")
             } else {
                 setError("")
-                // await handleEmail()
+                await handleEmail()
                 setStep(prevState => prevState + 1)
             }
         } else if (step === 3) {
-            // await handleConfirm()
+            await handleConfirm()
             setStep(prevState => prevState + 1)
         } else if (step === 4) {
             if (!data.phoneNumber) {
@@ -437,7 +437,7 @@ export function Registration(): React.JSX.Element {
         <form className="registration-form">
             {step === 1 &&
                 <div className="steps">
-                    <h1>Укажите качестве кого вы хотите зарегистрироваться</h1>
+                    <h1>Укажите в качестве кого вы хотите зарегистрироваться</h1>
                     <select name="role" value={data.role} onChange={handleChange} style={{color: "black"}}>
                         <option/>
                         <option value="ROLE_MASTER">Исполнитель</option>
