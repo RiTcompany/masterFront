@@ -644,7 +644,7 @@ export function Main(): React.JSX.Element {
             <div className="mini-service-container common">
                 <div className="service-circles service-scroll">
                     {categories.map((category) => (
-                        <div className="service-item" key={category.id}>
+                        <div className="service-item" key={category.id} onClick={() => updateCategoryAndSearch(category.id)}>
                             <OrangeCircle key={category.id} image={categoryImages[category.name] || 'extra-serv.png'}  title={category.name}/>
                         </div>
                     ))}
