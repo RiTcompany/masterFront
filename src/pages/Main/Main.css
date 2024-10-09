@@ -544,7 +544,7 @@ a {
     .mini-service-container .service-circles {
         justify-content: space-between;
         height: 108px;
-        gap: 15px;
+        gap: 28px;
         background-color: #f7f7f7;
     }
 
