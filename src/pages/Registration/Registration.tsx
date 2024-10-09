@@ -428,9 +428,15 @@ export function Registration(): React.JSX.Element {
     }
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showRepPassword, setShowRepPassword] = useState<boolean>(false);
+
 
     const toggleShowPassword = () => {
         setShowPassword(prevShowPassword => !prevShowPassword);
+    };
+
+    const toggleShowRepPassword = () => {
+        setShowRepPassword(prevShowPassword => !prevShowPassword);
     };
 
     return (
@@ -627,7 +633,21 @@ export function Registration(): React.JSX.Element {
                         </button>
                     </div>
                     <label>Повторите пароль</label>
-                    <input name="repeatPassword" type="password" value={repeatPassword} onChange={handleChangeRepeatPassword}/>
+                    <div className="password-input-container">
+                        <input
+                            name="repeatPassword"
+                            type={showRepPassword ? "text" : "password"}
+                            value={repeatPassword}
+                            onChange={handleChangeRepeatPassword}
+                            className="password-input"
+                        />
+                        <button type="button" onClick={toggleShowRepPassword} className="password-toggle-button">
+                            {showPassword ? <span className="material-symbols-outlined">visibility_off</span>
+                                : <span className="material-symbols-outlined">visibility</span>}
+                        </button>
+                    </div>
+
+
                     <div className="error-container">
                         {error === "MismatchedPasswords" && <p className="error-message">Пароли не совпадают</p>}
                         {error === "WrongPassword" && <p className="error-message">Пароль должен содержать не менее 8 символов и включать в себя заглавные и строчные буквы и цифры</p>}
