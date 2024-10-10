@@ -6,8 +6,8 @@ export function Footer(): React.JSX.Element {
         <div className="footer">
             <div className={'footer-content'}>
                 <div style={{display: "flex", gap: "7px"}}>
-                    <a href="/public/Spb-masters.ru_website_privacy_policy.pdf" target="_blank" className={"footer-links"}>Политика конфидециальности</a>
-                    <a href="/public/Spb-masters.ru_User_agreement.pdf" target="_blank" className={"footer-links"}>Пользовательское соглашение</a>
+                    <a href="/Spb-masters.ru_website_privacy_policy.pdf" target="_blank" className={"footer-links"}>Политика конфидециальности</a>
+                    <a href="/Spb-masters.ru_User_agreement.pdf" target="_blank" className={"footer-links"}>Пользовательское соглашение</a>
                 </div>
                 <div className={"footer-links"}>
                     <p>Проказин Иван Леонидович, ИНН 532114769283</p>
