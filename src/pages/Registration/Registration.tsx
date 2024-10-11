@@ -137,7 +137,7 @@ export function Registration(): React.JSX.Element {
         const hasLowerCase = /[a-z]/.test(password);
         const hasNumber = /\d/.test(password);
         const hasMinimumLength = password.length >= 8;
-        const hasValidSymbols = /^[A-Za-z0-9!.,?:;@&]*$/.test(password);
+        const hasValidSymbols = /^[A-Za-z0-9!.,?:;@&\-_*]*$/.test(password);
         return hasUpperCase && hasLowerCase && hasNumber && hasMinimumLength && hasValidSymbols;
     }
 
