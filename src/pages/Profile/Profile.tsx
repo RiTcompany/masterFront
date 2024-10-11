@@ -3,7 +3,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import "./Profile.css";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
-import Select, {CSSObjectWithLabel} from "react-select";
+import Select, {CSSObjectWithLabel, MultiValue} from "react-select";
 
 interface UserType {
     email: string,
@@ -49,6 +49,11 @@ interface FeedbackType {
 
 interface ProfileProps {
     authUserId: number
+}
+
+interface OptionType {
+    value: string;
+    label: string;
 }
 
 export function Profile({authUserId} : ProfileProps): React.JSX.Element {
@@ -350,6 +355,38 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
         setChangeInfoMaster({...changeInfoMaster, [e.target.name]: e.target.value})
     }
 
+    const metroOptions: OptionType[] = metro.map(station => ({ value: station, label: station }));
+    const allOption: OptionType = { value: 'ALL', label: 'Выбрать все' };
+    const options: OptionType[] = [allOption, ...metroOptions];
+
+    // const selectedValues: OptionType[] = user?.metroStation?.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter((option: OptionType) => user?.metroStation?.includes(option.value));
+
+    const [selectedStations, setSelectedStations] = useState<string[]>([]);
+    useEffect(() => {
+        user?.metroStation && setSelectedStations(user?.metroStation)
+    }, [activeTab])
+
+    const handleMultiSelectChange = (selectedOptions: MultiValue<OptionType>) => {
+        let values: string[] = [];
+
+        if (selectedOptions.some(option => option.value === 'ALL')) {
+            values = metro.map(station => station);
+        } else {
+            values = selectedOptions.map(option => option.value);
+        }
+
+        setSelectedStations(values);
+
+        handleChangeMaster({
+            target: {
+                name: 'metroStation',
+                value: values
+            }
+        } as unknown as React.ChangeEvent<HTMLInputElement>);
+    };
+
+
+
     const submitClientChanges = async (e: any) => {
         e.preventDefault();
         if (!changeInfoClient.phoneNumber) {
@@ -639,13 +676,21 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                            value={changeInfoMaster.description ? changeInfoMaster.description : ""}
                                            onChange={handleChangeMaster}/>
                                     <label>Метро</label>
-                                    <select name="metroStation" value={changeInfoMaster.metroStation} className="input-container change-info"
-                                            onChange={handleChangeMaster} style={{color: "black"}}>
-                                        <option/>
-                                        {metro && metro.map((metro) => (
-                                            <option key={metro}>{metro}</option>
-                                        ))}
-                                    </select>
+                                    {/*<select name="metroStation" value={changeInfoMaster.metroStation} className="input-container change-info"*/}
+                                    {/*        onChange={handleChangeMaster} style={{color: "black"}}>*/}
+                                    {/*    <option/>*/}
+                                    {/*    {metro && metro.map((metro) => (*/}
+                                    {/*        <option key={metro}>{metro}</option>*/}
+                                    {/*    ))}*/}
+                                    {/*</select>*/}
+                                    <Select
+                                        name="metroStation"
+                                        value={metroOptions.filter((option: OptionType) => selectedStations.includes(option.value))}
+                                        onChange={handleMultiSelectChange}
+                                        options={options}
+                                        isMulti
+                                        styles={{ control: (base: CSSObjectWithLabel) => ({ ...base, color: 'black' }) }}
+                                    />
                                     <div className="error-container">
                                         {error === "EmptyEmailError" &&
                                             <p className="error-message">Поле email не должно быть пустым</p>

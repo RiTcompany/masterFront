@@ -314,10 +314,19 @@ export function Registration(): React.JSX.Element {
 
     const handleMultiSelectChange = (selectedOptions: MultiValue<OptionType>) => {
         let values: string[] = [];
-        if (selectedOptions.some((option: OptionType) => option.value === 'ALL')) {
-            values = metroOptions.map((option: OptionType) => option.value);
+
+        const allSelected = selectedOptions.some((option: OptionType) => option.value === 'ALL');
+
+        if (allSelected) {
+            if (selectedOptions.length === metroOptions.length + 1) {
+                values = metroOptions.map((option: OptionType) => option.value);
+            } else {
+                values = selectedOptions
+                    .filter((option: OptionType) => option.value !== 'ALL')
+                    .map((option: OptionType) => option.value);
+            }
         } else {
-            values = selectedOptions ? selectedOptions.map((option: OptionType) => option.value) : [];
+            values = selectedOptions.map((option: OptionType) => option.value);
         }
 
         const event = {
