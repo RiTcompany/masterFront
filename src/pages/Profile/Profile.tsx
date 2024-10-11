@@ -691,21 +691,27 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                 <img src="/phone-icon.png" alt="phone-icon"/>
                                 <div className="contact-text">
                                     <strong>Телефон</strong>
-                                    <p>Скрыт</p>
+                                    {userId && authUserId && +userId === authUserId ?
+                                        <p>{user.phoneNumber}</p> : <p>Скрыт</p>
+                                    }
                                 </div>
                             </div>
                             <div className="contacts">
                                 <img src="/email-icon.png" alt="email-icon"/>
                                 <div className="contact-text">
                                     <strong>Email</strong>
-                                    <p>Скрыт</p>
+                                    {userId && authUserId && +userId === authUserId ?
+                                        <p>{user.email}</p> : <p>Скрыт</p>
+                                    }
                                 </div>
                             </div>
                             <div className="contacts">
                                 <img src="/tg-icon.png" alt="tg-icon"/>
                                 <div className="contact-text">
                                     <strong>Телеграм</strong>
-                                    <p>Скрыт</p>
+                                    {userId && authUserId && user.telegramTag && +userId === authUserId ?
+                                        <p>{user.telegramTag}</p> : <p>Скрыт</p>
+                                    }
                                 </div>
                             </div>
                         </div>
