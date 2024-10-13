@@ -636,7 +636,7 @@ export function Main(): React.JSX.Element {
                         </div>
                     )}
                     {searchResults && searchResults[0] === undefined &&
-                        <div>В этой категории пока что заказов нет.</div>
+                        <div style={{height: "150px"}}>В этой категории пока что заказов нет.</div>
                     }
                 </div>
             }
@@ -644,7 +644,7 @@ export function Main(): React.JSX.Element {
             <div className="mini-service-container common">
                 <div className="service-circles service-scroll">
                     {categories.map((category) => (
-                        <div className="service-item" key={category.id} onClick={() => updateCategoryAndSearch(category.id)}>
+                        <div className="service-item" key={category.id} onClick={() => updateCategoryAndSearch(category.id)} style={{cursor: "pointer"}}>
                             <OrangeCircle key={category.id} image={categoryImages[category.name] || 'extra-serv.png'}  title={category.name}/>
                         </div>
                     ))}
@@ -694,8 +694,9 @@ export function Main(): React.JSX.Element {
                     {categories.slice(0, 6).map((category) => (
                         <div className="service-item" key={category.id}
                              onClick={() => updateCategoryAndSearch(category.id)}
+                             style={{cursor: "pointer"}}
                         >
-                            <OrangeCircle key={category.id} image={categoryImages[category.name] || 'extra-serv.png'}  title={category.name}/>
+                            <OrangeCircle key={category.id} image={categoryImages[category.name] || 'extra-serv.png'}  title={category.name} />
                         </div>
                     ))}
                 </div>
@@ -775,8 +776,8 @@ export function Main(): React.JSX.Element {
                                     className="password-input"
                                 />
                                 <button type="button" onClick={toggleShowPassword} className="password-toggle-button" style={{top: "12px"}}>
-                                    {showPassword ? <span className="material-symbols-outlined">visibility_off</span>
-                                        : <span className="material-symbols-outlined">visibility</span>}
+                                    {showPassword ? <img alt="" src={"/visibility-off.svg"} style={{height: "24px"}}/>
+                                        : <img alt="" src={"/visibility.svg"} style={{height: "24px"}}/>}
                                 </button>
                             </div>
                         </div>

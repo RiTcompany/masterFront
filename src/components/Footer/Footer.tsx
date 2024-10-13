@@ -13,7 +13,7 @@ export function Footer(): React.JSX.Element {
                     <p>Проказин Иван Леонидович, ИНН 532114769283</p>
                     <p>Адрес: Ленинградская область, Всеволожский р-н, г. Мурино, ул. Шувалова, д. 27/7, кв. 623</p>
                     <p>тел.: +7-911-035-95-06</p>
-                    <p>e-mail: Ivanprokazin@yandex.ru</p>
+                    <p>e-mail: master-na-chas-spb@yandex.ru</p>
                 </div>
                 <div className={"developers"}>
                     Created by RiT

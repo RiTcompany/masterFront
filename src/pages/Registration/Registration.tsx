@@ -637,8 +637,8 @@ export function Registration(): React.JSX.Element {
                             className="password-input"
                         />
                         <button type="button" onClick={toggleShowPassword} className="password-toggle-button">
-                            {showPassword ? <span className="material-symbols-outlined">visibility_off</span>
-                                : <span className="material-symbols-outlined">visibility</span>}
+                            {showPassword ? <img alt="" src={"/visibility-off.svg"} style={{height: "24px"}}/>
+                                : <img alt="" src={"/visibility.svg"} style={{height: "24px"}}/>}
                         </button>
                     </div>
                     <label>Повторите пароль</label>
@@ -651,8 +651,8 @@ export function Registration(): React.JSX.Element {
                             className="password-input"
                         />
                         <button type="button" onClick={toggleShowRepPassword} className="password-toggle-button">
-                            {showPassword ? <span className="material-symbols-outlined">visibility_off</span>
-                                : <span className="material-symbols-outlined">visibility</span>}
+                            {showRepPassword ? <img alt="" src={"/visibility-off.svg"} style={{height: "24px"}}/>
+                                : <img alt="" src={"/visibility.svg"} style={{height: "24px"}}/>}
                         </button>
                     </div>
 

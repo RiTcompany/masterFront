@@ -28,8 +28,8 @@ header img {
 .navigate {
     display: flex;
     justify-content: space-between;
-    width: 50%;
-    padding: 0 50px 0 150px;
+    width: 70%;
+    padding: 0 150px 0 150px;
     font-weight: 400;
     background-color: #414143;
     color: white;

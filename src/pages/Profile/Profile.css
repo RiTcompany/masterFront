@@ -49,6 +49,11 @@
     font-size: 18px;
 }
 
+.settings-icon svg {
+    height: 24px;
+    width: 24px;
+}
+
 .settings {
     color: gray;
 }
