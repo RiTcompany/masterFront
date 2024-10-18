@@ -1,5 +1,5 @@
 import './App.css'
-import {Route, Routes, useLocation} from "react-router-dom";
+import {Route, Routes,Navigate, useLocation} from "react-router-dom";
 import {Navbar} from "./components/Navbar/Navbar.tsx";
 import {Main} from "./pages/Main/Main.tsx";
 import {Registration} from "./pages/Registration/Registration.tsx";
@@ -9,6 +9,9 @@ import {NewOrder} from "./pages/NewOrder/NewOrder.tsx";
 import {TaskPage} from "./pages/TaskPage/TaskPage.tsx";
 import {Footer} from "./components/Footer/Footer.tsx";
 import {CookieConsent} from "./components/CookieConsent/CookieConsent.tsx";
+import LayoutAdmin from "./components/admin/layout/layout-admin.tsx";
+import AdminClient from "./components/admin/client/adminClient.tsx";
+import MastersComponent from "./components/admin/masters/mastersComponent.tsx";
 
 export function parseJwt(token: string) {
     try {
@@ -40,10 +43,21 @@ function App() {
             // setAuthUserRole(data.role)
         }
     }, []);
+    const hideNavbar = location.pathname.startsWith('/admin');
 
   return (
     <>
-      <Navbar/>
+        {!hideNavbar && <Navbar />}
+
+        <Routes>
+            <Route path="/admin" element={<LayoutAdmin />}>
+                <Route path="" element={<Navigate to="/admin/clients" />} />
+                <Route path="/admin/clients" element={<AdminClient/>}/>
+                <Route path="/admin/masters" element={<MastersComponent/>}/>
+            </Route>
+
+        </Routes>
+
       <Routes>
         <Route path={'/'} element={<Main />}/>
         <Route path={'/registration'} element={<Registration/>}/>
