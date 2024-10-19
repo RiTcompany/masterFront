@@ -554,7 +554,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                                     {uncompletedTasks.length > 0 ? uncompletedTasks
                                         .map((task) => (
                                             <div key={task.id}>
-                                                <TaskCard data={task} />
+                                                <TaskCard data={task}/>
                                             </div>
                                         )) : <h4>Заказов нет</h4>}
                                 </div>

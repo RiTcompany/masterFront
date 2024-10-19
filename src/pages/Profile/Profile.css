@@ -152,11 +152,12 @@
     flex-direction: column;
     box-sizing: border-box;
     padding: 15px;
-    width: 170px;
+    max-width: 250px;
     height: 200px;
     border-radius: 12.92px;
     border: none;
     box-shadow: 0 5.17px 15.5px 0 #5F58693D;
+    margin-bottom: 50px;
 }
 
 .profile-review-card .title, .profile-review-card .text {
@@ -177,7 +178,7 @@
 
 .profile-review-card .master {
     display: flex;
-    margin-top: 30px;
+    margin-top: 10px;
     font-size: 7.75px;
     color: #666666;
     position: relative;

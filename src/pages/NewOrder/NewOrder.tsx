@@ -16,13 +16,13 @@ interface DataType {
     startDate: string | null;
     endDate: string | null;
     description: string;
-    maxPrice: number
+    // maxPrice: number
 }
 
 export function NewOrder() {
     const [step, setStep] = useState<number>(1)
     const [data, setData] = useState<DataType>(
-        {userId: -1, categoryName: "", startDate: null, endDate: null, description: "", maxPrice: 0})
+        {userId: -1, categoryName: "", startDate: null, endDate: null, description: ""})
     const [categories, setCategories] = useState<CategoryType[]>()
     const [error, setError] = useState('')
 
@@ -99,15 +99,15 @@ export function NewOrder() {
                 setStep(prevState => prevState + 1);
             }
         }
+        // if (step === 4) {
+        //     if (!data.maxPrice || +data.maxPrice < 500) {
+        //         setError("EmptyPrice");
+        //     } else {
+        //         setError("");
+        //         setStep(prevState => prevState + 1);
+        //     }
+        // }
         if (step === 4) {
-            if (!data.maxPrice || +data.maxPrice < 500) {
-                setError("EmptyPrice");
-            } else {
-                setError("");
-                setStep(prevState => prevState + 1);
-            }
-        }
-        if (step === 5) {
             (async () => {
                 await fetchTask();
                 window.location.hash = (`/profile/${data.userId}`);
@@ -251,23 +251,22 @@ export function NewOrder() {
                     </div>
                 </div>
             }
+            {/*{step === 4 &&*/}
+            {/*    <div className="steps">*/}
+            {/*        <h1>Укажите максимальную стоимость</h1>*/}
+            {/*        <label>Максимальная сумма, которую вы готовы заплатить за выполнение задания. Исполнители не смогут предложить цену, превышающую указанную сумму.</label>*/}
+            {/*        <input className="input-container" placeholder="Сумма" type="number" onChange={handleChangeDescription} value={data.maxPrice} name="maxPrice"/>*/}
+            {/*        <div className="error-container">*/}
+            {/*            {error === "EmptyPrice" &&*/}
+            {/*                <p className="error-message">Заполните, пожалуйста, поле. Сумма должна быть не менее 500 рублей.</p>*/}
+            {/*            }*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*}*/}
             {step === 4 &&
-                <div className="steps">
-                    <h1>Укажите максимальную стоимость</h1>
-                    <label>Максимальная сумма, которую вы готовы заплатить за выполнение задания. Исполнители не смогут предложить цену, превышающую указанную сумму.</label>
-                    <input className="input-container" placeholder="Сумма" type="number" onChange={handleChangeDescription} value={data.maxPrice} name="maxPrice"/>
-                    <div className="error-container">
-                        {error === "EmptyPrice" &&
-                            <p className="error-message">Заполните, пожалуйста, поле. Сумма должна быть не менее 500 рублей.</p>
-                        }
-                    </div>
-                </div>
-            }
-            {step === 5 &&
                 <div className="steps">
                     <h1>{data.categoryName}</h1>
                     <p style={{margin: "20px 0 0"}}>{data.description}</p>
-                    <p style={{margin: "10px 0 20px"}}>Макимальная цена: {data.maxPrice}</p>
                     {data.startDate &&
                         <p>Начать {formatDate(data.startDate)}</p>
                     }
