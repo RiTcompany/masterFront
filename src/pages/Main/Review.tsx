@@ -18,8 +18,8 @@ export function Review({review}: ReviewProps): React.JSX.Element {
                 <div className="review-footer">
                     <div className="review-header">
                         <span className="review-name">{review.name}</span>
-                        <span className="review-rating">Рейтинг исполнителя: <span
-                            className="review-star">⭐</span> {review.rating}</span>
+                        {/*<span className="review-rating">Рейтинг исполнителя: <span*/}
+                        {/*    className="review-star">⭐</span> {review.rating}</span>*/}
                     </div>
                     {/*<span className="review-tasks">Выполнил {review.tasksCompleted} заданий</span>*/}
                 </div>
