@@ -315,18 +315,19 @@ export function Registration(): React.JSX.Element {
     const handleMultiSelectChange = (selectedOptions: MultiValue<OptionType>) => {
         let values: string[] = [];
 
-        const allSelected = selectedOptions.some((option: OptionType) => option.value === 'ALL');
+        const isAllSelected = selectedOptions.some(option => option.value === 'ALL');
 
-        if (allSelected) {
-            if (selectedOptions.length === metroOptions.length + 1) {
-                values = metroOptions.map((option: OptionType) => option.value);
+        if (isAllSelected) {
+            if (selectedOptions.length === 1) {
+                values = metro.map(station => station);
+                selectedOptions = metroOptions;
             } else {
                 values = selectedOptions
-                    .filter((option: OptionType) => option.value !== 'ALL')
-                    .map((option: OptionType) => option.value);
+                    .filter(option => option.value !== 'ALL')
+                    .map(option => option.value);
             }
         } else {
-            values = selectedOptions.map((option: OptionType) => option.value);
+            values = selectedOptions.map(option => option.value);
         }
 
         const event = {
@@ -338,6 +339,8 @@ export function Registration(): React.JSX.Element {
 
         handleChange(event);
     };
+
+
 
 
     const selectedValues: OptionType[] = data.metroStations.length === metro.length ? [allOption, ...metroOptions] : metroOptions.filter((option: OptionType) => data.metroStations.includes(option.value));

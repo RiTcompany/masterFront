@@ -161,9 +161,10 @@ export function TaskPage(): React.JSX.Element {
             setError("EmptyDate");
         } else if (response.dateEnd < response.dateStart) {
             setError("EndDateBeforeStartDate")
-        } else if (task?.maxPrice && response.price > task?.maxPrice) {
-            setError("TooBigPrice")
-        } else {
+        }
+        // else if (task?.maxPrice && response.price > task?.maxPrice) {
+        //     setError("TooBigPrice")}
+        else {
             setError("")
             try {
                 const res = await fetch("http://89.23.117.193:80/masters/bid", {
@@ -286,9 +287,8 @@ export function TaskPage(): React.JSX.Element {
                     <h1>{task.categoryName}</h1>
                     <h3>{task.description}</h3>
                     <h3>{task.userName}</h3>
-                    <p>Начать {formatDate(task.startDate)}</p>
-                    <p>Закончить {formatDate(task.endDate)}</p>
-                    <p>Максимальная цена: {task.maxPrice}</p>
+                    <p>Начать {task.startDate && formatDate(task.startDate)}</p>
+                    <p>Закончить {task.endDate && formatDate(task.endDate)}</p>
                 </div>
             )}
             {user && user.role === "ROLE_MASTER" && task && !task.masterEmail &&(
@@ -333,9 +333,9 @@ export function TaskPage(): React.JSX.Element {
                             {error === "EndDateBeforeStartDate" && (
                                 <p className="error-message">Дата окончания должна быть не раньше даты начала работ</p>
                             )}
-                            {error === "TooBigPrice" && (
-                                <p className="error-message">Ваша цена не может быть больше указанной в заказе</p>
-                            )}
+                            {/*{error === "TooBigPrice" && (*/}
+                            {/*    <p className="error-message">Ваша цена не может быть больше указанной в заказе</p>*/}
+                            {/*)}*/}
                         </div>
                         <div className="response-button">
                             <OrangeButton text={"Откликнуться"} onClick={handleResponse}/>
