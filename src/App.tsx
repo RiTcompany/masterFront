@@ -1,5 +1,5 @@
 import './App.css'
-import {Route, Routes,Navigate, useLocation} from "react-router-dom";
+import {Route, Routes, Navigate, useLocation} from "react-router-dom";
 import {Navbar} from "./components/Navbar/Navbar.tsx";
 import {Main} from "./pages/Main/Main.tsx";
 import {Registration} from "./pages/Registration/Registration.tsx";
@@ -46,29 +46,31 @@ function App() {
     const hideNavbar = location.pathname.startsWith('/admin');
 
   return (
-    <>
-        {!hideNavbar && <Navbar />}
+     <>
+    {/*//     <Router>*/}
+            {!hideNavbar && <Navbar />}
 
-        <Routes>
-            <Route path="/admin" element={<LayoutAdmin />}>
-                <Route path="" element={<Navigate to="/admin/clients" />} />
-                <Route path="/admin/clients" element={<AdminClient/>}/>
-                <Route path="/admin/masters" element={<MastersComponent/>}/>
-            </Route>
+            <Routes>
+                <Route path="/admin" element={<LayoutAdmin />}>
+                    <Route path="" element={<Navigate to="/admin/clients" />} />
+                    <Route path="/admin/clients" element={<AdminClient/>}/>
+                    <Route path="/admin/masters" element={<MastersComponent/>}/>
+                </Route>
 
-        </Routes>
+            </Routes>
 
-      <Routes>
-        <Route path={'/'} element={<Main />}/>
-        <Route path={'/registration'} element={<Registration/>}/>
-        <Route path="/profile/:id" element={<Profile authUserId={authUserId}/>} />
-        <Route path="/create-order" element={<NewOrder />} />
-        <Route path="/task/:id" element={<TaskPage />} />
-      </Routes>
-        {location.pathname === "/" &&
-            <Footer/>
-        }
-        <CookieConsent />
+            <Routes>
+                <Route path={'/'} element={<Main />}/>
+                <Route path={'/registration'} element={<Registration/>}/>
+                <Route path="/profile/:id" element={<Profile authUserId={authUserId}/>} />
+                <Route path="/create-order" element={<NewOrder />} />
+                <Route path="/task/:id" element={<TaskPage />} />
+            </Routes>
+            {location.pathname === "/" &&
+                <Footer/>
+            }
+            <CookieConsent />
+        {/*</Router>*/}
     </>
   )
 }
