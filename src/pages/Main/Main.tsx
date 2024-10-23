@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import "./Main.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {OrangeCircle} from "../../components/OrangeCircle/OrangeCircle.tsx";
 import {ServiceCard} from "../../components/ServiceCard/ServiceCard.tsx";
 import {Review} from "./Review.tsx";
@@ -180,67 +180,6 @@ const categoryImages: { [key: string]: string } = {
     "Демонтажные работы": "demon-works.png",
     "Дополнительные услуги": "extra-serv.png"
 }
-
-// const tasks: TaskType[] = [
-//     {
-//         id: 1,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 2,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 3,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 4,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 5,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-// ]
-
-// function FoundCard({title, customer, description, date, price}: TaskType): React.JSX.Element {
-//     const formattedDate = date.toLocaleDateString();
-//
-//     return (
-//         <div className="found-card">
-//             <div className="left">
-//                 <h1>{title}</h1>
-//                 <p>{description}</p>
-//                 <p>Начать {formattedDate}</p>
-//             </div>
-//             <div className="right">
-//                 <h1>до {price}&#8381;</h1>
-//                 <p>{customer}</p>
-//             </div>
-//         </div>
-//     )
-// }
 
 export function Main(): React.JSX.Element {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -524,6 +463,8 @@ export function Main(): React.JSX.Element {
         setPassword(e.target.value);
     };
 
+    const navigate = useNavigate()
+
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (!email || !password) {
@@ -550,7 +491,7 @@ export function Main(): React.JSX.Element {
                 const token = responseData.token;
                 const data = parseJwt(token);
                 if (data && data.id && localStorage.getItem('authToken')) {
-                    window.location.hash=`#/profile/${data.id}`
+                    navigate(`/profile/${data.id}`)
                     window.location.reload();
                 } else {
                     console.error('Invalid token data:', data);
@@ -746,7 +687,8 @@ export function Main(): React.JSX.Element {
             {!token && <div className="login-container common">
                 <div className="left"></div>
                 <div className="right">
-                    <img alt="logo" src='/black-logo.png'/>
+                    <img src='/login-image.jpg' className={"mobile-img"}/>
+                    <img alt="logo" src='/black-logo.png' className={"mobile-logo"}/>
                     <form className="form-login">
                         <h3>Войти</h3>
                         <div className="login-field">

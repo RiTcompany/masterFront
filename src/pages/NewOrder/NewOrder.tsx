@@ -3,6 +3,7 @@ import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {parseJwt} from "../../App.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 interface CategoryType {
@@ -71,6 +72,8 @@ export function NewOrder() {
         console.log(data)
     });
 
+    const navigate = useNavigate()
+
     const handleNext = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
         if (step === 1) {
@@ -110,7 +113,7 @@ export function NewOrder() {
         if (step === 4) {
             (async () => {
                 await fetchTask();
-                window.location.hash = (`/profile/${data.userId}`);
+                navigate(`/profile/${data.userId}`);
                 window.location.reload()
             })();
         }

@@ -15,7 +15,7 @@ body > .common {
     align-items: center;
     height: 560px;
     padding: 156px 17vw 0 17vw;
-    background: url("../../../public/intro-background.png") center / cover no-repeat, rgba(91, 91, 91, 0.2);
+    background: url("../../../public/intro-background.png") center / cover no-repeat, rgba(91, 91, 91, 1);
     background-blend-mode: overlay;
 }
 
@@ -795,14 +795,64 @@ a {
         color: black;
     }
 
-    .reviews-container,
+    .service-container {
+        height: auto;
+        gap: 30px;
+        padding: 20px 0;
+    }
+
+    .small-title {
+        font-size: 16px;
+        font-weight: 700;
+        width: 100%;
+        text-align: center;
+
+    }
+
+    .login-container {
+        position: relative;
+    }
+
     .search, .login-container .left,
-    .small-title, .service-container,
+    .service-container .service-circles,
     .intro-container img {
         display: none;
     }
 
+    .reviews-container {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        height: auto;
+        padding: 40px 10px 0;
+    }
+
+    .review {
+        width: 100%;
+    }
+
     .login-container .right {
-        min-width: 100%
+        padding-top: 100px;
+        min-width: 100%;
+        position: relative;
+    }
+
+    .form-login {
+        margin-top: 70px;
+    }
+
+    .mobile-img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 200px !important;
+        object-fit: cover;
+        object-position: center 70%;
+        z-index: -1;
+        transform: scaleX(-1);
+    }
+
+    .register-link {
+        margin-top: 20px;
     }
 }
