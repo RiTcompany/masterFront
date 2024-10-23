@@ -3,6 +3,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Select, {CSSObjectWithLabel, MultiValue} from 'react-select';
 import "./Registration.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
+import {useNavigate} from "react-router-dom";
 
 interface DocumentType {
     url: string;
@@ -179,6 +180,7 @@ export function Registration(): React.JSX.Element {
         }
     };
 
+    const navigate = useNavigate();
     const handleSubmit = async () => {
         setError("");
         if (data.password !== repeatPassword) {
@@ -208,7 +210,7 @@ export function Registration(): React.JSX.Element {
                 const decodedToken = parseJwt(responseData.token);
                 console.log(decodedToken)
 
-                window.location.hash=`#/profile/${decodedToken.id}`
+                navigate(`/profile/${decodedToken.id}`)
                 window.location.reload();
             } else {
                 console.error('Sign-up failed:', response.statusText);

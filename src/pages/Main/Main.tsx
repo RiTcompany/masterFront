@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import "./Main.css"
 import {OrangeButton} from "../../components/OrangeButton/OrangeButton.tsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {OrangeCircle} from "../../components/OrangeCircle/OrangeCircle.tsx";
 import {ServiceCard} from "../../components/ServiceCard/ServiceCard.tsx";
 import {Review} from "./Review.tsx";
@@ -463,6 +463,8 @@ export function Main(): React.JSX.Element {
         setPassword(e.target.value);
     };
 
+    const navigate = useNavigate()
+
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (!email || !password) {
@@ -489,7 +491,7 @@ export function Main(): React.JSX.Element {
                 const token = responseData.token;
                 const data = parseJwt(token);
                 if (data && data.id && localStorage.getItem('authToken')) {
-                    window.location.hash=`#/profile/${data.id}`
+                    navigate(`/profile/${data.id}`)
                     window.location.reload();
                 } else {
                     console.error('Invalid token data:', data);
