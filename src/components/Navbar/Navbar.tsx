@@ -3,6 +3,7 @@ import './Navbar.css'
 import {OrangeButton} from "../OrangeButton/OrangeButton.tsx";
 import {Link} from "react-router-dom";
 import {parseJwt} from "../../App.tsx";
+import {BurgerMenu} from "./BurgerMenu.tsx";
 
 interface UserType {
     role: string,
@@ -61,9 +62,19 @@ export function Navbar(): React.JSX.Element {
                         <Link to={`/profile/${user.id}`}><p style={{color: "white"}}>Мой профиль</p></Link>
                     }
                 </div>
+                {user &&
+                    <div className={`mobile-navigate`}>
+                        <BurgerMenu user={user} handleLogout={handleLogout} />
+                    </div>
+                }
+
                 <div className={"login-button"}>
                     <Link to="/#login">
-                        {user && <OrangeButton text="Выйти" onClick={handleLogout}/>}
+                        {user && (
+                            <div className={"logout-button"}>
+                                <OrangeButton text="Выйти" onClick={handleLogout}/>
+                            </div>
+                        )}
                         {!user && <OrangeButton text="Войти" onClick={scrollToBottom}/>}
                     </Link>
                 </div>

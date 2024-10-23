@@ -181,67 +181,6 @@ const categoryImages: { [key: string]: string } = {
     "Дополнительные услуги": "extra-serv.png"
 }
 
-// const tasks: TaskType[] = [
-//     {
-//         id: 1,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 2,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 3,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 4,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-//     {
-//         id: 5,
-//         title: "Замена окон",
-//         customer: "Дмитрий Ц.",
-//         description: "Демонтаж окон в квартире, 4 шт.",
-//         date: new Date(2024, 5, 6),
-//         price: 12000
-//     },
-// ]
-
-// function FoundCard({title, customer, description, date, price}: TaskType): React.JSX.Element {
-//     const formattedDate = date.toLocaleDateString();
-//
-//     return (
-//         <div className="found-card">
-//             <div className="left">
-//                 <h1>{title}</h1>
-//                 <p>{description}</p>
-//                 <p>Начать {formattedDate}</p>
-//             </div>
-//             <div className="right">
-//                 <h1>до {price}&#8381;</h1>
-//                 <p>{customer}</p>
-//             </div>
-//         </div>
-//     )
-// }
-
 export function Main(): React.JSX.Element {
     const scrollRef = useRef<HTMLDivElement>(null);
     const token = localStorage.getItem("authToken");
@@ -746,7 +685,8 @@ export function Main(): React.JSX.Element {
             {!token && <div className="login-container common">
                 <div className="left"></div>
                 <div className="right">
-                    <img alt="logo" src='/black-logo.png'/>
+                    <img src='/login-image.jpg' className={"mobile-img"}/>
+                    <img alt="logo" src='/black-logo.png' className={"mobile-logo"}/>
                     <form className="form-login">
                         <h3>Войти</h3>
                         <div className="login-field">
