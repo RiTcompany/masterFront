@@ -434,6 +434,10 @@ a {
     color: rgb(0, 122, 255);
 }
 
+.mobile-img {
+    display: none;
+}
+
 .mini-service-container, .create-service-container,
 .find-service-container, .selection, .service-scroll::-webkit-scrollbar {
     display: none;

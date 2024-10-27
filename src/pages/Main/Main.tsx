@@ -687,7 +687,7 @@ export function Main(): React.JSX.Element {
             {!token && <div className="login-container common">
                 <div className="left"></div>
                 <div className="right">
-                    <img src='/login-image.jpg' className={"mobile-img"}/>
+                    <img src='/login-image.jpg' className={"mobile-img"} alt={""}/>
                     <img alt="logo" src='/black-logo.png' className={"mobile-logo"}/>
                     <form className="form-login">
                         <h3>Войти</h3>

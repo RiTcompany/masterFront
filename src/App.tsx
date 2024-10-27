@@ -14,9 +14,12 @@ import AdminClient from "./components/admin/client/adminClient.tsx";
 import MastersComponent from "./components/admin/masters/mastersComponent.tsx";
 
 export function parseJwt(token: string) {
+    console.log(token)
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+        // const jsonPayload = atob(base64);
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
