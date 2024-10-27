@@ -6,7 +6,7 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <BrowserRouter basename={"http:/spb-masters.com/"}>
+    <BrowserRouter basename={"http:/spb-masters.ru/"}>
         <App />
     </BrowserRouter>
 )
