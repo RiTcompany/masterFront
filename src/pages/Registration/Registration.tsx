@@ -69,7 +69,7 @@ export function Registration(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://89.23.117.193:80/masters/metro-stations", {
+                const response = await fetch("https://spb-masters.ru/masters/metro-stations", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -89,7 +89,7 @@ export function Registration(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://89.23.117.193:80/categories", {
+                const response = await fetch("https://spb-masters.ru/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -106,7 +106,7 @@ export function Registration(): React.JSX.Element {
     useEffect(() => {
         async function fetchUserPhoto() {
                 try {
-                    const response = await fetch(`http://89.23.117.193:80/masters/photo/key?key=${data.photoLink}`, {
+                    const response = await fetch(`https://spb-masters.ru/masters/photo/key?key=${data.photoLink}`, {
                         credentials: "include",
                         method: "GET",
                     });
@@ -160,7 +160,7 @@ export function Registration(): React.JSX.Element {
     const handleEmail = async () => {
         console.log(data.email)
         try {
-            await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}`, {
+            await fetch(`https://spb-masters.ru/masters/email?email=${encodeURIComponent(data.email)}`, {
                 credentials: "include",
                 method: "POST",
         });
@@ -171,7 +171,7 @@ export function Registration(): React.JSX.Element {
 
     const handleConfirm = async () => {
         try {
-            await fetch(`http://89.23.117.193:80/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
+            await fetch(`https://spb-masters.ru/masters/email?email=${encodeURIComponent(data.email)}&pin=${encodeURIComponent(pin)}`, {
                 credentials: "include",
                 method: "DELETE",
             });
@@ -194,7 +194,7 @@ export function Registration(): React.JSX.Element {
 
         try {
             console.log(data)
-            const response = await fetch("http://89.23.117.193:80/auth/sign-up", {
+            const response = await fetch("https://spb-masters.ru/auth/sign-up", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -381,7 +381,7 @@ export function Registration(): React.JSX.Element {
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://89.23.117.193:80/masters/photo-reg", {
+            const response = await fetch("https://spb-masters.ru/masters/photo-reg", {
                 method: "POST",
                 credentials: "include",
                 body: formData
@@ -415,7 +415,7 @@ export function Registration(): React.JSX.Element {
         });
 
         try {
-            const response = await fetch("http://89.23.117.193:80/masters/documents", {
+            const response = await fetch("https://spb-masters.ru/masters/documents", {
                 method: "POST",
                 credentials: "include",
                 body: formData

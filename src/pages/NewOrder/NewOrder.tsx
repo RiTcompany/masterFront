@@ -42,7 +42,7 @@ export function NewOrder() {
         }
         (async function () {
             try {
-                const response = await fetch("http://89.23.117.193:80/categories", {
+                const response = await fetch("https://spb-masters.ru/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -56,7 +56,7 @@ export function NewOrder() {
 
     const fetchTask = async () => {
         try {
-            await fetch("http://89.23.117.193:80/tasks/", {
+            await fetch("https://spb-masters.ru/tasks/", {
                 credentials: "include",
                 method: "POST",
                 body: JSON.stringify(data),

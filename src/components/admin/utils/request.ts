@@ -1,4 +1,5 @@
-const BASE_URL = 'http://89.23.117.193/admin'
+const BASE_URL = 'https://spb-masters.ru/admin'
+const URL_DEFAULT  ="https://spb-masters.ru"
 
 
 export const getClients = async () => {
@@ -18,13 +19,63 @@ export const getClients = async () => {
     }
 };
 
+export const responseGetDocument = async (id: number) => {
+    try {
+        const url = new URL(URL_DEFAULT + `/masters/show/${id}`);
+
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+        });
+
+
+        if (!response.ok) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+
+        const blob = await response.blob();
+        const pdfUrl = URL.createObjectURL(blob);
+        return pdfUrl;
+    } catch (error) {
+        console.error('Ошибка при получении документа:', error);
+        throw error;
+    }
+};
+
+
+
+export const responseAddComment = async (id: number, comment: string) => {
+    try {
+        const url = new URL(URL_DEFAULT + `/masters/${id}/verification-comment`);
+        url.searchParams.append('comment', comment);  // Добавляем comment как query-параметр
+
+        const response = await fetch(url.toString(), {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        throw error;
+    }
+};
+
+
 
 export const getMasters = async (url: string) => {
     try {
-        const token: string | null = localStorage.getItem("authToken");
+    //    const token: string | null = localStorage.getItem("authToken");
 
         const headers = {
-            "Authorization": `Bearer ${token}`,
+    //        "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
         };
 
@@ -40,14 +91,14 @@ export const getMasters = async (url: string) => {
         const data = await response.json();
 
 
-        // Проверяем структуру данных и возвращаем массив мастеров
+
 
         if (Array.isArray(data)) {
-            return data; // Если это массив, возвращаем его
+            return data;
         } else if (data.content) {
-            return data.content; // Если есть поле content, возвращаем его
+            return data.content;
         } else {
-            throw new Error('Неизвестный формат данных'); // Обработка ошибки, если формат не совпадает
+            throw new Error('Неизвестный формат данных');
         }
     } catch (error) {
         console.error('Error fetching clients:', error);

@@ -1,14 +1,50 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import styled from '../../Admin.module.css';
 import SvgComponent from "../../svg/svgComponent.tsx";
 import {MasterItemProps} from "../../interfaces/admin.props.ts";
-import {deleteMaster, postMaster} from "../../utils/request.ts";
+import {deleteMaster, postMaster, responseAddComment, responseGetDocument} from "../../utils/request.ts";
 
 
 
 
 const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
+    const [addComment,setAddComment] = useState<number | null>(null);
+    const [comment, setComment] = useState("");
+    const switchStateComment = (id:number| null) => {
+        setAddComment(id);
+    }
+
+    const showDocument = async (id: number) => {
+        try {
+            const documentUrl = await responseGetDocument(id);
+            if (documentUrl) {
+                window.open(documentUrl, '_blank');
+            }
+        } catch (error) {
+            console.error('Ошибка получение pdf:', error);
+            alert('Ошибка получение pdf');
+        }
+    };
+    const handleAddComment = async (id:number) => {
+        if (!comment.trim()) {
+            alert("Пожалуйста, введите комментарий.");
+            return;
+        }
+
+
+        try {
+            const data = await responseAddComment(id, comment);
+            alert('Комментарий успешно добавлен:');
+            console.log(data);
+            setComment("");
+        } catch (error) {
+            console.error('Ошибка добавления комментария:', error);
+        }
+    };
+
+
+
     const metroStations = item.metroStation.map((metro) => {
         if (typeof metro === 'string') {
             return metro;
@@ -93,28 +129,56 @@ const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
                         {categoryString}
                     </p>
                 </div>
+                
 
-                {url === "/access-requests" && (
-                    <div className={styled.masterBlockData} >
-                        <div  onClick={() => handleVerify(`/accept/${item.id}`)} className={styled.verifyButton}>
+            {url === "/access-requests" && (
+                <div className={styled.masterBlockData}>
+                    <div onClick={() => handleVerify(`/accept/${item.id}`)} className={styled.verifyButton}>
                             Верифицировать
                         </div>
                         <div onClick={() => handleDelete(`/discard/${item.id}`)} className={styled.deleteButton}>
-                            Удалить
+                        Удалить
                         </div>
                     </div>
                 )}
 
                 {url === "/non-verified-masters" && (
-                    <div className={styled.masterBlockData}>
-                        <div onClick={() => handleVerify(`/verify/${item.id}`)} className={styled.verifyButton}>
-                            Верифицировать
-                        </div>
-                        <div onClick={() => handleDelete(`/discard/${item.id}`)} className={styled.deleteButton}>
-                            Удалить
-                        </div>
+                    <div className={styled.flexCol}>
+                       <div className={styled.masterBlockData}>
+                           <div onClick={() => handleVerify(`/verify/${item.id}`)} className={styled.verifyButton}>
+                               Верифицировать
+                           </div>
+                           <div onClick={() => handleDelete(`/discard/${item.id}`)} className={styled.deleteButton}>
+                                Удалить
+                            </div>
+                       </div>
+                        {addComment != item.id ? (
+                            <div className={styled.addCom} onClick={() => switchStateComment(item.id)}>
+                                Добавление комментария
+                            </div>
+                        ) : (
+                            <div className={styled.commentForm}>
+
+                                  <textarea
+                                      placeholder="Введите комментарий"
+                                      className={styled.commentInput}
+                                      value={comment}
+                                      onChange={(e) => setComment(e.target.value)}
+                                  />
+                                <div className={styled.addCom} onClick={() => handleAddComment(item.id)}>Добавить</div>
+
+
+
+                                <div className={styled.cancelBtn} onClick={() => switchStateComment(null)}>
+                                    Отмена
+                                </div>
+                            </div>
+                        )}
+                        <div className={styled.addCom} onClick={() => showDocument(item.id)}>
+                           Показать документ
+                       </div>
                     </div>
-                )}
+            )}
 
 
 

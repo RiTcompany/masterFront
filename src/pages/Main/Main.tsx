@@ -221,7 +221,7 @@ export function Main(): React.JSX.Element {
         console.log(selectedCategory)
         try {
             const response = await fetch(
-                `http://89.23.117.193:80/tasks/category/${categ}`,
+                `https://spb-masters.ru/tasks/category/${categ}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -248,7 +248,7 @@ export function Main(): React.JSX.Element {
             const categoryIds = categoryIdsArr.join(',')
             console.log(categoryIds)
 
-            const response = await fetch(`http://89.23.117.193:80/tasks/category/list?categoryIds=${categoryIds}`, {
+            const response = await fetch(`https://spb-masters.ru/tasks/category/list?categoryIds=${categoryIds}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ export function Main(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://89.23.117.193:80/masters/top10", {
+                const response = await fetch("https://spb-masters.ru/masters/top10", {
                     method: "GET",
                     credentials: "include"
                 });
@@ -301,7 +301,7 @@ export function Main(): React.JSX.Element {
     const fetchAndSetPhotos = async (masters: MasterType[]) => {
         const updatedMasters = await Promise.all(masters.map(async (master) => {
             try {
-                const response = await fetch(`http://89.23.117.193:80/masters/${master.userId}/photo`, {
+                const response = await fetch(`https://spb-masters.ru/masters/${master.userId}/photo`, {
                     credentials: "include",
                     method: "GET",
                 });
@@ -331,7 +331,7 @@ export function Main(): React.JSX.Element {
     useEffect(() => {
         (async function () {
             try {
-                const response = await fetch("http://89.23.117.193:80/categories", {
+                const response = await fetch("https://spb-masters.ru/categories", {
                     method: "GET",
                     credentials: "include"
                 })
@@ -473,7 +473,7 @@ export function Main(): React.JSX.Element {
         }
         setError("");
         try {
-            const response = await fetch('http://89.23.117.193:80/auth/sign-in', {
+            const response = await fetch('https://spb-masters.ru/auth/sign-in', {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
