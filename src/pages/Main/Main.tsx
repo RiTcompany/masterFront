@@ -9,6 +9,7 @@ import {Review} from "./Review.tsx";
 import {parseJwt} from "../../App.tsx";
 import {TaskCard} from "../../components/TaskCard/TaskCard.tsx";
 import Select, {CSSObjectWithLabel, MultiValue} from 'react-select';
+import {useCategoryContext} from "../../CategoryContext.tsx";
 
 // interface MainProps {
 //     authUserId: number
@@ -108,69 +109,6 @@ const reviews: ReviewType[] = [
     },
 ];
 
-// const services: ServiceType[] = [
-//     {
-//         id: 1,
-//         image: 'intro-background.png',
-//         title: "Прокладка труб",
-//         description: "Описание описание описание",
-//         master: "Михаил",
-//         city: "Санкт-Петербург",
-//         age: 25,
-//         rating: 5,
-//     },
-//     {
-//         id: 2,
-//         image: 'intro-background.png',
-//         title: "Прокладка труб",
-//         description: "Описание описание описание",
-//         master: "Михаил",
-//         city: "Санкт-Петербург",
-//         age: 25,
-//         rating: 4,
-//     },
-//     {
-//         id: 3,
-//         image: 'intro-background.png',
-//         title: "Прокладка труб",
-//         description: "Описание описание описание",
-//         master: "Михаил",
-//         city: "Санкт-Петербург",
-//         age: 25,
-//         rating: 3,
-//     },
-//     {
-//         id: 4,
-//         image: 'intro-background.png',
-//         title: "Прокладка труб",
-//         description: "Описание описание описание Описание описание описание ",
-//         master: "Михаил",
-//         city: "Санкт-Петербург",
-//         age: 25,
-//         rating: 2,
-//     },
-//     {
-//         id: 5,
-//         image: 'intro-background.png',
-//         title: "Прокладка труб",
-//         description: "Описание описание описание",
-//         master: "Михаил",
-//         city: "Санкт-Петербург",
-//         age: 25,
-//         rating: 1,
-//     },
-//     {
-//         id: 6,
-//         image: 'intro-background.png',
-//         title: "Прокладка труб",
-//         description: "Описание описание описание",
-//         master: "Михаил",
-//         city: "Санкт-Петербург",
-//         age: 25,
-//         rating: 0,
-//     }
-// ];
-
 const categoryImages: { [key: string]: string } = {
     "Конструктивные работы": "const-works.png",
     "Отделочные работы": "otd-works.png",
@@ -201,12 +139,24 @@ export function Main(): React.JSX.Element {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const [options, setOptions] = useState<OptionType[]>([]);
-    const [selectedValues, setSelectedValues] = useState<OptionType[]>([]);
+    // const [selectedValues, setSelectedValues] = useState<OptionType[]>([]);
+    const { selectedValues, setSelectedValues } = useCategoryContext();
+
+    useEffect(() => {
+        console.log(selectedValues)
+    }, [selectedValues]);
+
+    useEffect(() => {
+        setShowSearchResults(!!(selectedValues))
+        multiSearch();
+    }, [selectedValues]);
+
 
     const handleMultiSelectChange = (
         newValue: MultiValue<OptionType>,
         // actionMeta: ActionMeta<OptionType>
     ) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         if (newValue.some((option: OptionType) => option.value === 'all')) {
             setSelectedValues(options.filter(option => option.value !== 'all'));
         } else {
@@ -233,7 +183,6 @@ export function Main(): React.JSX.Element {
                 const filteredResults = result.filter((res: any) => !res.masterId);
 
                 setSearchResults(filteredResults);
-                setShowSearchResults(true);
             } else {
                 console.error("Ошибка при загрузке заданий:", response.statusText);
             }
@@ -273,6 +222,7 @@ export function Main(): React.JSX.Element {
 
         await new Promise<void>((resolve) => {
             setSelectedCategory(category);
+            setSelectedValues([{value: category?.id, label: category?.name}]);
             resolve();
         });
         console.log(selectedCategory)
@@ -353,28 +303,12 @@ export function Main(): React.JSX.Element {
         console.log(categories)
         const category = categories.find(cat => cat.id === categoryId);
         setSelectedCategory(category);
+        setSelectedValues([{value: category?.id, label: category?.name}]);
     }
 
     useEffect(() => {
         console.log(selectedCategory)
     }, [selectedCategory]);
-
-    // useEffect(() => {
-    //     const scrollContainer = scrollRef.current;
-    //     if (!scrollContainer) return;
-    //
-    //     const handleScroll = () => {
-    //         if (scrollContainer.scrollLeft + scrollContainer.offsetWidth >= scrollContainer.scrollWidth) {
-    //             scrollContainer.scrollLeft = 0;
-    //         }
-    //     };
-    //
-    //     scrollContainer.addEventListener('scroll', handleScroll);
-    //
-    //     return () => {
-    //         scrollContainer.removeEventListener('scroll', handleScroll);
-    //     };
-    // }, []);
 
     const addMoreMasters = () => {
         setTopMasters((prevMasters) => prevMasters.concat(topMasters));
@@ -427,7 +361,6 @@ export function Main(): React.JSX.Element {
         };
     }, []);
 
-    // Function to handle scroll events
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
@@ -537,22 +470,6 @@ export function Main(): React.JSX.Element {
                         </div>
                     </form>
                 </div>
-                {/*<div className='selection'>*/}
-                {/*    <div className="switcher">*/}
-                {/*        <button*/}
-                {/*            className={activeTab === 'create' ? 'active' : ''}*/}
-                {/*            onClick={() => handleTabClick('create')}*/}
-                {/*        >*/}
-                {/*            Создать услугу*/}
-                {/*        </button>*/}
-                {/*        <button*/}
-                {/*            className={activeTab === 'find' ? 'active' : ''}*/}
-                {/*            onClick={() => handleTabClick('find')}*/}
-                {/*        >*/}
-                {/*            Найти услугу*/}
-                {/*        </button>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
             </div>
 
             {showSearchResults &&
@@ -590,45 +507,7 @@ export function Main(): React.JSX.Element {
                         </div>
                     ))}
                 </div>
-                {/*<div className="finder-container">*/}
-                {/*    <form className="finder-form">*/}
-                {/*        <label htmlFor="service-search" className="finder-label">Поиск исполнителя</label>*/}
-                {/*        <div className="finder-inputs">*/}
-                {/*            <input type="text" id="service-search" name="search" placeholder="Услуга или специалист"*/}
-                {/*                   className="finder-input"/>*/}
-                {/*            <select id="location-select" name="location" className="finder-select">*/}
-                {/*                <option value="">Радиус, метро, район</option>*/}
-                {/*            </select>*/}
-                {/*        </div>*/}
-                {/*    </form>*/}
-                {/*</div>*/}
             </div>
-
-            {/*{activeTab === 'create' &&*/}
-            {/*    <div className="create-service-container">*/}
-            {/*        {services && services.map((service) =>*/}
-            {/*            <CreatedCard image={service.image} title={service.title} master={service.master}*/}
-            {/*                         city={service.city} age={service.age} rating={service.rating}*/}
-            {/*                         description={service.description} id={service.id} key={service.id}*/}
-            {/*            />)}*/}
-            {/*    </div>*/}
-            {/*}*/}
-
-            {/*{activeTab === 'find' &&*/}
-            {/*    <div className="find-service-container">*/}
-            {/*        <div className="subscribe-card">*/}
-            {/*            <p>Подпишитесь на уведомления о новых заказах</p>*/}
-            {/*            <div className="subscribe-button">*/}
-            {/*                <OrangeButton text={"Подписаться"} onClick={(e) => e.preventDefault()}/>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*        {tasks && tasks.map((task) =>*/}
-            {/*            <FoundCard title={task.title} customer={task.customer} description={task.description}*/}
-            {/*                       date={task.date} price={task.price} id={task.id} key={task.id}*/}
-            {/*            />*/}
-            {/*        )}*/}
-            {/*    </div>*/}
-            {/*}*/}
 
             <div className="service-container common">
                 <div className="service-circles">
@@ -670,9 +549,6 @@ export function Main(): React.JSX.Element {
                         <h5>подходящего исполнителя и обсудите сроки выполнения</h5>
                     </div>
                 </div>
-                {/*<div className="search">*/}
-                {/*    <SearchField/>*/}
-                {/*</div>*/}
 
             </div>
 
@@ -702,12 +578,6 @@ export function Main(): React.JSX.Element {
                         </div>
                         <div className="login-field">
                             <label htmlFor="password">Пароль</label>
-                            {/*<input type="password"*/}
-                            {/*       placeholder="Пароль"*/}
-                            {/*       value={password}*/}
-                            {/*       onChange={handlePasswordChange}*/}
-                            {/*       required*/}
-                            {/*/>*/}
                             <div className="password-input-container">
                                 <input
                                     name="password"
@@ -745,10 +615,6 @@ export function Main(): React.JSX.Element {
                         <hr/>
                         <p className="register-link">Не зарегистрированы? <Link to={"/registration"}>Пройти регистрацию</Link></p>
                     </form>
-                    {/*<div className="register-bottom">*/}
-                    {/*    <p>@</p>*/}
-                    {/*    <p>© Perfect Login 2021</p>*/}
-                    {/*</div>*/}
                 </div>
             </div>}
         </>
