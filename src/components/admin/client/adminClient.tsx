@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import { getClients } from '../utils/request.ts'
+import  {useEffect, useState} from "react";
+import {getClients, requestBlockUser} from '../utils/request.ts'
 import styled from "../Admin.module.css";
 import {AdminResponseClient, Client} from "../interfaces/admin.props.ts";
 import SvgComponent from "../svg/svgComponent.tsx";
@@ -12,6 +12,7 @@ const AdminClient = () =>{
                 NProgress.start();
                 const data = await getClients();
                 setClients(data);
+                console.log(data);
             } catch (error) {
                 console.error('Ошибка:', error);
             }
@@ -21,6 +22,37 @@ const AdminClient = () =>{
 
         fetchClients();
     }, []);
+
+    const bannedUser = async (username: string, isCurrentlyBanned: boolean) => {
+        try {
+
+            const newBanStatus = !isCurrentlyBanned;
+
+
+            await requestBlockUser(username, newBanStatus);
+
+            setClients((prevState) => {
+                if (!prevState) return prevState;
+
+                const updatedClients = prevState.content.map((client) => {
+                    if (client.user.username === username) {
+                        return {
+                            ...client,
+                            user: {
+                                ...client.user,
+                                isBanned: newBanStatus,
+                            },
+                        };
+                    }
+                    return client;
+                });
+
+                return { ...prevState, content: updatedClients };
+            });
+        } catch (error) {
+            console.error("Ошибка при блокировке/разблокировке пользователя:", error);
+        }
+    };
     return(
         <>
             <h2 className={styled.h2Master}>Заказчики</h2>
@@ -35,11 +67,11 @@ const AdminClient = () =>{
                             {item.name}
                         </div>
 
-                        <div className={styled.clientBlockData }>
+                        <div className={styled.clientBlockData}>
                             <SvgComponent num={2}/>
 
 
-                            <div >{item.email}</div>
+                            <div>{item.email}</div>
                         </div>
 
                         <div className={styled.clientBlockData}>
@@ -48,22 +80,19 @@ const AdminClient = () =>{
 
                             {item.phoneNumber}
                         </div>
+                        <div  className={styled.deleteButton} onClick={()=>bannedUser(item.user.username, item.user.isBanned)}>
+                            {item.user.isBanned ? "Разблокировать":"Блокировать"}
+                        </div>
                     </div>
 
 
                 </div>
 
-            ))}
+                ))}
 
 
-
-
-
-
-
-
-        </div>
-            </>
+            </div>
+        </>
     )
 
 }

@@ -3,7 +3,13 @@ import React, {useState} from 'react';
 import styled from '../../Admin.module.css';
 import SvgComponent from "../../svg/svgComponent.tsx";
 import {MasterItemProps} from "../../interfaces/admin.props.ts";
-import {deleteMaster, postMaster, responseAddComment, responseGetDocument} from "../../utils/request.ts";
+import {
+    deleteMaster,
+    postMaster,
+    requestBlockUser,
+    responseAddComment,
+    responseGetDocument
+} from "../../utils/request.ts";
 
 
 
@@ -14,6 +20,24 @@ const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
     const switchStateComment = (id:number| null) => {
         setAddComment(id);
     }
+
+
+
+    const bannedUser = async (username: string, isCurrentlyBanned: boolean) => {
+        try {
+
+            const newBanStatus = !isCurrentlyBanned;
+
+
+            await requestBlockUser(username, newBanStatus);
+
+            onUpdate();
+
+
+        } catch (error) {
+            console.error("Ошибка при блокировке/разблокировке пользователя:", error);
+        }
+    };
 
     const showDocument = async (id: number) => {
         try {
@@ -98,16 +122,16 @@ const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
         <div className={styled.masterBlock}>
             <div className={styled.masterBlockFlex}>
                 <div className={styled.masterBlockData}>
-                    <SvgComponent num={3} />
+                    <SvgComponent num={3}/>
                     <p className={styled.masterName}>{item.firstName}</p>
                     <p className={styled.masterName}>{item.lastName}</p>
                 </div>
                 <div className={styled.masterBlockData}>
-                    <SvgComponent num={2} />
+                    <SvgComponent num={2}/>
                     {item.email}
                 </div>
                 <div className={styled.masterBlockData}>
-                    <SvgComponent num={1} />
+                    <SvgComponent num={1}/>
                     {item.phoneNumber}
                 </div>
                 <div className={styled.masterBlockData}>
@@ -120,7 +144,7 @@ const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
                 </div>
 
                 <div className={styled.masterBlockData}>
-                    <SvgComponent num={5} />
+                    <SvgComponent num={5}/>
                     <p className={styled.masterName}>{item.description}</p>
                 </div>
                 <div className={styled.masterBlockData}>
@@ -129,29 +153,29 @@ const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
                         {categoryString}
                     </p>
                 </div>
-                
 
-            {url === "/access-requests" && (
-                <div className={styled.masterBlockData}>
-                    <div onClick={() => handleVerify(`/accept/${item.id}`)} className={styled.verifyButton}>
+
+                {url === "/access-requests" && (
+                    <div className={styled.masterBlockData}>
+                        <div onClick={() => handleVerify(`/accept/${item.id}`)} className={styled.verifyButton}>
                             Верифицировать
                         </div>
                         <div onClick={() => handleDelete(`/discard/${item.id}`)} className={styled.deleteButton}>
-                        Удалить
+                            Удалить
                         </div>
                     </div>
                 )}
 
                 {url === "/non-verified-masters" && (
                     <div className={styled.flexCol}>
-                       <div className={styled.masterBlockData}>
-                           <div onClick={() => handleVerify(`/verify/${item.id}`)} className={styled.verifyButton}>
-                               Верифицировать
-                           </div>
-                           <div onClick={() => handleDelete(`/discard/${item.id}`)} className={styled.deleteButton}>
+                        <div className={styled.masterBlockData}>
+                            <div onClick={() => handleVerify(`/verify/${item.id}`)} className={styled.verifyButton}>
+                                Верифицировать
+                            </div>
+                            <div onClick={() => handleDelete(`/discard/${item.id}`)} className={styled.deleteButton}>
                                 Удалить
                             </div>
-                       </div>
+                        </div>
                         {addComment != item.id ? (
                             <div className={styled.addCom} onClick={() => switchStateComment(item.id)}>
                                 Добавление комментария
@@ -168,18 +192,19 @@ const MasterItem: React.FC<MasterItemProps> = ({ item, url,onUpdate }) => {
                                 <div className={styled.addCom} onClick={() => handleAddComment(item.id)}>Добавить</div>
 
 
-
                                 <div className={styled.cancelBtn} onClick={() => switchStateComment(null)}>
                                     Отмена
                                 </div>
                             </div>
                         )}
                         <div className={styled.addCom} onClick={() => showDocument(item.id)}>
-                           Показать документ
-                       </div>
+                            Показать документ
+                        </div>
                     </div>
-            )}
-
+                )}
+                <div className={styled.deleteButton} onClick={() => bannedUser(item.userId.username, item.userId.isBanned)}>
+                    {item.userId.isBanned ? "Разблокировать" : "Блокировать"}
+                </div>
 
 
             </div>

@@ -38,6 +38,7 @@ export interface User {
     firstName: string;
     password: string;
     role: string;
+    isBanned:boolean;
     enabled: boolean;
     authorities: Authority[];
     accountNonExpired: boolean;
@@ -81,6 +82,7 @@ export interface Master {
     categories:string[] | CategoryMaster[];
     age: number;
     rate: number;
+    userId:User;
 }
 
 export interface MetroStation {

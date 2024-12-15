@@ -166,3 +166,26 @@ export const deleteMaster = async (url: string) => {
         throw error;
     }
 };
+
+
+export const requestBlockUser = async (username: string, isBanned: boolean) => {
+    try {
+        const response = await fetch(`${BASE_URL}/ban-user?username=${username}&isBanned=${isBanned}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to ban/unban user. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Response:", data);
+        return data;
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
+};

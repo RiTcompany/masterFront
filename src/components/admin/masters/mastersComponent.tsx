@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Master } from "../interfaces/admin.props.ts";
-import { getMasters } from "../utils/request.ts";
+import {getMasters} from "../utils/request.ts";
 import styled from "../Admin.module.css";
 
 import MasterItem from "./layout/masterItem.tsx";
@@ -26,6 +26,8 @@ const MastersComponent = () => {
 
         fetchMasters();
     }, [activePath]);
+
+
 
 
     const handleUpdateMasters = async () => {
