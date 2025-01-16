@@ -1,0 +1,247 @@
+.profile-container {
+
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 7% 50px;
+}
+
+.profile-left {
+    width: 70%;
+    max-width: 700px;
+    box-sizing: border-box;
+    padding-right: 40px;
+    /*display: flex;*/
+}
+
+.base-info {
+    display: flex;
+    margin: 50px 0;
+    gap: 20px;
+}
+
+.profile-left img {
+    width: 230px;
+    height: 235px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 0.5px solid rgba(224, 224, 224, 1);
+}
+
+.profile-photo {
+    display: flex;
+    flex-direction: column;
+    gap: 15px
+}
+
+.profile-select {
+    display: flex;
+    gap: 30px;
+}
+
+.profile-select button {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.settings-icon svg {
+    height: 24px;
+    width: 24px;
+}
+
+.settings {
+    color: gray;
+}
+
+.change-info {
+    width: 50vw;
+    max-width: 500px;
+    margin: 5px 0 25px;
+}
+
+.profile-select .active {
+    font-weight: 700;
+    color: black;
+}
+
+.profile-left hr {
+    margin: 10px 0 30px;
+}
+
+.orders-title {
+    margin: 30px 0;
+}
+
+.profile-left .profile-about h3 {
+    margin: 20px 0;
+}
+
+.profile-left .profile-portfolio {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: none;
+    position: relative;
+    height: 250px;
+    margin-top: 30px;
+}
+
+.profile-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin-top: 70px;
+    padding-left: 7%;
+    border-left: 0.5px solid grey;
+}
+
+.profile-right h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.profile-right h2 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.profile-right strong {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.profile-right p {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.profile-right .contacts {
+    display: flex;
+    gap: 40px;
+    height: 50px;
+}
+
+.contacts .contact-text {
+    align-self: center;
+}
+
+.profile-right img {
+    width: 40px;
+    height: 40px;
+    align-self: center;
+}
+
+.profile-bottom {
+    padding: 0 50px;
+    margin-bottom: 30px;
+}
+
+.profile-bottom h2 {
+    margin-bottom: 20px;
+}
+
+.profile-review-card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 15px;
+    max-width: 250px;
+    height: 200px;
+    border-radius: 12.92px;
+    border: none;
+    box-shadow: 0 5.17px 15.5px 0 #5F58693D;
+    margin-bottom: 50px;
+}
+
+.profile-review-card .title, .profile-review-card .text {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.profile-review-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.profile-review-card .price {
+    font-size: 10.5px;
+    margin-bottom: 15px;
+}
+
+.profile-review-card .master {
+    display: flex;
+    margin-top: 10px;
+    font-size: 7.75px;
+    color: #666666;
+    position: relative;
+    bottom: -10px;
+}
+
+.profile-review-card .master-info {
+    margin-left: 10px;
+}
+
+.profile-review-card .name {
+    margin-bottom: 15px;
+}
+
+.feedbacks {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap
+}
+
+@media (max-width: 656px) {
+    .info-container {
+        flex-direction: column;
+        padding: 3% 20px;
+    }
+
+    .profile-left {
+        padding: 0;
+    }
+
+    .profile-right {
+        border: none;
+        gap: 30px;
+        margin-top: 30px;
+        padding-left: 0;
+    }
+
+    .add-photo-button {
+        width: 190px;
+    }
+
+    .profile-left img {
+        width: 190px;
+    }
+
+    .profile-bottom {
+        padding: 0 20px;
+        /*margin-bottom: 30px;*/
+    }
+
+    .change-info {
+        width: 90vw;
+        margin: 5px 0 25px;
+    }
+}
+
+@media (max-width: 450px) {
+    .profile-review-card {
+        width: 90vw;
+        justify-self: center;
+        align-self: center;
+    }
+    .profile-left {
+        width: 90vw;
+    }
+}

@@ -1,0 +1,26 @@
+.service-card {
+    min-width: 187px;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    border-radius: 18px;
+    overflow: hidden;
+    text-align: center;
+    width: 187px;
+}
+
+.service-card div {
+    background-color: white;
+    flex-grow: 1;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+.service-card img {
+    width: 187px;
+    height: 170px;
+    object-fit: cover;
+}

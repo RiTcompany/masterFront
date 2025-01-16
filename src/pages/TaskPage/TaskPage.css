@@ -1,0 +1,150 @@
+/*.task-container {*/
+/*    padding: 30px;*/
+/*}*/
+
+.response-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px
+}
+
+@media (max-width: 767px) {
+    .response-form div {
+        /*display: flex;*/
+        /*flex-direction: column;*/
+    }
+
+    .task-container {
+        width: 95vw;
+    }
+}
+
+@media (max-width: 450px) {
+    .task-container h1 {
+        font-size: 22px;
+    }
+
+    .task-container h2 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .task-container h3 {
+
+        font-weight: 600;
+    }
+}
+
+.response-form input {
+    width: 200px;
+}
+
+.response-button {
+    width: 200px;
+    height: 40px
+}
+
+.task-container {
+    background-color: #FCF6F0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-container .back-button {
+    color: gray;
+    width: 200px;
+    border: 0.5px solid gray;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.task-container .back-button:hover {
+    background-color: rgba(95, 96, 108, 0.24);
+}
+
+.task-details {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.task-details h1 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.task-details h3 {
+    margin: 0 0 8px;
+    color: #666;
+}
+
+.task-details p {
+    margin: 0 0 8px;
+    color: #333;
+}
+
+.responses {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.responses h1 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.responses p {
+    margin: 0;
+    color: #666;
+}
+
+.master-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.master-card p {
+    margin: 8px 0;
+    color: #495057;
+}
+
+.master-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #343a40;
+}
+
+.master-date-start, .master-date-end {
+    font-style: italic;
+    color: #6c757d;
+}
+
+.master-price, .master-rate {
+    font-weight: bold;
+}
+
+select, textarea {
+    height: 45px;
+    /*width: 68vw;*/
+    font-size: 13px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 10px 0 #d5d5d5;
+}
+
