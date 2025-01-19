@@ -12,6 +12,7 @@ import {CookieConsent} from "./components/CookieConsent/CookieConsent.tsx";
 import LayoutAdmin from "./components/admin/layout/layout-admin.tsx";
 import AdminClient from "./components/admin/client/adminClient.tsx";
 import MastersComponent from "./components/admin/masters/mastersComponent.tsx";
+import TaskComponent from "./components/admin/task/taskComponent.tsx";
 
 export function parseJwt(token: string) {
     console.log(token)
@@ -58,6 +59,7 @@ function App() {
                     <Route path="" element={<Navigate to="/admin/clients" />} />
                     <Route path="/admin/clients" element={<AdminClient/>}/>
                     <Route path="/admin/masters" element={<MastersComponent/>}/>
+                    <Route path="/admin/tasks" element={<TaskComponent/>}/>
                 </Route>
 
             </Routes>

@@ -1,3 +1,9 @@
+.adminTaskTitle{
+    color: white;
+    margin-top: 30px;
+}
+
+
 .adminHC {
     position: fixed;
     width: 200px;
@@ -274,6 +280,68 @@
     gap: 10px;
 }
 
+/*Обьявления   */
+
+
+.adminTaskContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Автоматическая адаптация колонок */
+    gap: 50px;
+    margin-top: 40px;
+}
+
+.adminTaskBlock {
+    width: 400px;
+    height: 400px;
+    border-radius: 10px;
+    background-color: #21222d;
+    margin-top: 100px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.adminTaskBlock:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.adminTaskBlockFlex {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    color: white;
+}
+
+.adminTaskBlockData {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.adminTaskLoadMore {
+    margin: 40px auto 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.adminTaskLoadMore:hover {
+    background-color: #0056b3;
+}
+
+.adminTaskLoadMore:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
 @media (max-width: 768px) {
     .burgerIcon {
         display: block;
@@ -358,6 +426,10 @@
     .commentInput{
         width: 200px;
         font-size: 14px;
+    }
+
+    .adminTaskBlock {
+        width: 300px;
     }
 
 

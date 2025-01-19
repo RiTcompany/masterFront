@@ -4,18 +4,18 @@ import React, {useEffect, useState} from "react";
 import styles from "../Admin.module.css";
 import styled from "../Admin.module.css";
 const TaskList: React.FC = () => {
-    const [tasks, setTasks] = useState<Task[]>([]); // Хранение всех задач из content
-    const [page, setPage] = useState(0); // Текущая страница
-    const [totalPages, setTotalPages] = useState(1); // Всего страниц
-    const [loading, setLoading] = useState(false); // Индикатор загрузки
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
 
 
     const fetchTasks = async (pageNumber: number) => {
         setLoading(true);
         try {
-            const response: Pagination = await getTasks(pageNumber); // Получаем данные с сервера
-            setTasks((prev) => [...prev, ...response.content]); // Добавляем новые задачи из content
-            setTotalPages(response.totalPages); // Устанавливаем общее количество страниц
+            const response: Pagination = await getTasks(pageNumber);
+            setTasks((prev) => [...prev, ...response.content]);
+            setTotalPages(response.totalPages);
         } catch (error) {
             console.error("Ошибка при загрузке задач:", error);
         } finally {
@@ -42,7 +42,7 @@ const TaskList: React.FC = () => {
             const result = await deleteTaskRequest(id);
             if (result.response.ok) {
                 setTasks((prevTasks) => {
-                    const updatedTasks = prevTasks.filter((task) => task.id !== id); // Удаляем задачу из списка
+                    const updatedTasks = prevTasks.filter((task) => task.id !== id);
                     console.log("Обновлённый список задач:", updatedTasks);
                     return updatedTasks;
                 });
@@ -58,7 +58,7 @@ const TaskList: React.FC = () => {
 
     return (
         <div>
-            <h1 className={styles.adminTaskTitle}>Список задач</h1>
+            <h1 className={styles.adminTaskTitle}>Список объявлений</h1>
             <div className={styles.adminTaskContainer}>
                 {tasks.map((task) => (
                     <div key={task.id} className={styles.adminTaskBlock}>
