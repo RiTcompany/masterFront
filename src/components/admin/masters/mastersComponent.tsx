@@ -1,49 +1,55 @@
 import { useEffect, useState } from "react";
-import { Master } from "../interfaces/admin.props.ts";
-import {getMasters} from "../utils/request.ts";
+import { Master, MasterReq } from "../interfaces/admin.props.ts";
+import { getMasters } from "../utils/request.ts";
 import styled from "../Admin.module.css";
-
 import MasterItem from "./layout/masterItem.tsx";
 import NProgress from "nprogress";
 
 const MastersComponent = () => {
     const [masters, setMasters] = useState<Master[]>([]);
+    const [isData, setData] = useState<MasterReq | null>(null);
     const [activePath, setActivePath] = useState<string>("/masters");
+    const [currentPage, setCurrentPage] = useState<number>(0);
 
+    // Функция для загрузки мастеров
     useEffect(() => {
         const fetchMasters = async () => {
             NProgress.start();
             try {
-                const data = await getMasters(activePath);
-                setMasters(data);
-                console.log(data)
+                const data = await getMasters(activePath, currentPage); // Передаем активный путь и текущую страницу
+                setMasters(data.content);
+                setData(data); // Сохраняем данные для пагинации
             } catch (error) {
                 console.error('Ошибка:', error);
-                setMasters([])
+                setMasters([]);
             }
             NProgress.done();
         };
 
         fetchMasters();
-    }, [activePath]);
-
-
-
+    }, [activePath, currentPage]); // Пагинация и смена пути
 
     const handleUpdateMasters = async () => {
         try {
-            const data = await getMasters(activePath);
-            setMasters(data);
+            const data = await getMasters(activePath, currentPage); // Передаем текущую страницу
+            setMasters(data.content);
             console.log('Обновленные мастера:', data);
         } catch (error) {
-            setMasters([])
+            setMasters([]);
             console.error('Ошибка при обновлении мастеров:', error);
         }
     };
 
     const switchState = (path: string) => {
         setActivePath(path);
+        setCurrentPage(1); // Сбрасываем на первую страницу при изменении пути
     };
+
+    const handleLoadMore = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
+
+
 
     return (
         <>
@@ -62,15 +68,24 @@ const MastersComponent = () => {
                 </div>
             </div>
             <div className={styled.masterContainer}>
-                { masters.map((item: Master) => (
-                    <MasterItem key={item.id} item={item} url={activePath}  onUpdate={handleUpdateMasters} />
+                {masters.map((item: Master) => (
+                    <MasterItem key={item.id} item={item} url={activePath} onUpdate={handleUpdateMasters} />
                 ))}
-                {masters.length == 0 && (
+                {masters.length === 0 && (
                     <h2>Ничего не найдено!</h2>
                 )}
             </div>
+
+            {/* Пагинация */}
+            {isData && currentPage < isData.totalPages - 1 && (
+                <div className={styled.showMoreContainer}>
+                    <button className={styled.showMoreButton} onClick={handleLoadMore}>
+                        Показать еще
+                    </button>
+                </div>
+            )}
         </>
     );
-}
+};
 
 export default MastersComponent;

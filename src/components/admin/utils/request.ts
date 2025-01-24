@@ -2,9 +2,9 @@ const BASE_URL = 'https://spb-masters.ru/admin'
 const URL_DEFAULT  ="https://spb-masters.ru"
 
 
-export const getClients = async () => {
+export const getClients = async (page:number) => {
     try {
-        const response = await fetch(BASE_URL +'/clients');
+        const response = await fetch(BASE_URL +`/clients?=page=${page}`);
 
 
         if (!response.ok) {
@@ -70,7 +70,7 @@ export const responseAddComment = async (id: number, comment: string) => {
 
 
 
-export const getMasters = async (url: string) => {
+export const getMasters = async (url: string, page:number) => {
     try {
     //    const token: string | null = localStorage.getItem("authToken");
 
@@ -79,7 +79,7 @@ export const getMasters = async (url: string) => {
             "Content-Type": "application/json"
         };
 
-        const response = await fetch(BASE_URL + url, {
+        const response = await fetch(BASE_URL + url + `?=page=${page}`, {
             method: 'GET',
             headers: headers,
         });
@@ -93,13 +93,7 @@ export const getMasters = async (url: string) => {
 
 
 
-        if (Array.isArray(data)) {
-            return data;
-        } else if (data.content) {
-            return data.content;
-        } else {
-            throw new Error('Неизвестный формат данных');
-        }
+        return data;
     } catch (error) {
         console.error('Error fetching clients:', error);
         throw error;
@@ -197,7 +191,7 @@ export const getTasks = async (page: number) => {
             "Content-Type": "application/json",
         };
 
-        const fullUrl = `${URL_DEFAULT}/tasks/?page=${page}`;
+        const fullUrl = `${URL_DEFAULT}/tasks?page=${page}`;
 
         const response = await fetch(fullUrl, {
             method: 'GET',

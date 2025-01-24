@@ -341,6 +341,38 @@
     cursor: not-allowed;
 }
 
+.showMoreContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.showMoreButton {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.showMoreButton:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+.showMoreButton:active {
+    background-color: #444;
+    transform: translateY(1px);
+}
+
+.showMoreButton:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+}
+
 
 @media (max-width: 768px) {
     .burgerIcon {

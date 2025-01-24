@@ -84,6 +84,14 @@ export interface Master {
     rate: number;
     userId:User;
 }
+export interface MasterReq {
+    totalPages:number;
+    pageable:{
+        pageNumber:number;
+    }
+    content:Master[]
+
+}
 
 export interface MetroStation {
     id: number;
