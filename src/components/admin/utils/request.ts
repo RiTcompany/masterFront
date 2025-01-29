@@ -3,8 +3,9 @@ const URL_DEFAULT  ="https://spb-masters.ru"
 
 
 export const getClients = async (page:number) => {
+    console.log(page);
     try {
-        const response = await fetch(BASE_URL +`/clients?=page=${page}`);
+        const response = await fetch(BASE_URL +`/clients?page=${page}`);
 
 
         if (!response.ok) {
@@ -12,6 +13,7 @@ export const getClients = async (page:number) => {
         }
 
         const data = await response.json();
+        console.log(data.content)
         return data;
     } catch (error) {
         console.error('Error fetching clients:', error);

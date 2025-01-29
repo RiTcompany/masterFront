@@ -59,7 +59,9 @@ const AdminClient = () => {
     };
 
     const handleShowMore = () => {
-        setCurrentPage(currentPage + 1); // Увеличиваем номер страницы на 1
+
+        setCurrentPage(prevState => prevState + 1);
+
     };
 
     return (
