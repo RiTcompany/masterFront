@@ -70,8 +70,12 @@ interface TasksType {
 interface MasterType {
     photoLink: string,
     description: string,
-    userId: number,
+    userId: MasterUser,
     photo: string
+}
+
+interface MasterUser{
+    id:number;
 }
 
 const reviews: ReviewType[] = [
@@ -250,8 +254,9 @@ export function Main(): React.JSX.Element {
 
     const fetchAndSetPhotos = async (masters: MasterType[]) => {
         const updatedMasters = await Promise.all(masters.map(async (master) => {
+            console.log(master.userId.id);
             try {
-                const response = await fetch(`https://spb-masters.ru/masters/${master.userId}/photo`, {
+                const response = await fetch(`https://spb-masters.ru/masters/${master.userId.id}/photo`, {
                     credentials: "include",
                     method: "GET",
                 });
