@@ -529,7 +529,7 @@ export function Main(): React.JSX.Element {
                 <div className={"test"}>
                     <div className="service-scroll" ref={scrollRef}>
                         {topMasters.concat(topMasters).map((master, index) => (
-                            <Link to={`/profile/${master.userId}`}>
+                            <Link to={`/profile/${master.userId.id}`}>
                                 <ServiceCard key={`${master.userId}-${index}`} image={master.photo}
                                              description={master.description}/>
                             </Link>

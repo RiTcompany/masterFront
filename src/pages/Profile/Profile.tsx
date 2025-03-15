@@ -93,6 +93,7 @@ export function Profile({authUserId} : ProfileProps): React.JSX.Element {
                 if (!authToken) {
                     throw new Error("Auth token not found in localStorage");
                 }
+                console.log(userId)
 
                 const response = await fetch(`https://spb-masters.ru/profiles/${userId}`, {
                     method: "GET",
