@@ -193,7 +193,7 @@ export const getTasks = async (page: number) => {
             "Content-Type": "application/json",
         };
 
-        const fullUrl = `${URL_DEFAULT}/tasks?page=${page}`;
+        const fullUrl = `${URL_DEFAULT}/tasks/?page=${page}&size=10`;
 
         const response = await fetch(fullUrl, {
             method: 'GET',
